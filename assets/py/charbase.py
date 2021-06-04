@@ -2,7 +2,7 @@ class PlayerCharacter:
     stats = {
         "hp": 100,
         "energy": 100,
-        "AC": 50,
+        "AC": 30,
         "hitroll": [5, 20],
         "dodge": 20,
         "block": 10,

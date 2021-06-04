@@ -9,8 +9,8 @@ import numbers
 import charbase
 aghast = charbase.PlayerCharacter()
 skynet = charbase.PlayerCharacter()
-player1 = aghast.stats
-player2 = skynet.stats
+char = aghast.stats
+victim = skynet.stats
 
 def rth(ch, vict): #Roll to hit
     # This will wind up having to be significantly more complex
@@ -19,24 +19,25 @@ def rth(ch, vict): #Roll to hit
     if hitroll >= vict["AC"]:   # If it clears their armor class
         dbp(ch, vict)           # Call on the Dodge Block and Parry function
     else:                       # Otherwise
-        miss(hit)               # Send it to the miss function with "hit"
+        miss("miss")               # Send it to the miss function with "hit"
 
 def dbp(ch, vict): # dodge block parry
     dodge = vict["dodge"] # Maybe update this into a dict or pair of lists, and compare them in a loop
     block = vict["block"]
     parry = vict["parry"]
     dodgeroll = numbers.dice_roll( 1, 100 )
-    if dodgeroll >= dodge:
-        dmg(ch,vict)
+    if dodgeroll <= dodge:
+        miss("dodge")
         return
     blockroll = numbers.dice_roll( 1, 100 )
-    if blockroll >= block:
-        dmg(ch,vict)
+    if blockroll <= block:
+        miss("block")
         return
     parryroll = numbers.dice_roll( 1, 100 )
-    if parryroll >= parry:
-        dmg(ch,vict)
+    if parryroll <= parry:
+        miss("parry")
         return
+    dmg(ch,vict)
     """
     Possible alternative:
     #if dodge
@@ -56,17 +57,20 @@ def dmg(ch, vict):
     damage = numbers.dice_roll( damage_dice, damage_sides)    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
+    print(f"You hit your opponent with some force ({damage})")
 
 
 def miss(case):
-    switcher = {
-        1: "You swing for your opponent, but miss.",
-        2: "You swing for your opponent, but your attack is dodged.",
-        3: "You swing for your opponent, but your attack is blocked.",
-        4: "You swing for your opponent, but your attack is parried.",
-    }
-    print switcher.get(case, "Invalid case argument found, check fightbase.py")
+    if case == "miss":
+        print("You swing for your opponent, but miss.")
+    if case == "dodge":
+        print("You swing for your opponent, but your attack is dodged.")
+    if case == "block":
+        print("You swing for your opponent, but your attack is blocked.")
+    if case == "parry":
+        print("You swing for your opponent, but your attack is parried.")
 
+rth(char, victim)
             
 
 
