@@ -1,49 +1,59 @@
 import math
 import numbers
 import charbase
+import time
 
-aghast = charbase.PlayerCharacter()
-skynet = charbase.PlayerCharacter()
-char = aghast.stats
-victim = skynet.stats
+aghast = charbase.Aghast()
+skynet = charbase.Skynet()
 
-def rth(ch, vict, type): #Roll to hit. "type" will refer to different attacks so that this function is multipurpose
+#Roll to hit. "type" will refer to different attacks so that this function is multipurpose
+def rth(ch, vict, type): 
     # This will wind up having to be significantly more complex
     # because of the nature of different classes having some varies hit or damage effects.
-    if type == "auto":
-        hitroll = numbers.dice_roll( ch["hitroll"][0], ch["hitroll"][1] ) # Call the dice roll function
-        if hitroll >= vict["AC"]:   # If it clears their armor class
-            dbp(ch, vict)           # Call on the Dodge Block and Parry function
-        else:                       # Otherwise
-            miss("miss")               # Send it to the miss function with "hit"
+    if ch.is_dead != True and vict.is_dead != True:
+        if type == "auto":
+            hitroll = numbers.dice_roll( ch.hitroll[0], ch.hitroll[1] ) # Call the dice roll function
+            if hitroll >= vict.ac:   # If it clears their armor class
+                dbp(ch, vict, type)           # Call on the Dodge Block and Parry function
+            else:                       # Otherwise
+                miss("miss")               # Send it to the miss function with "hit"
 
-def dbp(ch, vict): # dodge block parry
-    dodge = vict["dodge"] # Maybe update this into a dict or pair of lists, and compare them in a loop
+# After a hit registers, run the dbp function, short for dodge, block and parry
+def dbp(ch, vict, type): # dodge block parry
+    # Check dodge roll
+    dodge = vict.dodge
     dodgeroll = numbers.dice_roll( 1, 100 )
     if dodgeroll <= dodge:
         miss("dodge")
         return
-    block = vict["block"]
+
+    # Check block roll
+    block = vict.block
     blockroll = numbers.dice_roll( 1, 100 )
     if blockroll <= block:
         miss("block")
         return
-    parry = vict["parry"]
+
+    # Check parry roll
+    parry = vict.parry
     parryroll = numbers.dice_roll( 1, 100 )
     if parryroll <= parry:
         miss("parry")
         return
-    dmg(ch,vict)
 
-def dmg(ch, vict):
-    damage_dice = ch["damage"][0]  # Collect the number of damage dice to be rolled
-    damage_sides = ch["damage"][1] # and how many facets those dice have
-    damage_resistance = ch["DR"]   # Collect the damage resistance
+    # If damage isn't prevented, calculate damage
+    dmg(ch,vict, type)
+
+# dmg( Damage ) function for calculating damage and checking for death
+def dmg(ch, vict, type):
+    damage_dice = ch.damage[0]  # Collect the number of damage dice to be rolled
+    damage_sides = ch.damage[1] # and how many facets those dice have
+    damage_resistance = ch.dr  # Collect the damage resistance
     damage = numbers.dice_roll( damage_dice, damage_sides)    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
-    vict["hp"] -= damage    #apply damage
+    vict.hp -= damage    #apply damage
     print(f"You hit your opponent with some force ({damage})") # this will someday refer to a function full of different descriptors for different damage amounts
-    if vict["hp"] <= 0:
+    if vict.hp <= 0:
         victory(ch, vict)
 
 def miss(case):
@@ -56,18 +66,32 @@ def miss(case):
     if case == "parry":
         print("You swing for your opponent, but your attack is parried.")
 
-
 def auto_atk(ch, vict):
-    spd = ch["speed"]
+    spd = ch.speed
     aps = spd // 40
-    ch["speed"] = spd % 40 
+    ch.speed = spd % 40 
     for attacks in range(0, aps):
         rth(ch, vict, "auto")
 
+def victory(ch, vict):
+    vict.is_dead = True
+    print(f"{vict.name} is incapacitated and will die soon, if not aided.")
+
+def turn_timer(player1, player2):
+    print("")
+    print(f"<hp: {player1.hp}/{player1.max_hp}>")
+    tick(player1, player2)
+    time.sleep(3)
+    turn_queue(player1, player2)
 
 def turn_queue(player1, player2):
-    if player1["is_dead"] == False and player2["is_dead"] == False:
+    if player1.is_dead == False and player2.is_dead == False:
         auto_atk(player1, player2)
         auto_atk(player2, player1)
+        turn_timer(player1, player2)
 
-turn_queue(char, victim)
+def tick(player1, player2):
+    player1.speed += player1.speed_max
+    player2.speed += player2.speed_max
+
+turn_queue(aghast, skynet)

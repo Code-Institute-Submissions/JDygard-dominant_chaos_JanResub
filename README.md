@@ -71,8 +71,6 @@ Secondary skills will all passively increase.
 # I'm working on it, lol
 
 
-"""
-
 dump to turn queue    
 
 TURN QUEUE
@@ -87,6 +85,4 @@ the same time that is always referenced for damage
 Add an argument for attack type so that the RTH can be used for user-initiated attacks.
 This would let me build in conditionals for different attack types having different hit chances and damage rolls
 
-
-I should think of a better way to dig up stat lines out of the characters.
 """
