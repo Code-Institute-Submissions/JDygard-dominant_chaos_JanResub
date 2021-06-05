@@ -26,7 +26,6 @@ How do players meet each other? How do they interact?
 
 ## Levels/Matchmaking
 Players' "levels" should be represented by how much experience they have spent customizing their character, and these interactions should be hard limited to players within their own strata.
-aghastamok — 05/03/2021
 
 ## The alignment axes 
 Pretty much stolen directly from DnD. Chaos/Order, Good/Evil.
@@ -44,7 +43,8 @@ If a character wants to go from Midgaard to Waterdeep, they enter a travel scene
 Other scenes like landmarks, random encounters, hidden adventures, hideouts, caves etc. will be found procedurally by "taking the scenic route" as an option while travelling, explicitly exploring, while lost, etc. Procedurally discovered locations become semi-static locations that can be found by others. Finding a good adventure, good hideout, oasis or shortcut could be akin to finding an epic or legendary item in another game and become a closely guarded secret.
 
 Locations could be upgraded by players to become protected, harder to find, etc. Perhaps sorcerers need a location to build a place of power.
- You guys really seem to have this figured out, how can I help? 
+
+## You guys really seem to have this figured out, how can I help? 
 If you read this and think of anything to add, change, or remove, TELL ME. I would love ideas. Much of this was Algerothen and Conundrum riffing off of our general ideas. Just put a header on it and talk it through.
 
 ## Equipment
@@ -65,3 +65,28 @@ Secondary skills will all passively increase.
 - Perception: Ability to detect trailing or infiltrating thieves. Affects scene chances passively.
 - Exploration: Weights chances on exploratory scenes
 - Diplomacy: Weights chances in adventure scenes with appropriate elements. Maybe split it into bluff, something like sense motive, etc.
+
+
+
+# I'm working on it, lol
+
+
+"""
+
+dump to turn queue    
+
+TURN QUEUE
+Needs to be set up such that there is a "user" character and a victim.
+The messaging needs to be split up so that this can be used once I figure out how to do multiplayer.
+The timer will be working for the server as it is.
+So the timer doesn't work in terms of ch and vict, it works in terms of individual players and runs both of their combat code
+
+There should be a specific function to deduct HP and check for death at
+the same time that is always referenced for damage
+
+Add an argument for attack type so that the RTH can be used for user-initiated attacks.
+This would let me build in conditionals for different attack types having different hit chances and damage rolls
+
+
+I should think of a better way to dig up stat lines out of the characters.
+"""

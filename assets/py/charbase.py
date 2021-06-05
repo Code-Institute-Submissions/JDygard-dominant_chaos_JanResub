@@ -10,4 +10,5 @@ class PlayerCharacter:
         "speed": 100,
         "damage": [2, 4],
         "DR": 0,
+        "is_dead": False,
     }
