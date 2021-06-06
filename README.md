@@ -8,6 +8,14 @@ In traditional MUDs, the world is arranged into a huge matrix of rooms connected
 
 "Scenes" will replace this. An unremarkable town will be represented by a single scene. A whole short PvE adventure may be represented by 2 or 3 scenes. You can see what other players inhabit a scene with you; there are no private scenes. The only static global scenes will be major hubs, primarily cities.
 
+### Some thoughts on scenes as a concept.
+The idea of this aspect of the game is to, in order of importance:
+1. Give the player a sense of a vast, interconnected world
+2. Give the player a sense that their choices impact their player
+2. Give the player a sense of exploration
+3. Give the player a sense of opportunity
+4. Give the player a sense of danger
+
 ## Classes 
 The first 5 classes are set in stone. 
 Inward Fist: A martial artist who uses the ki energy of the body to drive inward strength and physical abilities.
@@ -85,4 +93,57 @@ the same time that is always referenced for damage
 Add an argument for attack type so that the RTH can be used for user-initiated attacks.
 This would let me build in conditionals for different attack types having different hit chances and damage rolls
 
-"""
+
+Alright, I know how we will do the modular combat system.
+Every discrete portion of the combat system will be housed in classes in a big pyramid, with the basic system on top. Every subsequent breakdown will have the methods we want for that fight, i.e. in fist v saiyan it would gather the basic system, the fist system, and the fist v saiyan system. This last part may not be necessary because the statements involved with fist v saiyan might have to be integrated.
+The possibility of building separate systems into the third tier of subclass would mean a lot of organization.
+
+## We'll break it down like this
+Everything between the bars is kind of deprecated.
+First tier will work as originally intended, containing the core autoattack and combat queue system.
+Second tier will consist of subclasses with chclass specific code.
+Third tier will be mixins and decorators for augmenting the code with matchup-specific modifiers.
+
+***
+first tier is fight logic
+second tier is class logic
+third tier is specific fight logic
+
+### Bottom-loaded system
+1. 2nd tier logic would be limited to very general stuff that doesn't affect other classes
+2. 3rd tier logic would contain a version of every matchup specific logic, even if the class isn't involved, to keep from loading multiple versions of the same thing
+
+### Middle-loaded system
+1. 2nd tier logic would be primary. Conditional trees would be more complex but more centralized. Repetitive code would be limited.
+2. 3rd tier logic would be very specific and limited. Some of these classes would be empty, especially at the beginning.
+
+### Limited tier system
+1. Logic would be based on composites and mixins with the basic logic as the super.
+2. I.E: The fist class would inherit the fight class, and then mixin the specific code for a saiyan fight.
+
+## Training and the front-end
+1. We will keep the code light by keeping all the combat abilities separate from each character. The chclass and a chsheet itself will only carry a list of what items to load into it on generation.
+2. So what will actually happen when the user is training in the front-end, is that they are modifying the list of elements on their loadout in the database. When loading a combat instance, the list is read and the associated elements are added. This limits the ability of malicious users to submit unauthorized commands, keeps instance code lighter, and keeps database information load lighter.
+***
+
+# Some code notes to remember:
+## Subclassing
+class JobListing():
+    """
+    Creates an instance of JobListing
+    """
+    def __init__(self, job_title, department):
+        self.job_title = job_title
+        self.department = department
+    
+    def description(self):
+        return f"Job opening for {self.job_title} in {self.department} department"
+
+- class SalesManager(JobListing): # Define the new class
+    - def __init__(self, salary): # Define the initialization procedures for the class
+        - JobListing.__init__(self, "Sales Manager", "Sales") # Call the __init__ method from the parent and define that stuff
+        - self.salary = salary # Define the new salary argument from salesmanager class
+
+## Unpacking a tuple
+
+        c, d = a # Unpacks the tuple a into variables c and d
