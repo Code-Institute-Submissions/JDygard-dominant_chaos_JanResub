@@ -78,8 +78,36 @@ Secondary skills will all passively increase.
 
 # I'm working on it, lol
 
+## The front end
+![alt text](assets/images/readme/color-scheme.png)
 
-dump to turn queue    
+### Front page:
+Typical splash page. 
+- Header, navbar
+- hero image with small blurb and "start playing".
+- Scroll down for a more elaborated version of the small blurb in the hero
+
+### Play page
+- Canvas with whatever graphics I can scrounge. 
+- Mutable control scheme below.
+
+### Character page
+- Contains all training and upgrades for the character
+- Contains all control scheme customization
+- Maybe has a small canvas that shows the character and highlights parts when hovering over elements
+
+### About page
+- Info about meeeeeeeee
+
+### Library page
+- Contains learning materials pertinent to playing the game, and maybe information about coming updates and additions.
+
+## Deployment plans? Maybe?
+
+Load into amazon s3 bucket.
+Use amazon gamelift for combat server.
+
+## dump to turn queue    
 
 TURN QUEUE
 Needs to be set up such that there is a "user" character and a victim.
