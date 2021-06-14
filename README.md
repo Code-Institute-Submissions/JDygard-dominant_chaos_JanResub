@@ -81,6 +81,9 @@ Secondary skills will all passively increase.
 ## The front end
 ![alt text](assets/images/readme/color-scheme.png)
 
+## The back end
+![alt text](assets/images/readme/basic-data-struct.png)
+
 ### Front page:
 Typical splash page. 
 - Header, navbar
@@ -175,3 +178,20 @@ class JobListing():
 ## Unpacking a tuple
 
         c, d = a # Unpacks the tuple a into variables c and d
+
+## The dispatch library:
+
+def some_function():
+    Do a thing
+
+dispatch = {
+    do_a_thing: "some_function"
+}
+
+## Method controller view
+
+look into method controller view (MCV) theory
+
+## field control/defensive programming
+
+pattern="^[a-zA-Z0-9]{5,15}$" can be added to any sort of input field. This is an example that limits the input to alphanumeric strings between 5 and 15 characters
