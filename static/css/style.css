@@ -1,9 +1,41 @@
-  body {
+body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-  }
+}
 
-  main {
+main {
     flex: 1 0 auto;
-  }
+}
+
+footer{
+    background-color: darkgray;
+}
+
+nav {
+    background-color: #E63946;
+}
+
+html {
+    background-color: #f1faee;
+}
+
+.container{
+    width: 100%;
+}
+
+.hero-container {
+    background-image: url( ../images/hero.png );
+    background-color: #1f3759;
+    width: 100%;  
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    height: 375px;
+}
+
+@media screen and (min-width:992px){
+    .hero-container{
+        height:750px;
+    }
+}

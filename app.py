@@ -36,7 +36,8 @@ def play():
     return render_template("play.html")
 
 
-@app.route("/character")
+# I'm going to need to establish a session and user before this section can be done
+@app.route("/character", methods=["GET", "POST"])
 def character():
     return render_template("character.html")
 
@@ -46,13 +47,50 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        existing_user = mongo.db.users.find_one(
+            {"username": request.form.get("username").lower()})
+
+        if existing_user:
+            if check_password_hash(
+                existing_user["password"], request.form.get("password")):
+                    session["user"] = request.form.get("username").lower()
+                    flash("Welcome, {}".format(request.form.get("username")))
+                    return redirect(
+                        url_for("character", username=session["user"]))
+            else:
+                flash("Incorrect Username and/or Password")
+                return redirect(url_for("login"))
+
+        else:
+            flash("Incorrect Username and/or Password")
+            return redirect(url_for("login"))
+            
     return render_template("login.html")
 
 
 @app.route("/register")
 def register():
+    if request.method == "POST":
+        existing_user = mongo.db.users.find_one(
+            {"username": request.form.get("username").lower()})# Check if the username already exists
+
+        if existing_user:
+            flash("Username already exists")
+            return redirect(url_for("register"))
+        
+        register = {
+            "username": request.form.get("username").lower(),
+            "password": generate_password_hash(request.form.get("password"))
+        }
+        mongo.db.users.insert_one(register)
+
+        # put the new user into session cookie
+        session["user"] = request.form.get("username").lower()
+        flash("Registration Successful")
+        return redirect(url_for("profile", username=session["user"]))
     return render_template("register.html")
 
 
