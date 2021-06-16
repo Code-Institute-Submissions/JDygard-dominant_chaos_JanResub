@@ -16,6 +16,21 @@ nav {
     background-color: #E63946;
 }
 
+.nav-wrapper {
+    background-color: darkred;
+    align-items: center;
+}
+
+.nav-wrapper > a {
+    color: gold;
+
+}
+
+.card {
+    margin: 0, auto;
+    
+}
+
 html {
     background-color: #f1faee;
 }
