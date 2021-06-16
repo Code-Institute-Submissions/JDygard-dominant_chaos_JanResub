@@ -6,18 +6,20 @@ from flask_pymongo import PyMongo   # Importing a module to use python with Mong
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
 from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
+from flask_mail import Mail, Message
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
 
 
 app = Flask(__name__)           # setting flask to the standard __name__
+mail = Mail(app)
 
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
 app.secret_key = os.environ.get("SECRET_KEY")               # Getting the secret key for accessing the DB
 app.security_password_salt = os.environ.get("SECURITY_PASSWORD_SALT")
-
+app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
 mongo = PyMongo(app)
 
@@ -98,6 +100,11 @@ def register():
 
         # put the new user into session cookie
         token = generate_confirmation_token(request.form.get("email"))
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('activate.html', confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(request.form.get("email"), subject, html)
+
         session["user"] = request.form.get("username").lower()
         flash("Registration Successful")
         return redirect(url_for("character", username=session["user"]))
@@ -132,6 +139,7 @@ def generate_confirmation_token(email):
     serializer = URLSafeTimedSerializer(app.secret_key)
     return serializer.dumps(email, salt=app.security_password_salt)
 
+
 def confirm_token(token, expiration=3600):
     serializer = URLSafeTimedSerializer(app.secret_key)
     try:
@@ -144,6 +152,15 @@ def confirm_token(token, expiration=3600):
         return False
     return email
 
+
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=app.mail_default_sender
+    )
+    mail.send(msg)
 
 
 
