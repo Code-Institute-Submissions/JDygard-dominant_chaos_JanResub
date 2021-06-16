@@ -97,7 +97,7 @@ def register():
             return redirect(url_for("register"))
 
         # put the new user into session cookie
-        token = generate_confirmation_token(request.form.get("email"))s
+        token = generate_confirmation_token(request.form.get("email"))
         session["user"] = request.form.get("username").lower()
         flash("Registration Successful")
         return redirect(url_for("character", username=session["user"]))
@@ -145,7 +145,6 @@ def confirm_token(token, expiration=3600):
     return email
 
 
-        
 
 
 if __name__ == "__main__":  # If the name is valid
