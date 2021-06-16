@@ -4,6 +4,8 @@ from flask import (Flask, render_template,  #Importing Flask and the ability to 
 from bson.objectid import ObjectId #Importing the ability to reference MongoDB object ids
 from flask_pymongo import PyMongo   # Importing a module to use python with MongoDB
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
+from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
+import datetime # For... you know. The date... and the time.
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
 
@@ -14,6 +16,7 @@ app = Flask(__name__)           # setting flask to the standard __name__
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
 app.secret_key = os.environ.get("SECRET_KEY")               # Getting the secret key for accessing the DB
+app.security_password_salt = os.environ.get("SECURITY_PASSWORD_SALT")
 
 
 mongo = PyMongo(app)
@@ -83,7 +86,10 @@ def register():
         if request.form.get("password") == request.form.get("password_confirm"):
             register = {
                 "username": request.form.get("username").lower(),
-                "password": generate_password_hash(request.form.get("password"))
+                "password": generate_password_hash(request.form.get("password")),
+                "confirmed": False,
+                "email": request.form.get("email"),
+                "registered_on": datetime.datetime.now(),
             }
             mongo.db.users.insert_one(register)
         else:
@@ -91,10 +97,27 @@ def register():
             return redirect(url_for("register"))
 
         # put the new user into session cookie
+        token = generate_confirmation_token(request.form.get("email"))s
         session["user"] = request.form.get("username").lower()
         flash("Registration Successful")
         return redirect(url_for("character", username=session["user"]))
     return render_template("register.html")
+
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash("The confirmation link is invalid or has expired.")
+    user = mongo.db.users.find_on({"email": email})
+    if user.confirmed:
+        flash("Account already confirmed, please login.")
+    else:
+        user.confirmed = True
+        session["user"] = user
+        flash("You have confirmed your account. High five!")
+    return redirect(url_for("character"))
 
 
 @app.route("/logout")
@@ -104,20 +127,25 @@ def logout():
     return redirect(url_for("login"))
 
 
+# Generate key for confirmation email
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    return serializer.dumps(email, salt=app.security_password_salt)
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    try:
+        email = serializer.loads(
+            token,
+            salt=app.security_password_salt,
+            max_age=expiration
+        )
+    except:
+        return False
+    return email
 
 
-# App route for login
-
-# App route for logout
-
-# app route for register
-
-# app route for library
-
-
-# App route for character page
-
-# app route for about page
+        
 
 
 if __name__ == "__main__":  # If the name is valid
