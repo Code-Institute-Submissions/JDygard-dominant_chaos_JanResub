@@ -30,7 +30,7 @@ app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
 mail = Mail(app)
 mongo = PyMongo(app)
-
+print(mail.use_tls)
 
 # app route for home page(index)
 @app.route("/")
@@ -97,7 +97,7 @@ def register():
             register = {
                 "username": request.form.get("username").lower(),
                 "password": generate_password_hash(request.form.get("password")),
-                "confirmed": False,
+                #"confirmed": False,
                 "email": request.form.get("email"),
                 "registered_on": datetime.datetime.now(),
             }
@@ -107,32 +107,16 @@ def register():
             return redirect(url_for("register"))
 
         # put the new user into session cookie
-        token = generate_confirmation_token(request.form.get("email"))
-        confirm_url = url_for('confirm_email', token=token, _external=True)
-        html = render_template('activate.html', confirm_url=confirm_url)
-        subject = "Please confirm your email"
-        send_email(request.form.get("email"), subject, html)
+        #token = generate_confirmation_token(request.form.get("email"))
+        #confirm_url = url_for('confirm_email', token=token, _external=True)
+        ##html = render_template('activate.html', confirm_url=confirm_url)
+        #subject = "Please confirm your email"
+        #send_email(request.form.get("email"), subject, html)
 
         session["user"] = request.form.get("username").lower()
         flash("Registration Successful")
         return redirect(url_for("character", username=session["user"]))
     return render_template("register.html")
-
-
-@app.route('/confirm/<token>')
-def confirm_email(token):
-    try:
-        email = confirm_token(token)
-    except:
-        flash("The confirmation link is invalid or has expired.")
-    user = mongo.db.users.find_on({"email": email})
-    if user.confirmed:
-        flash("Account already confirmed, please login.")
-    else:
-        user.confirmed = True
-        session["user"] = user
-        flash("You have confirmed your account. High five!")
-    return redirect(url_for("character"))
 
 
 @app.route("/logout")
@@ -142,33 +126,49 @@ def logout():
     return redirect(url_for("login"))
 
 
+#@app.route('/confirm/<token>')
+#def confirm_email(token):
+#    try:
+#        email = confirm_token(token)
+#    except:
+##        flash("The confirmation link is invalid or has expired.")
+#    user = mongo.db.users.find_on({"email": email})
+#    if user.confirmed:
+#        flash("Account already confirmed, please login.")
+#    else:
+##        user.confirmed = True
+#        session["user"] = user
+#        flash("You have confirmed your account. High five!")
+#    return redirect(url_for("character"))
+
+
 # Generate key for confirmation email
-def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.secret_key)
-    return serializer.dumps(email, salt=app.security_password_salt)
+#def generate_confirmation_token(email):
+#    serializer = URLSafeTimedSerializer(app.secret_key)
+#    return serializer.dumps(email, salt=app.security_password_salt)
 
 
-def confirm_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.secret_key)
-    try:
-        email = serializer.loads(
-            token,
-            salt=app.security_password_salt,
-            max_age=expiration
-        )
-    except:
-        return False
-    return email
+#def confirm_token(token, expiration=3600):
+#    serializer = URLSafeTimedSerializer(app.secret_key)
+#    try:
+#        email = serializer.loads(
+#            token,
+#            salt=app.security_password_salt,
+#            max_age=expiration
+#        )
+#    except:
+#        return False
+#    return email
 
 
-def send_email(to, subject, template):
-    print(app.config["MAIL_SERVER"])
-    msg = Message(
-        subject,
-        recipients=[to],
-        html=template,
-    )
-    mail.send(msg)
+#def send_email(to, subject, template):
+#    print(app.config["MAIL_SERVER"])
+#    msg = Message(
+#        subject,
+#        recipients=[to],
+#        html=template,
+#    )
+#    mail.send(msg)
 
 
 
