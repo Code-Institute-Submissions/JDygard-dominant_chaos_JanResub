@@ -6,7 +6,6 @@ from flask_pymongo import PyMongo   # Importing a module to use python with Mong
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
 from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
-import smtplib
 from flask_mail import Mail, Message
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
@@ -18,6 +17,13 @@ mail = Mail(app)
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
+app.config["MAIL_SERVER"]= os.environ.get("MAIL_SERVER")
+app.config["MAIL_PORT"]= os.environ.get("MAIL_PORT")
+app.config["MAIL_USE_TLS"]= os.environ.get("MAIL_USE_TLS")
+app.config["MAIL_USE_SSL"]= os.environ.get("MAIL_USE_SSL")
+app.config["MAIL_USERNAME"]= os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"]= os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"]= os.environ.get("MAIL_DEFAULT_SENDER")
 app.secret_key = os.environ.get("SECRET_KEY")               # Getting the secret key for accessing the DB
 app.security_password_salt = os.environ.get("SECURITY_PASSWORD_SALT")
 app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
@@ -155,6 +161,7 @@ def confirm_token(token, expiration=3600):
 
 
 def send_email(to, subject, template):
+    print(app.config["MAIL_SERVER"])
     msg = Message(
         subject,
         recipients=[to],
