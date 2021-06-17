@@ -6,6 +6,7 @@ from flask_pymongo import PyMongo   # Importing a module to use python with Mong
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
 from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
+import smtplib
 from flask_mail import Mail, Message
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
@@ -158,7 +159,6 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        sender=app.mail_default_sender
     )
     mail.send(msg)
 
