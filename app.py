@@ -12,7 +12,7 @@ if os.path.exists("env.py"):    # If statement so that the program works without
 
 
 app = Flask(__name__)           # setting flask to the standard __name__
-mail = Mail(app)
+app.config.from_object(__name__)
 
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
@@ -28,6 +28,7 @@ app.secret_key = os.environ.get("SECRET_KEY")               # Getting the secret
 app.security_password_salt = os.environ.get("SECURITY_PASSWORD_SALT")
 app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
+mail = Mail(app)
 mongo = PyMongo(app)
 
 
