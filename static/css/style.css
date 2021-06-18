@@ -1,3 +1,5 @@
+/* General */
+
 body {
     display: flex;
     min-height: 100vh;
@@ -26,11 +28,6 @@ nav {
 
 }
 
-.card {
-    margin: 0, auto;
-    
-}
-
 html {
     background-color: #f1faee;
 }
@@ -53,4 +50,45 @@ html {
     .hero-container{
         height:750px;
     }
+}
+
+
+/* Character page specific */
+
+.chshow {
+    border: 1,solid,black;
+    height: 250px;
+    width: 125px;
+}
+
+.card {
+    margin: 0, auto;
+    height: 500px;
+}
+
+li > a {
+    width: 100%
+}
+
+.chSelect {
+    height: 275px;
+    margin-top:50px;
+    background-color: #457b9d
+}
+
+.pagination > li {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.pagination > li:first-of-type {
+    margin-left: 55px
+}
+
+.card > .row {
+    margin-left: 30px;
+}
+
+.hidden {
+    display: none;
 }

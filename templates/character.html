@@ -18,5 +18,131 @@
 -->
 {% extends "base.html" %}
 {% block content %}
-    
+    <!-- Display the characters in a row -->
+    <!-- If the user has no characters we can use "featurediscovery" to highlight where they should build their character-->
+    <!-- Use a modal to pop up the character creation. It'll have a description of what to expect from the character and a prompt to name it and create it -->
+    <div class="row chSelect">
+        <div class="col m3 center-align chshow">
+            <a href="#">Pick a fuckin character<i class="fa-solid fa-circle-plus"></i></a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m6">
+            <h3>I'm gonna put like a cool canvas here</h3>
+        </div>
+        <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+                <h3 class="center-align">Body Training</h3>
+                <ul class="pagination">
+                    <li class="active" id="train-card-1"><a href="#!" onclick="moveActive(event)">Torso</a></li>
+                    <li class="waves-effect" id="train-card-2"><a href="#!" onclick="moveActive(event)">Arms</a></li>
+                    <li class="waves-effect" id="train-card-3"><a href="#!" onclick="moveActive(event)">Hands</a></li>
+                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Legs</a></li>
+                </ul>
+                <div class="row torso">
+                    <h3>Torso Training</h3>
+                    <p>The inward fist's core can be rigorously trained and is key to withstanding attacks.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row hands hidden">
+                    <h3>Hands Training</h3>
+                    <p>The Inward Fist can train their hands to harden them, increasing the damage they can inflict.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row legs hidden">
+                    <h3>Legs Training</h3>
+                    <p>The inward fist's legs and feet can be trained for speed and power, increasing the power of their kicks.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row arms hidden">
+                    <h3>Arms Training</h3>
+                    <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                
+                <div class="card-action">
+                    <a href="#">This is a link</a>
+                    <a href="#">This is a link</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+                <h3 class="center-align">Disciplines</h3>
+                <ul class="pagination">
+                    <li class="active" id="train-card-1"><a href="#!" onclick="moveActive(event)">Truesight</a></li>
+                    <li class="waves-effect" id="train-card-2"><a href="#!" onclick="moveActive(event)">Levitation</a></li>
+                    <li class="waves-effect" id="train-card-3"><a href="#!" onclick="moveActive(event)">Roundhouse</a></li>
+                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Inner-Fire</a></li>
+                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Pheonix-Fire</a></li>
+                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Dim-Mak</a></li>
+                </ul>
+                <div class="row truesight">
+                    <h3>Truesight</h3>
+                    <p>By training their senses and awareness of the energies of chakra, the inward fist can detect things not seen by the physical eye alone.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row levitation hidden">
+                    <h3>Levitation</h3>
+                    <p>Through focus, determination and sheer inner will, the inward fist can lift themselves from the shackles of the earth.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row roundhouse hidden">
+                    <h3>Roundhouse</h3>
+                    <p>A simple but effective attack that can hit multiple enemies.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row inner-fire hidden">
+                    <h3>Inner Fire</h3>
+                    <p>By turning their focus inward and allowing their ki to flow through their body, the inward fist can burn away impurities in the body.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row pheonix-fire hidden">
+                    <h3>Pheonix Fire</h3>
+                    <p>The inward fist can train themselves to redirect their flow of ki, empowering their attacks at the cost of their speed.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                <div class="row dim-mak hidden">
+                    <h3>Dim-Mak</h3>
+                    <p>Using their knowledge of Ki in all things, the inward fist can use their own energy to throw off the alignment of energy in others, essentially poisoning their energy.</p>
+                    <!-- Cost: 1500 * isquare(current value + 1)-->
+                </div>
+                
+                <div class="card-action">
+                    <a href="#">This is a link</a>
+                    <a href="#">This is a link</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6">
+            <h3>I'm gonna put like a cool canvas here</h3>
+        </div>
+    </div>
+
+    <script>
+        function moveActive() {
+            parent = event.target.parentNode.parentNode.firstElementChild;
+            while (parent){
+                if (parent.className == "active") {
+                    parent.className = "waves-effect"
+                    let childText = parent.firstElementChild.innerHTML.toLowerCase()
+                    let hideIt = document.getElementsByClassName(childText)
+                    hideIt[0].style.display = "none"
+                } else {
+                    parent = parent.nextElementSibling
+                }
+            }
+            
+            if (event.target.parentNode.className !== "active") {
+                event.target.parentNode.className = "active"
+                let childText = event.target.innerHTML.toLowerCase() 
+                let showIt = document.getElementsByClassName(childText)
+                console.log(showIt[0])
+                showIt[0].style.display = "block"
+                console.log(showIt[0])
+            }
+        }
+    </script>
 {% endblock %}
