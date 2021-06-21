@@ -1,5 +1,6 @@
-import os # os module for accessing the os on the machine running flask
-from flask import (Flask, render_template,  #Importing Flask and the ability to render templates
+import os
+from re import M # os module for accessing the os on the machine running flask
+from flask import (Flask, render_template, make_response,  #Importing Flask and the ability to render templates
     redirect, request, session, url_for, flash) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
 from bson.objectid import ObjectId #Importing the ability to reference MongoDB object ids
 from flask_pymongo import PyMongo   # Importing a module to use python with MongoDB
@@ -39,6 +40,12 @@ def about():
     return render_template("about.html")
 
 
+@app.errorhandler(404)
+def not_found():
+    """Page not found."""
+    return make_response(render_template("404.html"), 404)
+
+
 @app.route("/library")
 def library():
     return render_template("library.html")
@@ -49,14 +56,42 @@ def play():
     return render_template("play.html")
 
 
-# I'm going to need to establish a session and user before this section can be done
 @app.route("/character/<username>", methods=["GET", "POST"])
 def character(username):
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
+    characters = mongo.db.characters.find(
+        {"owner": username}
+    )
+
+    if request.method == "POST" and "form-submit" in request.form:
+        if request.form.get("class") == "inward_fist":
+            chosen_icon = "images/fist_icon.png"
+        new_char = {
+            "name": request.form.get("name").lower(),
+            "chclass": request.form.get("class"),
+            "current_exp": 0,
+            "spent_exp": 0,
+            "max_hp": 100,
+            "max_energy": 100,
+            "ac": 30,
+            "hitroll": [5, 20],
+            "dodge": 20,
+            "block": 0,
+            "parry": 0,
+            "speed_max": 0,
+            "damage": [2, 40],
+            "dr": 0,
+            "owner": username,
+            "icon": chosen_icon,
+        }
+        mongo.db.characters.insert_one(new_char)
+        flash("Character Created")
+        return redirect(url_for("character", username=session["user"]))
 
     if session["user"]:
         return render_template("character.html", username=username, characters=characters)
+
 
     return redirect(url_for("login"))
 

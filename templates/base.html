@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <script></script>
     <title>Dominant Chaos</title>
 </head>
@@ -34,7 +35,7 @@
                 <li class="tab"><a href="{{ url_for('library')}}">Library</a></li>
                 {% if session.user %}
                     <li class="tab"><a href="{{ url_for('play')}}">Play</a></li>
-                    <li class="tab"><a href="{{ url_for('character')}}">Character</a></li>
+                    <li class="tab"><a href="{{ url_for('character', username= session['user'])}}">Character</a></li>
                 {% endif %}
                 <li class="tab"><a href="{{ url_for('about')}}">About</a></li>
             </ul>
@@ -46,7 +47,7 @@
         <li class="tab"><a href="{{ url_for('library')}}">Library</a></li>
         {% if session.user %}
             <li class="tab"><a href="{{ url_for('play')}}">Play</a></li>
-            <li class="tab"><a href="{{ url_for('character')}}">Character</a></li>
+            <li class="tab"><a href="{{ url_for('character', username= session['user'])}}">Character</a></li>
         {% endif %}
         <li class="tab"><a href="{{ url_for('about')}}">About</a></li>
     </ul>
