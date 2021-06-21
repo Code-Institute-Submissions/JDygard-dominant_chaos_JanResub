@@ -50,13 +50,20 @@ def play():
 
 
 # I'm going to need to establish a session and user before this section can be done
-@app.route("/character", methods=["GET", "POST"])
-def character():
+@app.route("/character/<username>", methods=["GET", "POST"])
+def character(username):
+    username = mongo.db.users.find_one(
+        {"username": session["user"]})["username"]
+
+    if session["user"]:
+        return render_template("character.html", username=username, characters=characters)
+
+    return redirect(url_for("login"))
+
     # Search through characters to find those that belong to the user and pump those into a list
     # Push all their stats into each list item
     # if request.method == "POST":
     # Make sure the player has the requisite points, deduct the points, add them to the spent points list, and award the training
-    return render_template("character.html")
 
 
 @app.route("/index")

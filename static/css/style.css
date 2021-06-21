@@ -55,10 +55,20 @@ html {
 
 /* Character page specific */
 
+.chSelect {
+    display:flex;
+}
+
+.fa-plus-circle {
+    display:flex;
+    width:400%;
+    height: 75px;
+    color:darkgray;
+    font-size: 84px;
+}
+
 .chshow {
     border: 1,solid,black;
-    height: 250px;
-    width: 125px;
 }
 
 .card {
