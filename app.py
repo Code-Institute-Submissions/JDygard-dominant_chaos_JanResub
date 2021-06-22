@@ -31,7 +31,6 @@ app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
 mail = Mail(app)
 mongo = PyMongo(app)
-print(mail.use_tls)
 
 # app route for home page(index)
 @app.route("/")
@@ -55,49 +54,77 @@ def library():
 def play():
     return render_template("play.html")
 
+# The character page will point to the <character> rather than the <username>. Profile will link to the <username> and contain the character bar.
+# The character page will have the stats, icon and stuff. If you own the character, it'll have the training section underneath. This way we can have the goddamn leaderboard page link straight to character without issue.
 
-@app.route("/character/<username>", methods=["GET", "POST"])
-def character(username):
+@app.route("/profile/<username>", methods=["GET", "POST"])
+def profile(username):
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
     characters = mongo.db.characters.find(
-        {"owner": username}
-    )
+        {"owner": username})
+    #####     POST to DB stuff     #####
+    if request.method == "POST":
+        form_name = request.form['form-name']
+        #####      Create character modal form      #####
+        if form_name == "create-character":
+            existing_char = mongo.db.characters.find_one(
+                {"name": request.form.get("name").lower()}
+            )
 
-    if request.method == "POST" and "form-submit" in request.form:
-        if request.form.get("class") == "inward_fist":
-            chosen_icon = "images/fist_icon.png"
-        new_char = {
-            "name": request.form.get("name").lower(),
-            "chclass": request.form.get("class"),
-            "current_exp": 0,
-            "spent_exp": 0,
-            "max_hp": 100,
-            "max_energy": 100,
-            "ac": 30,
-            "hitroll": [5, 20],
-            "dodge": 20,
-            "block": 0,
-            "parry": 0,
-            "speed_max": 0,
-            "damage": [2, 40],
-            "dr": 0,
-            "owner": username,
-            "icon": chosen_icon,
-        }
-        mongo.db.characters.insert_one(new_char)
-        flash("Character Created")
-        return redirect(url_for("character", username=session["user"]))
+            if existing_char:
+                flash("Character name taken, try again with a more differenter name")
+                return redirect(
+                        url_for("profile", username=session["user"]))
+
+            new_char = {
+                "name": request.form.get("name").lower(),
+                "chclass": request.form.get("class"),
+                "current_exp": 0,
+                "spent_exp": 0,
+                "max_hp": 100,
+                "max_energy": 100,
+                "ac": 30,
+                "hitroll": [5, 20],
+                "dodge": 20,
+                "block": 0,
+                "parry": 0,
+                "speed_max": 100,
+                "damage": [2, 40],
+                "dr": 0,
+                "owner": username,
+                "href": "character/" + request.form.get("name").lower(),
+                "winloss": [0, 0]
+            }
+            if request.form.get("class") == "inward_fist":
+                new_char["icon"] = "images/fist-icon.png"
+                new_char["hands"] = 0
+                new_char["legs"] = 0
+                new_char["torso"] = 0
+                new_char["arms"] = 0
+                new_char["disciplines"] = [False, False, False, False, False, False]
+            mongo.db.characters.insert_one(new_char)
+            flash("Character Created")
+            return redirect(url_for("profile", username=session["user"]))
 
     if session["user"]:
-        return render_template("character.html", username=username, characters=characters)
+        return render_template("profile.html", username=username, characters=characters)
 
 
-    return redirect(url_for("login"))
+
+@app.route("/character/<charactername>", methods=["GET", "POST"])
+def character(charactername):
+    username = mongo.db.users.find_one(
+        {"username": session["user"]})["username"]
+    charactername = mongo.db.characters.find_one(
+        {"name": charactername}
+    )
+
+    return render_template("character.html", username=username, charactername=charactername)
+
 
     # Search through characters to find those that belong to the user and pump those into a list
     # Push all their stats into each list item
-    # if request.method == "POST":
     # Make sure the player has the requisite points, deduct the points, add them to the spent points list, and award the training
 
 
@@ -117,7 +144,7 @@ def login():
                     session["user"] = request.form.get("username").lower()
                     flash("Welcome, {}".format(request.form.get("username")))
                     return redirect(
-                        url_for("character", username=session["user"]))
+                        url_for("profile", username=session["user"]))
             else:
                 flash("Incorrect Username and/or Password")
                 return redirect(url_for("login"))
@@ -152,16 +179,9 @@ def register():
             flash("Password fields do not match")
             return redirect(url_for("register"))
 
-        # put the new user into session cookie
-        #token = generate_confirmation_token(request.form.get("email"))
-        #confirm_url = url_for('confirm_email', token=token, _external=True)
-        ##html = render_template('activate.html', confirm_url=confirm_url)
-        #subject = "Please confirm your email"
-        #send_email(request.form.get("email"), subject, html)
-
         session["user"] = request.form.get("username").lower()
         flash("Registration Successful")
-        return redirect(url_for("character", username=session["user"]))
+        return redirect(url_for("profile", username=session["user"]))
     return render_template("register.html")
 
 

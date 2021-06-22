@@ -56,6 +56,10 @@ html {
 
 /* Character page specific */
 
+#stats {
+    display:inline-block;
+}
+
 .new-char {
     display:inline-block;
     width:100%;

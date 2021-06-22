@@ -73,7 +73,7 @@
                     <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Current level: {{ charactername.torso }}</a>
-                        <a href="#">Train</a>
+                        <span id="train-torso"></span>
                     </div>
                 </div>
                 <div class="row hands hidden">
@@ -82,7 +82,7 @@
                     <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Current level: {{ charactername.hands }}</a>
-                        <a href="#">Train</a>
+                        <span id="train-hands"></span>
                     </div>
                 </div>
                 <div class="row legs hidden">
@@ -91,16 +91,17 @@
                     <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Current level: {{ charactername.legs }}</a>
-                        <a href="#">Train</a>
+                        <span id="train-legs"></span>
                     </div>
                 </div>
                 <div class="row arms hidden">
                     <h3>Arms Training</h3>
                     <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
                     <!-- Cost: 1500 * isquare(current value + 1)-->
+                    <p>Next level experience cost: </p>
                     <div class="card-action">
                         <a href="#">Current level: {{ charactername.arms }}</a>
-                        <a href="#">Train</a>
+                        <span id="train-arms">Train Arms</span>
                     </div>
                 </div>
                 
