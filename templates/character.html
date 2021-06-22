@@ -97,11 +97,11 @@
                 <div class="row arms hidden">
                     <h3>Arms Training</h3>
                     <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
-                    <p>Next level experience cost: </p>
-                    <div class="card-action">
-                        <a href="#">Current level: {{ charactername.arms }}</a>
-                        <span id="train-arms">Train Arms</span>
+                    <div class="card-action" id="action-arms">
+                        <h5>Current level: {{ charactername.arms }}</h5>
+                        <h5>Cost for next level:<span id="cost-arms"></span></h4>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-arms"><i class="material-icons">add</i></a><h5><span id="field-arms">0</span><span id="max-arms"></span></h5>
+                        <h5>Total cost: <span id="total-arms">0</span></h5>
                     </div>
                 </div>
                 
@@ -185,6 +185,40 @@
 
     {% endif %}
     <script>
+        var torso = "{{ charactername.torso }}"
+        var hands = "{{ charactername.hands }}"
+        var arms = "{{ charactername.arms }}"
+        var legs = "{{ charactername.legs }}"
+        
+        if (arms >= 100) {
+            document.getElementById("action-arms").innerHTML = "<h3> Your arms are trained to maximum </h3>"
+        } else {
+            document.getElementById("cost-arms").innerHTML = calculateCost(arms, 1)
+            document.getElementById("train-arms").addEventListener("click", function(){  // Listen for a click
+                if (parseInt(arms) + parseInt(document.getElementById("field-arms").innerHTML) >= 100) {
+                    document.getElementById("max-arms").innerHTML = " Maximum level reached."
+                } else{
+                    let current = parseInt(document.getElementById("field-arms").innerHTML);           // Store the current value of arms training   
+                    document.getElementById("field-arms").innerHTML = parseInt(current) + 1;
+                    let next = calculateCost(current + 1, 1); //OK
+                    document.getElementById("cost-arms").innerHTML = next;
+                    let totalExperience = calculateCost(arms, current + 1);
+                    document.getElementById("total-arms").innerHTML = totalExperience;
+                }
+            })
+        }
+
+        function calculateCost(number, iterations) {
+            let initialValue = parseInt(number) + 1;
+            let result = 0;
+            for (let i = 0; i < iterations; i++) {
+                result += Math.sqrt(initialValue) * 1500;
+                initialValue++;
+                console.log(initialValue)
+            }
+            return Math.round(result);
+        }
+        
         function moveActive() {
             parent = event.target.parentNode.parentNode.firstElementChild;
             while (parent){
