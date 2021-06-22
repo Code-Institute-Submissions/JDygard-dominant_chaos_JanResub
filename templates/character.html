@@ -71,27 +71,38 @@
                     <h3>Torso Training</h3>
                     <p>The inward fist's core can be rigorously trained and is key to withstanding attacks.</p>
                     <!-- Cost: 1500 * isquare(current value + 1)-->
-                    <div class="card-action">
-                        <a href="#">Current level: {{ charactername.torso }}</a>
-                        <span id="train-torso"></span>
+                    <div class="card-action" id="action-torso">
+                        <h5>Current level: {{ charactername.torso }}</h5>
+                        <h5>Cost for next level:<span id="cost-torso"></span></h4>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">add</i></a><h5><span id="field-torso">0</span><span id="max-torso"></span></h5>
+                        <h5>Total cost: <span id="total-torso">0</span></h5>
                     </div>
                 </div>
                 <div class="row hands hidden">
                     <h3>Hands Training</h3>
                     <p>The Inward Fist can train their hands to harden them, increasing the damage they can inflict.</p>
                     <!-- Cost: 1500 * isquare(current value + 1)-->
-                    <div class="card-action">
-                        <a href="#">Current level: {{ charactername.hands }}</a>
-                        <span id="train-hands"></span>
+                    <div class="card-action" id="action-hands">
+                        <h5>Current level: {{ charactername.hands }}</h5>
+                        <h5>Cost for next level:<span id="cost-hands"></span></h4>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-hands"><i class="material-icons">add</i></a><h5><span id="field-hands">0</span><span id="max-hands"></span></h5>
+                        <h5>Total cost: <span id="total-hands">0</span></h5>
                     </div>
                 </div>
                 <div class="row legs hidden">
                     <h3>Legs Training</h3>
                     <p>The inward fist's legs and feet can be trained for speed and power, increasing the power of their kicks.</p>
                     <!-- Cost: 1500 * isquare(current value + 1)-->
-                    <div class="card-action">
-                        <a href="#">Current level: {{ charactername.legs }}</a>
-                        <span id="train-legs"></span>
+                    <div class="card-action" id="action-legs">
+                        <h5>Current level: {{ charactername.legs }}</h5>
+                        <h5>Cost for next level:<span id="cost-legs"></span></h4>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-legs"><i class="material-icons">add</i></a>
+                        <h5>
+                            
+                            <span id="field-legs">0</span>
+                            <span id="max-legs"></span>
+                        </h5>
+                        <h5>Total cost: <span id="total-legs">0</span></h5>
                     </div>
                 </div>
                 <div class="row arms hidden">
@@ -100,7 +111,16 @@
                     <div class="card-action" id="action-arms">
                         <h5>Current level: {{ charactername.arms }}</h5>
                         <h5>Cost for next level:<span id="cost-arms"></span></h4>
-                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-arms"><i class="material-icons">add</i></a><h5><span id="field-arms">0</span><span id="max-arms"></span></h5>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-arms"><i class="material-icons">add</i></a>
+                        <h5>
+                            <form method="POST">
+                                <span name="field-arms" id="field-arms">0</span>                                
+                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="arms">Train
+                                    <i class="material-icons right"></i>
+                                </button>
+                            </form>
+                            <span id="max-arms"></span>
+                        </h5>
                         <h5>Total cost: <span id="total-arms">0</span></h5>
                     </div>
                 </div>
@@ -189,7 +209,7 @@
         var hands = "{{ charactername.hands }}"
         var arms = "{{ charactername.arms }}"
         var legs = "{{ charactername.legs }}"
-        
+        /*
         if (arms >= 100) {
             document.getElementById("action-arms").innerHTML = "<h3> Your arms are trained to maximum </h3>"
         } else {
@@ -207,6 +227,7 @@
                 }
             })
         }
+        */
 
         function calculateCost(number, iterations) {
             let initialValue = parseInt(number) + 1;
@@ -214,9 +235,31 @@
             for (let i = 0; i < iterations; i++) {
                 result += Math.sqrt(initialValue) * 1500;
                 initialValue++;
-                console.log(initialValue)
             }
             return Math.round(result);
+        }
+        // Building the for loop of the ages
+        bodyTraining = [torso, hands, arms, legs];
+        bodyString = ["torso", "hands", "arms", "legs"]
+        for (let i = 0; i < bodyTraining.length; i++) {
+            console.log(bodyTraining[i])
+            if (bodyTraining[i] >= 100) {
+                document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>"
+                } else {
+                document.getElementById("cost-" + bodyString[i]).innerHTML = calculateCost(bodyTraining[i], 1)
+                document.getElementById("train-" + bodyString[i]).addEventListener("click", function(){
+                    if (parseInt(bodyTraining[i]) + parseInt(document.getElementById("field-" + bodyString[i]).innerHTML) >= 100) {
+                        document.getElementById("max-" + bodyString[i]).innerHTML = " Maximum level reached."
+                    } else{
+                        let current = parseInt(document.getElementById("field-" + bodyString[i]).innerHTML);  
+                        document.getElementById("field-" + bodyString[i]).innerHTML = parseInt(current) + 1;
+                        let next = calculateCost(current + 1, 1); //OK
+                        document.getElementById("cost-" + bodyString[i]).innerHTML = next;
+                        let totalExperience = calculateCost(bodyTraining[i], current + 1);
+                        document.getElementById("total-" + bodyString[i]).innerHTML = totalExperience;
+                    }
+                })
+            }
         }
         
         function moveActive() {

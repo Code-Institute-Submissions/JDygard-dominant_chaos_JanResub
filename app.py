@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash   # Im
 from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
 from flask_mail import Mail, Message
+import math
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
 
@@ -120,6 +121,14 @@ def character(charactername):
         {"name": charactername}
     )
 
+    if request.method == "POST":
+        form_name = request.form['form-name']
+        if form_name == "arms":
+            arms = charactername.arms
+            experience = charactername.current_exp
+            cost = calculateCost(arms, request.form['field-arms'])
+            print(experience + "::" + cost)
+
     return render_template("character.html", username=username, charactername=charactername)
 
 
@@ -190,6 +199,14 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
+
+def calculateCost(current, iterations):
+    initialValue = current
+    result = 0
+    for x in iterations:
+        result += math.sqrt(initialValue) * 1500
+        initialValue += 1
+    return round(result)
 
 
 #@app.route('/confirm/<token>')
