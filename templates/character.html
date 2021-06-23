@@ -67,44 +67,74 @@
                     <li class="waves-effect" id="train-card-3"><a href="#!" onclick="moveActive(event)">Hands</a></li>
                     <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Legs</a></li>
                 </ul>
+
+                <!-- torso tab -->
                 <div class="row torso">
                     <h3>Torso Training</h3>
                     <p>The inward fist's core can be rigorously trained and is key to withstanding attacks.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action" id="action-torso">
                         <h5>Current level: {{ charactername.torso }}</h5>
                         <h5>Cost for next level:<span id="cost-torso"></span></h4>
-                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">add</i></a><h5><span id="field-torso">0</span><span id="max-torso"></span></h5>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">add</i></a>
+                        <h5>
+                            <form method="POST">
+                                <span id="field-torso">0</span>
+                                <input type="text" class="hidden" name="flask-torso" id="flask-torso">                               
+                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="torso">Train
+                                    <i class="material-icons right"></i>
+                                </button>
+                            </form>
+                            <span id="max-torso"></span>
+                        </h5>
                         <h5>Total cost: <span id="total-torso">0</span></h5>
                     </div>
                 </div>
+
+                <!-- Hands tab -->
                 <div class="row hands hidden">
                     <h3>Hands Training</h3>
                     <p>The Inward Fist can train their hands to harden them, increasing the damage they can inflict.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action" id="action-hands">
                         <h5>Current level: {{ charactername.hands }}</h5>
                         <h5>Cost for next level:<span id="cost-hands"></span></h4>
-                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-hands"><i class="material-icons">add</i></a><h5><span id="field-hands">0</span><span id="max-hands"></span></h5>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-hands"><i class="material-icons">add</i></a>
+                        <h5>
+                            <form method="POST">
+                                <span id="field-hands">0</span>
+                                <input type="text" class="hidden" name="flask-hands" id="flask-hands">                               
+                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="hands">Train
+                                    <i class="material-icons right"></i>
+                                </button>
+                            </form>
+                            <span id="max-hands"></span>
+                        </h5>
                         <h5>Total cost: <span id="total-hands">0</span></h5>
                     </div>
                 </div>
+
+                <!-- Legs tab -->
                 <div class="row legs hidden">
                     <h3>Legs Training</h3>
                     <p>The inward fist's legs and feet can be trained for speed and power, increasing the power of their kicks.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action" id="action-legs">
                         <h5>Current level: {{ charactername.legs }}</h5>
                         <h5>Cost for next level:<span id="cost-legs"></span></h4>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-legs"><i class="material-icons">add</i></a>
                         <h5>
-                            
-                            <span id="field-legs">0</span>
+                            <form method="POST">
+                                <span id="field-legs">0</span>
+                                <input type="text" class="hidden" name="flask-legs" id="flask-legs">                               
+                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="legs">Train
+                                    <i class="material-icons right"></i>
+                                </button>
+                            </form>
                             <span id="max-legs"></span>
                         </h5>
                         <h5>Total cost: <span id="total-legs">0</span></h5>
                     </div>
                 </div>
+
+                <!-- arms tab -->
                 <div class="row arms hidden">
                     <h3>Arms Training</h3>
                     <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
@@ -114,7 +144,8 @@
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-arms"><i class="material-icons">add</i></a>
                         <h5>
                             <form method="POST">
-                                <span name="field-arms" id="field-arms">0</span>                                
+                                <span id="field-arms">0</span>
+                                <input type="text" class="hidden" name="flask-arms" id="flask-arms">                               
                                 <button class="btn waves-effect waves-light" type="submit" name="form-name" value="arms">Train
                                     <i class="material-icons right"></i>
                                 </button>
@@ -200,10 +231,27 @@
             <h3>I'm gonna put like a cool canvas here</h3>
         </div>
     </div>
-
-    <!-- Edit character bio, delete character -->
-
+    <section>
+        <div class="row">
+            <div class="m12 center-align">
+                <form action="" method="POST">
+                    <input type="text" name="char-bio" value="{{ charactername.bio }}">
+                    <label for="char-bio">Character Biography</label>
+                    <button type="submit" name="form-name" value="char-bio"></button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- delete character -->
     {% endif %}
+    <section>
+        <div class="row">
+            <div class="m12 center-align">
+                <h3>Character Bio:</h3>
+                <p>{{ charactername.charbio }}</p>
+            </div>
+        </div>
+    </section>
     <script>
         var torso = "{{ charactername.torso }}"
         var hands = "{{ charactername.hands }}"
@@ -238,26 +286,34 @@
             }
             return Math.round(result);
         }
-        // Building the for loop of the ages
-        bodyTraining = [torso, hands, arms, legs];
-        bodyString = ["torso", "hands", "arms", "legs"]
-        for (let i = 0; i < bodyTraining.length; i++) {
-            console.log(bodyTraining[i])
-            if (bodyTraining[i] >= 100) {
-                document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>"
-                } else {
-                document.getElementById("cost-" + bodyString[i]).innerHTML = calculateCost(bodyTraining[i], 1)
-                document.getElementById("train-" + bodyString[i]).addEventListener("click", function(){
-                    if (parseInt(bodyTraining[i]) + parseInt(document.getElementById("field-" + bodyString[i]).innerHTML) >= 100) {
-                        document.getElementById("max-" + bodyString[i]).innerHTML = " Maximum level reached."
-                    } else{
-                        let current = parseInt(document.getElementById("field-" + bodyString[i]).innerHTML);  
-                        document.getElementById("field-" + bodyString[i]).innerHTML = parseInt(current) + 1;
-                        let next = calculateCost(current + 1, 1); //OK
-                        document.getElementById("cost-" + bodyString[i]).innerHTML = next;
-                        let totalExperience = calculateCost(bodyTraining[i], current + 1);
-                        document.getElementById("total-" + bodyString[i]).innerHTML = totalExperience;
-                    }
+        
+        
+        //                                     Body Training Card Generator 
+        //                                   ===============================
+        // This is here to build the four training card tabs in the bodytraining frame. The two arrays contain the variables/strings.
+        // This is needed to display experience cost per point, how many points they would like to train, and the total experience cost.
+        // It is also what provides the number in the field read by Flask.
+
+        bodyTraining = [torso, hands, arms, legs];      // Tied to the variables declared above, taken directly from the DB
+        bodyString = ["torso", "hands", "arms", "legs"] // contrains strings for navigating the DOM and buildings other strings
+        for (let i = 0; i < bodyTraining.length; i++) { // A for loop for going through the arrays
+            if (bodyTraining[i] >= 100) {               // If the body training is already at maximum, we tell the user and lock out the training
+                document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>" // The message
+            } else {                                                                                                                            // Otherwise
+            document.getElementById("cost-" + bodyString[i]).innerHTML = calculateCost(bodyTraining[i], 1)                                      // Set the cost field for the cost of the next point
+            document.getElementById("train-" + bodyString[i]).addEventListener("click", function(){                                             // And listen for the click
+                if (parseInt(bodyTraining[i]) + parseInt(document.getElementById("field-" + bodyString[i]).innerHTML) >= 100) {                 // Determine if the amount they are training would push them above maximum
+                    document.getElementById("max-" + bodyString[i]).innerHTML = " Maximum level reached."                                       // And prevent them from further queuing trainings
+                } else{
+                    let current = parseInt(document.getElementById("field-" + bodyString[i]).innerHTML);  // This is the field that is read by Flask. It also displays how many points the player wants to train at a time
+                    document.getElementById("field-" + bodyString[i]).innerHTML = parseInt(current) + 1;  // The field from a line above
+                    document.getElementById("flask-" + bodyString[i]).value = parseInt(current) + 1;
+                    let next = calculateCost(parseInt(bodyTraining[i]) + current + 1, 1);                                             // Adjust the cost field on click
+                    console.log(next)
+                    document.getElementById("cost-" + bodyString[i]).innerHTML = next;                    // the field for the cost
+                    let totalExperience = calculateCost(bodyTraining[i], current + 1);                    // Calculate how much the entire batch of points would cost
+                    document.getElementById("total-" + bodyString[i]).innerHTML = totalExperience;        // And display to the user
+                }
                 })
             }
         }

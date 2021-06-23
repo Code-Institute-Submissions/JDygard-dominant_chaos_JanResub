@@ -103,7 +103,7 @@ def profile(username):
                 new_char["legs"] = 0
                 new_char["torso"] = 0
                 new_char["arms"] = 0
-                new_char["disciplines"] = [False, False, False, False, False, False]
+                new_char["disciplines"] = 0
             mongo.db.characters.insert_one(new_char)
             flash("Character Created")
             return redirect(url_for("profile", username=session["user"]))
@@ -124,17 +124,78 @@ def character(charactername):
     if request.method == "POST":
         form_name = request.form['form-name']
         if form_name == "arms":
-            arms = charactername.arms
-            experience = charactername.current_exp
-            cost = calculateCost(arms, request.form['field-arms'])
-            print(experience + "::" + cost)
+            training = int(request.form.get('flask-arms'))
+            arms = int(charactername["arms"])
+            spent_experience = charactername["spent_exp"]
+            experience = int(charactername["current_exp"])
+            cost = calculateCost(arms, training)
+            updatefilter= {"name": charactername["name"]}
+            if experience >= cost and training + arms <= 100:
+                submit = {
+                    "arms": training + arms,
+                    "current_exp": experience - cost,
+                    "spent_exp": spent_experience + cost              
+                }
+                mongo.db.characters.update_one(updatefilter, {"$set": submit})
+                flash("Training complete")
 
+        if form_name == "hands":
+            training = int(request.form.get('flask-hands'))
+            hands = int(charactername["hands"])
+            spent_experience = charactername["spent_exp"]
+            experience = int(charactername["current_exp"])
+            cost = calculateCost(hands, training)
+            updatefilter= {"name": charactername["name"]}
+            if experience >= cost and training + hands <= 100:
+                submit = {
+                    "hands": training + hands,
+                    "current_exp": experience - cost,
+                    "spent_exp": spent_experience + cost              
+                }
+                mongo.db.characters.update_one(updatefilter, {"$set": submit})
+                flash("Training complete")
+
+        if form_name == "legs":
+            training = int(request.form.get('flask-legs'))
+            legs = int(charactername["legs"])
+            spent_experience = charactername["spent_exp"]
+            experience = int(charactername["current_exp"])
+            cost = calculateCost(legs, training)
+            updatefilter= {"name": charactername["name"]}
+            if experience >= cost and training + legs <= 100:
+                submit = {
+                    "legs": training + legs,
+                    "current_exp": experience - cost,
+                    "spent_exp": spent_experience + cost              
+                }
+                mongo.db.characters.update_one(updatefilter, {"$set": submit})
+                flash("Training complete")
+
+        if form_name == "torso":
+            training = int(request.form.get('flask-torso'))
+            torso = int(charactername["torso"])
+            spent_experience = charactername["spent_exp"]
+            experience = int(charactername["current_exp"])
+            cost = calculateCost(torso, training)
+            updatefilter= {"name": charactername["name"]}
+            if experience >= cost and training + torso <= 100:
+                submit = {
+                    "torso": training + torso,
+                    "current_exp": experience - cost,
+                    "spent_exp": spent_experience + cost              
+                }
+                mongo.db.characters.update_one(updatefilter, {"$set": submit})
+                flash("Training complete")
+            
+        if form_name == "char-bio":
+            submit = {
+                "charbio": request.form.get('char-bio')
+            }
+            mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit})
+            flash("Bio updated")
+
+ 
     return render_template("character.html", username=username, charactername=charactername)
-
-
-    # Search through characters to find those that belong to the user and pump those into a list
-    # Push all their stats into each list item
-    # Make sure the player has the requisite points, deduct the points, add them to the spent points list, and award the training
 
 
 @app.route("/index")
@@ -203,9 +264,11 @@ def logout():
 def calculateCost(current, iterations):
     initialValue = current
     result = 0
-    for x in iterations:
+    i = 0
+    while i < int(iterations):
         result += math.sqrt(initialValue) * 1500
         initialValue += 1
+        i += 1
     return round(result)
 
 
