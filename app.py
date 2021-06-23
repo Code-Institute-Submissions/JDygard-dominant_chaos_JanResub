@@ -194,6 +194,9 @@ def character(charactername):
             mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit})
             flash("Bio updated")
 
+        if form_name == "delete":
+            if request.form.get('delete') == charactername['name']:
+                mongo.db.characters.remove({"name": charactername["name"]})
  
     return render_template("character.html", username=username, charactername=charactername)
 

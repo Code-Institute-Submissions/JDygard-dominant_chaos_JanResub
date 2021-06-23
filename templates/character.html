@@ -11,7 +11,7 @@
 -->
 {% extends "base.html" %}
 {% block content %}
-    <!-- If the user has no characters we can use "featurediscovery" to highlight where they should build their character-->
+{% if charactername.owner %}
     <h3 class="center-align light-blue-text text-darken-4">
         {{ charactername.name|capitalize }}
     </h3> 
@@ -173,7 +173,6 @@
                 <div class="row truesight">
                     <h3>Truesight</h3>
                     <p>By training their senses and awareness of the energies of chakra, the inward fist can detect things not seen by the physical eye alone.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Cost</a>
                         <a href="#">Train this Discipline</a>
@@ -182,7 +181,6 @@
                 <div class="row levitation hidden">
                     <h3>Levitation</h3>
                     <p>Through focus, determination and sheer inner will, the inward fist can lift themselves from the shackles of the earth.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Cost</a>
                         <a href="#">Train this Discipline</a>
@@ -191,7 +189,6 @@
                 <div class="row roundhouse hidden">
                     <h3>Roundhouse</h3>
                     <p>A simple but effective attack that can hit multiple enemies.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Cost</a>
                         <a href="#">Train this Discipline</a>
@@ -200,7 +197,6 @@
                 <div class="row inner-fire hidden">
                     <h3>Inner Fire</h3>
                     <p>By turning their focus inward and allowing their ki to flow through their body, the inward fist can burn away impurities in the body.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Cost</a>
                         <a href="#">Train this Discipline</a>
@@ -209,7 +205,6 @@
                 <div class="row pheonix-fire hidden">
                     <h3>Pheonix Fire</h3>
                     <p>The inward fist can train themselves to redirect their flow of ki, empowering their attacks at the cost of their speed.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Cost</a>
                         <a href="#">Train this Discipline</a>
@@ -218,7 +213,6 @@
                 <div class="row dim-mak hidden">
                     <h3>Dim-Mak</h3>
                     <p>Using their knowledge of Ki in all things, the inward fist can use their own energy to throw off the alignment of energy in others, essentially poisoning their energy.</p>
-                    <!-- Cost: 1500 * isquare(current value + 1)-->
                     <div class="card-action">
                         <a href="#">Cost</a>
                         <a href="#">Train this Discipline</a>
@@ -235,14 +229,27 @@
         <div class="row">
             <div class="m12 center-align">
                 <form action="" method="POST">
+                    <label for="char-bio">Edit Character Biography</label>
                     <input type="text" name="char-bio" value="{{ charactername.bio }}">
-                    <label for="char-bio">Character Biography</label>
-                    <button type="submit" name="form-name" value="char-bio"></button>
+                    <button class="btn" type="submit" name="form-name" value="char-bio">Update bio</button>
                 </form>
             </div>
         </div>
     </section>
-    <!-- delete character -->
+    <section>
+        <div class="row">
+            <div class="m12 center-align">
+                <h3>
+                    Delete character?
+                </h3>
+                <span id="delete-char"></span>
+                <form action="" method="POST">
+                    <input type="text" name="delete" required>
+                    <button class="red btn" type="submit" name="form-name" value="delete">DELETE</button>
+                </form>
+            </div>
+        </div>
+    </section>
     {% endif %}
     <section>
         <div class="row">
@@ -252,6 +259,9 @@
             </div>
         </div>
     </section>
+{% else %}
+<h2 class="center-align">This character was not found.</h2>
+{% endif %}
     <script>
         var torso = "{{ charactername.torso }}"
         var hands = "{{ charactername.hands }}"
