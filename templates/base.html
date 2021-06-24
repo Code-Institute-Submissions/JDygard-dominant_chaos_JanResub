@@ -74,14 +74,19 @@
         {% endblock %}
     </main>
     <footer>
+        <div class="row">
+            <div class="col s12 center-align">
+                <a href="https://www.patreon.com/ChaosLegacy"><i class="fab fa-patreon"></i> <br> Become one of our patrons on Patreon</a>
+            </div>
+        </div>
         <div class="footer-copyright">
             <div class="container center-align">
                 © 2021 Joel Dygard
             </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
 </html>
