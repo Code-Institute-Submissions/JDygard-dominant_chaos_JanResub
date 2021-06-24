@@ -2,5 +2,40 @@
 
 {% extends "base.html" %}
 {% block content %}
-    
+    {% for character in characters %}
+        {% if loop.first %}
+            <div class="col">
+                <div class="row center-align">
+                    <h3 class="center-align light-blue-text text-darken-4">
+                        #1: {{ character.name|capitalize }}
+                    </h3> 
+                    <img src="{{ url_for('static', filename = character.icon) }}" alt="">
+                    <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
+                </div>
+            </div>
+        {% elif loop.index == 2 %}
+        <!-- if it's 2 or 3 -->
+            <div class="row center-align">
+                <div class="col m6">
+                    <h3 class="center-align light-blue-text text-darken-4">
+                        #2: {{ character.name|capitalize }}
+                    </h3> 
+                    <img src="{{ url_for('static', filename = character.icon) }}" alt="">
+                    <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
+                </div>
+        {% elif loop.index == 3 %}
+                <div class="col m6">
+                    <h3 class="center-align light-blue-text text-darken-4">
+                        #3: {{ character.name|capitalize }}
+                    </h3> 
+                    <img src="{{ url_for('static', filename = character.icon) }}" alt="">
+                    <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
+                </div>
+            </div>
+        {% else %}
+        <!-- And a list if it's 4+-->
+        <h3>{{ character.name }}</h3><br>
+        <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

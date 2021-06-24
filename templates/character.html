@@ -42,6 +42,11 @@
                 <h4>Parry chance:</h4><p>{{ charactername.parry }}%</p>
             </div>
         </div>
+        <div class="row">
+            <div class="col m2">
+                <h4>Available Experience: </h4><p>{{ charactername.current_exp }}</p>
+            </div>
+        </div>
         {% endif %}
         <!-- Public information -->
         <div class="row">
@@ -56,7 +61,7 @@
     {% if session.user == charactername.owner %}
     <div class="row">
         <div class="col s12 m6">
-            <h3>I'm gonna put like a cool canvas here</h3>
+            <canvas width="617" height="500" id="body-canvas" style="border:1px solid #000000;"></canvas>
         </div>
         <div class="col s12 m6">
             <div class="card blue-grey darken-1">
@@ -161,7 +166,16 @@
 
         <div class="col s12 m6">
             <div class="card blue-grey darken-1">
-                <h3 class="center-align">Disciplines</h3>
+                <div class="row">
+                    <h3>Disciplines</h3>
+                    <p>
+                        Through disciplining the mind and body, the inward fist gains access to specialized powers.
+                        Disciplines must be gained in order through training the ten levels.
+                    </p>
+                    <label for="disc-bar"></label>
+                    <progress id="disc-bar" value="{{ charactername.discipline }}" max="10" style="width:90%;"></progress>
+                    
+                </div>
                 <ul class="pagination">
                     <li class="active" id="train-card-1"><a href="#!" onclick="moveActive(event)">Truesight</a></li>
                     <li class="waves-effect" id="train-card-2"><a href="#!" onclick="moveActive(event)">Levitation</a></li>
@@ -171,58 +185,39 @@
                     <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Dim-Mak</a></li>
                 </ul>
                 <div class="row truesight">
-                    <h3>Truesight</h3>
+                    <h3>1 Discipline: Truesight</h3>
                     <p>By training their senses and awareness of the energies of chakra, the inward fist can detect things not seen by the physical eye alone.</p>
-                    <div class="card-action">
-                        <a href="#">Cost</a>
-                        <a href="#">Train this Discipline</a>
-                    </div>
                 </div>
                 <div class="row levitation hidden">
-                    <h3>Levitation</h3>
+                    <h3>4 Discipline: Levitation</h3>
                     <p>Through focus, determination and sheer inner will, the inward fist can lift themselves from the shackles of the earth.</p>
-                    <div class="card-action">
-                        <a href="#">Cost</a>
-                        <a href="#">Train this Discipline</a>
-                    </div>
                 </div>
                 <div class="row roundhouse hidden">
-                    <h3>Roundhouse</h3>
+                    <h3>5 Discipline: Roundhouse</h3>
                     <p>A simple but effective attack that can hit multiple enemies.</p>
-                    <div class="card-action">
-                        <a href="#">Cost</a>
-                        <a href="#">Train this Discipline</a>
-                    </div>
                 </div>
                 <div class="row inner-fire hidden">
-                    <h3>Inner Fire</h3>
+                    <h3>7 Discipline: Inner Fire</h3>
                     <p>By turning their focus inward and allowing their ki to flow through their body, the inward fist can burn away impurities in the body.</p>
-                    <div class="card-action">
-                        <a href="#">Cost</a>
-                        <a href="#">Train this Discipline</a>
-                    </div>
                 </div>
                 <div class="row pheonix-fire hidden">
-                    <h3>Pheonix Fire</h3>
+                    <h3>8 Discipline: Pheonix Fire</h3>
                     <p>The inward fist can train themselves to redirect their flow of ki, empowering their attacks at the cost of their speed.</p>
-                    <div class="card-action">
-                        <a href="#">Cost</a>
-                        <a href="#">Train this Discipline</a>
-                    </div>
                 </div>
                 <div class="row dim-mak hidden">
-                    <h3>Dim-Mak</h3>
+                    <h3>9 Discipline: Dim-Mak</h3>
                     <p>Using their knowledge of Ki in all things, the inward fist can use their own energy to throw off the alignment of energy in others, essentially poisoning their energy.</p>
-                    <div class="card-action">
-                        <a href="#">Cost</a>
-                        <a href="#">Train this Discipline</a>
-                    </div>
                 </div>
-                
+                <div class="card-action">
+                    <h4>Next point cost:</h4><span id="discipline-cost"></span>
+                    <form action="" method="POST">
+                        <button class="btn" type="submit" name="form-name" value="discipline">Train Discipline</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="col s12 m6">
-            <h3>I'm gonna put like a cool canvas here</h3>
+            <canvas width="617" height="500" id="discipline-canvas" style="border:1px solid #000000;"></canvas>
         </div>
     </div>
     <section>
@@ -240,7 +235,7 @@
         <div class="row">
             <div class="m12 center-align">
                 <h3>
-                    Delete character?
+                    To delete your character, type its name and click delete.
                 </h3>
                 <span id="delete-char"></span>
                 <form action="" method="POST">
@@ -267,6 +262,7 @@
         var hands = "{{ charactername.hands }}"
         var arms = "{{ charactername.arms }}"
         var legs = "{{ charactername.legs }}"
+        var discipline = parseInt("{{ charactername.discipline }}")
         /*
         if (arms >= 100) {
             document.getElementById("action-arms").innerHTML = "<h3> Your arms are trained to maximum </h3>"
@@ -297,12 +293,15 @@
             return Math.round(result);
         }
         
+        console.log(discipline)
+        document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000
         
         //                                     Body Training Card Generator 
         //                                   ===============================
         // This is here to build the four training card tabs in the bodytraining frame. The two arrays contain the variables/strings.
         // This is needed to display experience cost per point, how many points they would like to train, and the total experience cost.
-        // It is also what provides the number in the field read by Flask.
+        // It is also what provides the number in the field read by Flask. The backend verifies whatever information is submitted to prevent
+        // any bad faith POST attempts.
 
         bodyTraining = [torso, hands, arms, legs];      // Tied to the variables declared above, taken directly from the DB
         bodyString = ["torso", "hands", "arms", "legs"] // contrains strings for navigating the DOM and buildings other strings

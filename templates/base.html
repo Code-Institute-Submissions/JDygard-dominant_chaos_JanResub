@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <script></script>
-    <title>Dominant Chaos</title>
+    <title>Chaos Legacy</title>
 </head>
 
 <body>
     <nav class="nav-extended">
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo center-align">Dominant Chaos</a>
+            <a href="#" class="brand-logo center-align">Chaos Legacy</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons"></i></a>
             <ul id="nav-mobile" class="right">
                 {% if session.user %}
@@ -32,6 +32,7 @@
         <div class="nav-content">
             <ul class="tabs tabs-transparent center-align">
                 <li class="tab"><a href="{{ url_for('index')}}">Home</a></li>
+                <li class="tab"><a href="{{ url_for('leaderboard')}}">Leaderboard</a></li>
                 <li class="tab"><a href="{{ url_for('library')}}">Library</a></li>
                 {% if session.user %}
                     <li class="tab"><a href="{{ url_for('play')}}">Play</a></li>
@@ -44,6 +45,7 @@
 
     <ul class="sidenav" id="mobile-demo">
         <li class="tab"><a href="{{ url_for('index')}}">Home</a></li>
+        <li class="tab"><a href="{{ url_for('leaderboard')}}">Leaderboard</a></li>
         <li class="tab"><a href="{{ url_for('library')}}">Library</a></li>
         {% if session.user %}
             <li class="tab"><a href="{{ url_for('play')}}">Play</a></li>

@@ -55,15 +55,23 @@ def library():
 def play():
     return render_template("play.html")
 
-# The character page will point to the <character> rather than the <username>. Profile will link to the <username> and contain the character bar.
-# The character page will have the stats, icon and stuff. If you own the character, it'll have the training section underneath. This way we can have the goddamn leaderboard page link straight to character without issue.
+
+@app.route("/leaderboard")
+def leaderboard():
+    characters = list(mongo.db.characters.find().sort("spent_experience", 1))
+    return render_template("leaderboard.html", characters=characters)
+
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
-    username = mongo.db.users.find_one(
-        {"username": session["user"]})["username"]
-    characters = mongo.db.characters.find(
-        {"owner": username})
+    try:
+        username = mongo.db.users.find_one(
+            {"username": username})["username"]
+        characters = mongo.db.characters.find(
+            {"owner": username})
+    except:
+        username = "Username does not exist"
+        characters = []
     #####     POST to DB stuff     #####
     if request.method == "POST":
         form_name = request.form['form-name']
@@ -103,10 +111,19 @@ def profile(username):
                 new_char["legs"] = 0
                 new_char["torso"] = 0
                 new_char["arms"] = 0
-                new_char["disciplines"] = 0
+                new_char["discipline"] = 0
             mongo.db.characters.insert_one(new_char)
             flash("Character Created")
             return redirect(url_for("profile", username=session["user"]))
+        
+        if form_name == "delete-account":
+            user = mongo.db.users.find_one({"username":username})
+            print(user["password"])
+            if check_password_hash(user["password"], request.form.get("password")) and request.form.get("username").lower() == username:
+                    mongo.db.characters.delete_many({"owner": user["username"]})
+                    mongo.db.users.remove({"username": user["username"]})
+                    session.pop("user")
+
 
     if session["user"]:
         return render_template("profile.html", username=username, characters=characters)
@@ -138,6 +155,10 @@ def character(charactername):
                 }
                 mongo.db.characters.update_one(updatefilter, {"$set": submit})
                 flash("Training complete")
+                return redirect(url_for("character", charactername=charactername['name']))
+            else:
+                flash("Insufficient experience for training")
+                return redirect(url_for("character", charactername=charactername['name']))
 
         if form_name == "hands":
             training = int(request.form.get('flask-hands'))
@@ -154,6 +175,10 @@ def character(charactername):
                 }
                 mongo.db.characters.update_one(updatefilter, {"$set": submit})
                 flash("Training complete")
+                return redirect(url_for("character", charactername=charactername['name']))
+            else:
+                flash("Insufficient experience for training")
+                return redirect(url_for("character", charactername=charactername['name']))
 
         if form_name == "legs":
             training = int(request.form.get('flask-legs'))
@@ -170,6 +195,10 @@ def character(charactername):
                 }
                 mongo.db.characters.update_one(updatefilter, {"$set": submit})
                 flash("Training complete")
+                return redirect(url_for("character", charactername=charactername['name']))
+            else:
+                flash("Insufficient experience for training")
+                return redirect(url_for("character", charactername=charactername['name']))
 
         if form_name == "torso":
             training = int(request.form.get('flask-torso'))
@@ -186,6 +215,27 @@ def character(charactername):
                 }
                 mongo.db.characters.update_one(updatefilter, {"$set": submit})
                 flash("Training complete")
+                return redirect(url_for("character", charactername=charactername['name']))
+            else:
+                flash("Insufficient experience for training")
+                return redirect(url_for("character", charactername=charactername['name']))
+
+        if form_name == "discipline":
+            discipline = int(charactername["discipline"])
+            cost = disciplineCost(discipline)
+            spent_experience = int(charactername["spent_exp"])
+            experience = int(charactername["current_exp"])
+            if experience > cost:
+                submit = {
+                    "discipline": discipline + 1,
+                    "current_exp": experience - cost,
+                    "spent_exp": spent_experience + cost
+                }
+                mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit})
+            else:
+                flash("Insufficient experience for training")
+                return redirect(url_for("character", charactername=charactername['name']))
+
             
         if form_name == "char-bio":
             submit = {
@@ -243,7 +293,6 @@ def register():
             register = {
                 "username": request.form.get("username").lower(),
                 "password": generate_password_hash(request.form.get("password")),
-                #"confirmed": False,
                 "email": request.form.get("email"),
                 "registered_on": datetime.datetime.now(),
             }
@@ -273,6 +322,9 @@ def calculateCost(current, iterations):
         initialValue += 1
         i += 1
     return round(result)
+
+def disciplineCost(current):
+    return (current + 1) * 500000
 
 
 #@app.route('/confirm/<token>')
