@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash   # Im
 from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
 from flask_mail import Mail, Message
+from flask_socketio import SocketIO
 import math
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
@@ -15,7 +16,6 @@ if os.path.exists("env.py"):    # If statement so that the program works without
 
 app = Flask(__name__)           # setting flask to the standard __name__
 app.config.from_object(__name__)
-
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
@@ -32,6 +32,7 @@ app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
 mail = Mail(app)
 mongo = PyMongo(app)
+socketio = SocketIO(app)
 
 # app route for home page(index)
 @app.route("/")
@@ -54,6 +55,13 @@ def library():
 @app.route("/play")
 def play():
     return render_template("play.html")
+
+
+
+@socketio.on('message')
+def handle_message(data):
+    print('received message: ' + data)
+
 
 
 @app.route("/leaderboard")
