@@ -3,5 +3,190 @@
 -->
 {% extends "base.html" %}
 {% block content %}
+    <div class="tab-library">
+        <button class="tablinks" onclick="openTab(event, 'general')">General Info</button>
+        <button class="tablinks" onclick="openTab(event, 'inward-fist')">Inward Fist</button>
+        <button class="tablinks" onclick="openTab(event, 'outward-fist')">Outward Fist</button>
+        <button class="tablinks" onclick="openTab(event, 'chi-xin')">Chi-Xin Shaman</button>
+        <button class="tablinks" onclick="openTab(event, 'sorcerer')">Sorcerer</button>
+    </div>
     
+    <div id="general" class="tabcontent">
+        <h3>General Information</h3>
+        <h4>Combat</h4>
+        <h5>Rounds</h5>
+        <p>
+            Combat is broken up into short "rounds." Each round, both characters involved in the combat will automatically execute a number of "auto-attacks" based on their "speed" stat.
+            An "auto-attack" consumes 40 speed, and the remainder is carried to the next "round," and the character regenerates an amount of "speed" equal to their "speed" stat.
+        </p>
+        <p> Example: Amn starts the first round with 100 speed. He executes two auto-attacks, leaving a remainder of 20. Next round, with 120 speed, he executes three autoattacks.</p>
+        <h5>Player-input abilities</h5>
+        <p>
+            All abilities other than auto-attacks are initiated by the player. When input, the ability is placed into the queue to be executed on the beginning of the round after the speed penalty is paid. Speed for 
+            player-input abilities is calculated completely separately from speed for auto-attacks.
+        </p>
+        <p>Example 1: Amn starts the first round by clicking shinkick three times. Shinkick uses 80 speed of Amn's maximum of 100. So the second round begins with a shinkick, the third round begins with a shinkick, and the fourth round begins with a shinkick.</p>
+        <p>
+            Example 2: Amnlock the sorcerer starts the first round by chanting "Flamestrike," a powerful ability that uses 200 speed of Amnlock's 100, and then chanting "Air shield," a quick ability that produces a shield to prevent damage, using 80 speed.
+            The second round elapses while Amnlock chants, and the flamestrike hits during the third round. At the beginning of the fourth round, Air Shield executes.
+        </p>
+        <h5>Hit points</h5>
+        <p>
+            Hit points represent a character's ability to withstand damage. When hit points are reduced to zero, the character will collapse and the fight is over.
+        </p>
+        <h5>Experience</h5>
+        <p>
+            Experience is a universal stat that represents how much a character has learned from combat and exploration. It can be spent to increase a character's unique class attributes and skills.
+        </p>
+        <p>
+            Spent experience is tracked to determine what tier a character is. Characters with the same tier are matched against each other to ensure that the matches will be fair.
+        </p>
+        <h5>Character class</h5>
+        <p>
+            Character classes represent defining characteristics that make each class unique. Click on the relevant tab on the left to learn more about individual classes.
+        </p>
+        <h5>Armor Class (AC)</h5>
+        <p>
+            Armor class represents a character's ability to absorb attacks without taking damage. When a character is attacked, the attacking player makes a "hit roll" to determine if the attack connects with its target.
+            If the hitroll does not exceed the armor class of the victim, the attack does no damage.
+        </p>
+        <h5>Dodge, block and parry</h5>
+        <p>
+            Dodge, block and parry are different statistical lines for the same concept. If an attack is dodged, blocked or parried, the attack does no damage. Certain classes do not have access to one or more of these stats.
+            One point of any of them represents 1% chance.
+        </p>
+        <h5>Damage</h5>
+        <p>
+            Damage as a stat represents a character's ability to inflict harm upon a victim. Inflicted damage is represented by removing the victim's hit points.
+        </p>
+        <h5>Damage Resistance (DR)</h5>
+        <p>
+            DR represents flat damage reduction after an attack lands and has its inflicted damage calculated.
+        </p>
+    </div>
+    
+    <div id="inward-fist" class="tabcontent">
+        <h3>Inward Fist</h3>
+        <h4>Body Training</h4>
+        <h5>Hands</h5>
+        <p>
+            An inward fist's hands are his weapons. Training hands increases the damage dealt by the character for all weapon attacks.
+        </p>
+        <p>
+            NOTE: This does not affect the fist's energy attacks.
+        </p>
+        <h5>Torso</h5>
+        <p>
+            An inward fist's torso is the core of its defense. Training torso increases resistance to attacks. It represents a form of flat damage reduction.
+        </p>
+        <h5>Legs</h5>
+        <p>
+            An inward fist's legs are used as an alternate weapon. Training legs increases damage with kicks significantly, and makes ki-building kick moves like spinkick and shinkick more effective.
+        </p>
+        <h5>Arms</h5>
+        <p>
+            An inward fist's arms can be trained to increase elusiveness. Training arms increases the character's chances of blocking incoming attacks.
+        </p>
+        <h4>Disciplines</h4>
+        <p>Discipine is split into 10 levels, with 6 abilities spread out between them. This means that sometimes, training a single discipline level does not grant access to a new ability.</p>
+        <h5>1 Discipline: Truesight</h5>
+        <p>By training their senses and awareness of the energies of chakra, the inward fist can detect things not seen by the physical eye alone.</p>
+        <h5>4 Discipline: Levitation</h5>
+        <p>Through focus, determination and sheer inner will, the inward fist can lift themselves from the shackles of the earth.</p>
+        <h5>5 Discipline: Roundhouse</h5>
+        <p>A simple but effective attack that can hit multiple enemies.</p>
+        <h5>7 Discipline: Inner Fire</h5>
+        <p>By turning their focus inward and allowing their ki to flow through their body, the inward fist can burn away impurities in the body.</p>
+        <h5>8 Discipline: Pheonix Fire</h5>
+        <p>The inward fist can train themselves to redirect their flow of ki, empowering their attacks at the cost of their speed.</p>
+        <h5>9 Discipline: Dim-Mak</h5>
+        <p>Using their knowledge of Ki in all things, the inward fist can use their own energy to throw off the alignment of energy in others, essentially poisoning their energy.</p>
+        <h4>Ki</h4>
+        <p>
+            Ki represents the character's ability to generate and focus inner energies. It is split into 30 levels. Each Ki level from 10-30 represents a single combo attack. In combat, ki is built by using ki-building moves.
+        </p>
+        <h5>Combination attacks (Combo)</h5>
+        <h6>10 Ki: Quivering palm</h6>
+        <p>Drains energy from the victim. Can affect charging attacks of enemies.</p>
+        <h6>11 Ki: Toe stomp</h6>
+        <p>A minor damaging attack.</p>
+        <h6>12 Ki: Rotating strike</h6>
+        <p>A weak attack that hits twice.</p>
+        <h6>13 Ki: Ki ball</h6>
+        <p>An energy attack that hits twice.</p>
+        <h6>14 Ki: Kiwall</h6>
+        <p>A defensive shield.</p>
+        <h6>15 Ki: Jumpkick</h6>
+        <p>A highly damage kick</p>
+        <h6>16 Ki: Failed bodyslam</h6>
+        <p>A failed attack resulting in losing your fighting stance.</p>
+        <h6>17 Ki: Bodyslam</h6>
+        <p>An attack which leaves the enemy without their fighting stance.</p>
+        <h6>18 Ki: Failed bodyslam</h6>
+        <p>A failed attack resulting in losing your fighting stance.</p>
+        <h6>19 Ki: Fists of Fury</h6>
+        <p>A multi-attack flurry of fists.</p>
+        <h6>20 Ki: Palm thrust</h6>
+        <p>An energetic thrust that can deplete energy-based defenses.</p>
+        <h6>21 Ki: 6 hit combo</h6>
+        <p>A multi-attack that includes kicks.</p>
+        <h6>22 Ki: Hesitate</h6>
+        <p>A failed attack that costs significant speed.</p>
+        <h6>23 Ki: Touch of death</h6>
+        <p>A single attack that does substantial damage based on how hurt the victim is.</p>
+        <h6>24 Ki: Touch of death self</h6>
+        <p>A failed attack that executes Touch of Death on yourself.</p>
+        <h6>25: Maiden masher Failed</h6>
+        <p>A failed attack that makes the character unable to block for a period of time.</p>
+        <h6>26: Maiden masher</h6>
+        <p>A devastating 10 hit combo, alternating between energy, kicks and fists.</p>
+        <h6>27: Gadouken:</h6>
+        <p>A failed attack that hits with three weak bursts of energy.</p>
+        <h6>28: Shinkyuu Hadoken</h6>
+        <p>A devastating energy attack that hits three times.</p>
+        <h6>29: Holy Fists</h6>
+        <p>Energizes the character's fists with specialized energy based on what it is focusing.</p>
+        <h6>30: Kistrike</h6>
+        <p>A single attack that does damage based on the defenses used by the victim.</p>
+
+    </div>
+    
+    <div id="outward-fist" class="tabcontent">
+        <h3>Outward Fist</h3>
+        <p>This section under construction.</p>
+    </div> 
+
+    <div id="chi-xin" class="tabcontent">
+        <h3>Chi-Xin Shaman</h3>
+        <p>This section under construction.</p>
+    </div> 
+
+    <div id="sorcerer" class="tabcontent">
+        <h3>Sorcerer</h3>
+        <p>This section under construction.</p>
+    </div> 
+
+    <script>
+        /* Thanks to https://www.w3schools.com/howto/howto_js_vertical_tabs.asp for the code adapted here */
+        function openTab(evt, cityName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the link that opened the tab
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+        } 
+    </script>
 {% endblock %}
