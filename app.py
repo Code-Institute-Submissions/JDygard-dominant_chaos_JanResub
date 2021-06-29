@@ -1,14 +1,15 @@
 import os
 from re import M # os module for accessing the os on the machine running flask
 from flask import (Flask, render_template, make_response,  #Importing Flask and the ability to render templates
-    redirect, request, session, url_for, flash) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
+    redirect, request, session, url_for, flash, copy_current_request_context) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
 from bson.objectid import ObjectId #Importing the ability to reference MongoDB object ids
 from flask_pymongo import PyMongo   # Importing a module to use python with MongoDB
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
 from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
 from flask_mail import Mail, Message
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit, disconnect
+from threading import Lock
 import math
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
@@ -16,6 +17,10 @@ if os.path.exists("env.py"):    # If statement so that the program works without
 
 app = Flask(__name__)           # setting flask to the standard __name__
 app.config.from_object(__name__)
+
+async_mode = None
+thread = None
+thread_lock = Lock()
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
@@ -32,7 +37,7 @@ app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
 mail = Mail(app)
 mongo = PyMongo(app)
-socketio = SocketIO(app)
+socket_ = SocketIO(app, async_mode=async_mode)
 
 # app route for home page(index)
 @app.route("/")
@@ -54,7 +59,7 @@ def library():
 
 @app.route("/play")
 def play():
-    return render_template("play.html")
+    return render_template("play.html", sync_mode=socket_.async_mode)
 
 
 # Library source routes:
@@ -83,9 +88,45 @@ def outward_fist():
     return render_template("library/outward-fist.html")
 
 
-@socketio.on('message')
+@socket_.on('message')
 def handle_message(data):
     print('received message: ' + data)
+
+
+
+
+
+
+@socket_.on('my_event', namespace='/test')
+def test_message(message):
+    session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('my_response',
+         {'data': message['data'], 'count': session['receive_count']})
+
+
+@socket_.on('my_broadcast_event', namespace='/test')
+def test_broadcast_message(message):
+    session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('my_response',
+         {'data': message['data'], 'count': session['receive_count']},
+         broadcast=True)
+
+
+@socket_.on('disconnect_request', namespace='/test')
+def disconnect_request():
+    @copy_current_request_context
+    def can_disconnect():
+        disconnect()
+
+    session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('my_response',
+         {'data': 'Disconnected!', 'count': session['receive_count']},
+         callback=can_disconnect)
+
+
+
+
+
 
 
 
@@ -376,6 +417,6 @@ def disciplineCost(current):
 
 
 if __name__ == "__main__":  # If the name is valid
-    app.run(host=os.environ.get("IP"),#Setting the ip
+    socket_.run(app, host=os.environ.get("IP"),#Setting the ip
             port=int(os.environ.get("PORT")),#setting the port #
             debug=True) #Using debug mode while developing the backend
