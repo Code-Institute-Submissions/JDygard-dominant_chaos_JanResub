@@ -25,25 +25,25 @@
                         <form class="col s12" method="POST" action="{{ url_for('register') }}">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input placeholder="Username" id="username" name="username" type="text" class="validate">
+                                    <input placeholder="Username" id="username" name="username" type="text" class="validate" pattern="^[a-zA-Z0-9]{5,15}$">
                                     <label for="first_name">Username</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input placeholder="Email" id="email" name="email" type="email" class="validate">
+                                    <input placeholder="Email" id="email" name="email" type="email" class="validate" required>
                                     <label for="email">Email</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="password" type="password" name="password" class="validate">
+                                    <input id="password" type="password" name="password" class="validate" required>
                                     <label for="password">Password</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="password_confirm" type="password" name="password_confirm" class="validate">
+                                    <input id="password_confirm" type="password" name="password_confirm" class="validate" required>
                                     <label for="password_confirm">Confirm Password</label>
                                 </div>
                             </div>

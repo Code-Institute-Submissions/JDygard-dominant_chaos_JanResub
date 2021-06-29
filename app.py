@@ -126,11 +126,31 @@ def profile(username):
         
         if form_name == "delete-account":
             user = mongo.db.users.find_one({"username":username})
-            print(user["password"])
             if check_password_hash(user["password"], request.form.get("password")) and request.form.get("username").lower() == username:
                     mongo.db.characters.delete_many({"owner": user["username"]})
                     mongo.db.users.remove({"username": user["username"]})
                     session.pop("user")
+        
+
+        if form_name == "change-password":
+            user = mongo.db.users.find_one({"username":username})
+            if check_password_hash(user["password"], request.form.get("password")):
+                if request.form.get("new-password") == request.form.get("password2"):
+                    passwordupdate = generate_password_hash(request.form.get("new-password"))
+                    mongo.db.users.update_one({"username": username}, {"$set": {"password": passwordupdate}})
+                    flash("Password updated")
+                else:
+                    flash("Password not updated: Fields did not match.")
+            else:
+                flash("Password not updated: Current password entered incorrectly.")
+
+
+        if form_name == "change-email":
+            if request.form.get("email") == request.form.get("confirm-email"):
+                mongo.db.user.update_one({"username": username}, {"$set": {"email": request.form.get("email")}})
+                flash("Email updated")
+            else:
+                flash("Email not updated: Fields did not match.")
 
 
     if session["user"]:
@@ -253,8 +273,12 @@ def character(charactername):
             flash("Bio updated")
 
         if form_name == "delete":
-            if request.form.get('delete') == charactername['name']:
+            if request.form.get('delete').lower() == charactername['name']:
                 mongo.db.characters.remove({"name": charactername["name"]})
+                flash("Character deleted")
+                return redirect(url_for("profile", username=session["user"]))
+            else:
+                flash("Character not deleted, check name and try again.")
  
     return render_template("character.html", username=username, charactername=charactername)
 

@@ -3,34 +3,37 @@
 -->
 {% extends "base.html" %}
 {% block content %}
-    <div class="row">
+    <div class="row about-page">
         <div class="col m6 s12">
             <!-- image representing game-->
         </div>
         <div class="col m6 s12">
             <h2>About the game</h2>
-            <p>
+            <hr class="hr-about">
+            <p class="indent">
                 Chaos Legacy is a game about growth, exploration and curiosity. The core of the game is the combat system, but it intends to be so much more than that. That combat and character growth system should be enveloped in an
                 ever-evolving world designed to reward curiosity, build diversity of experience, and encourage exploration for exploration's sake.
             </p>
             <h4>Scenes</h4>
-            <p>
-                The world concept was inspired by the MUDs (Multi-User Dungeon) originally designed in the 1990s, and to bring the feel of that to the modern era. MUDs are text-based adventure games, designed with a matrix of
+            <hr class="hr-about">
+            <p class="indent">
+                The world concept was inspired by <a href="https://en.wikipedia.org/wiki/MUD">MUD</a>s (Multi-User Dungeon) originally designed in the 1990s, and to bring the feel of that to the modern era. MUDs are text-based adventure games, designed with a matrix of
                 connected "rooms" that can be traversed by inputting the command to travel from room to room, i.e. "north," "east." This wouldn't translate well to a visual field, not least because of the weight of the work of
                 providing a visual field for each such room. Instead, Chaos Legacy will be designed with the concept of "scenes."
             </p>
-            <p>
+            <p class="indent">
                 A "scene" could represent a small town, encounter, a short road or short adventure. Longer adventures, larger cities, longer roads could comprise multiple such scenes. These scenes would be dynamically created and placed
                 to connect static scenes like cities. For example, a character wishing to travel from city A to city B would have to "discover" a road going between those cities. They could discover a shorter passage scene, encounter an
                 event scene on the road, or get lost and discover a unique scene on the way.
             </p>
             <h4>Combat</h4>
-            <p>
+            <hr class="hr-about">
+            <p class="indent">
                 The combat is essentially directly modelled after the concept of MUD combat, with a turn timer. Every turn, the character and opponent would execute several automatic attacks, and the player has the opportunity to input
                 commands that take a certain amount of that timer. For example, if a fighter attempts a kick, they may be able to execute one or two kicks per turn, but if a sorcerer wants to cast a complex spell, it may take two or more
                 full turns to execute, giving their opponent time.
             </p>
-            <p>
+            <p class="indent">
                 Combat would be dynamic as well, with multiple class interactions and counterplays. Certain classes would be able to disrupt opponents' abilities with well-timed counter-attacks, or defend against enemies abilities by
                 changing to a more defensive combat stance or putting up a shield. This will hopefully lead to involved, interesting, fast-paced fighting for the strategic player, necessitating the management of multiple factors in the
                 course of a battle. A more skilled player could use an inferior character to win against a player using a character with better statistics.
@@ -40,20 +43,22 @@
     <div class="row">
         <div class="col m6 s12">
             <h2>Meet the team</h2>
-            <p>
+            <hr class="hr-about">
+            <p class="indent">
                 The dev team consists of one person for now.
             </p>
             <h4>Joel Dygard</h4>
-            <p>
+            <hr class="hr-about">
+            <p class="indent">
                 Joel was born in the United States in 1985, in Indianapolis, Indiana. He grew up on a flower farm, served in the US Army, worked as a line cook, landscape architect, helicopter mechanic, tram mechanic and now software developer.
             </p>
-            <p>
+            <p class="indent">
                 He has been developing his interest in video games his entire life, and now that he is in software development, it's only natural that he would start making games in his own image. We'll see if anyone likes what he has
                 to offer!
             </p>
         </div>
         <div class="col m6 s12">
-            <!-- Image of me, devguy -->
+            <img src="../static/images/about/dev.jpeg" alt="">
         </div>
     </div>
 {% endblock %}
