@@ -15,7 +15,6 @@
                             <div class="card-image">
                                 <a href="{{ url_for('character', charactername=character.name) }}"><img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon">
                                 <span class="card-title"> {{ character.name|capitalize }} </span></a>
-                                <!-- Fix the click me thing in here to be an invisible span covering the entire character pane -->
                             </div>
                         </div>
                     </div>
@@ -68,6 +67,7 @@
                 </div>
             </div>
         </div>
+    </div>
         <section id="user-settings">
             <hr class="hr-profile">
             <div class="row">
@@ -122,7 +122,6 @@
             </div>
         </section>
         {% endif %}
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

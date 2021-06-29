@@ -1,0 +1,54 @@
+{% extends "library.html" %}
+{% block information %}
+<h3>General Information</h3>
+<h4>Combat</h4>
+<h5>Rounds</h5>
+<p>
+    Combat is broken up into short "rounds." Each round, both characters involved in the combat will automatically execute a number of "auto-attacks" based on their "speed" stat.
+    An "auto-attack" consumes 40 speed, and the remainder is carried to the next "round," and the character regenerates an amount of "speed" equal to their "speed" stat.
+</p>
+<p> Example: Amn starts the first round with 100 speed. He executes two auto-attacks, leaving a remainder of 20. Next round, with 120 speed, he executes three autoattacks.</p>
+<h5>Player-input abilities</h5>
+<p>
+    All abilities other than auto-attacks are initiated by the player. When input, the ability is placed into the queue to be executed on the beginning of the round after the speed penalty is paid. Speed for 
+    player-input abilities is calculated completely separately from speed for auto-attacks.
+</p>
+<p>Example 1: Amn starts the first round by clicking shinkick three times. Shinkick uses 80 speed of Amn's maximum of 100. So the second round begins with a shinkick, the third round begins with a shinkick, and the fourth round begins with a shinkick.</p>
+<p>
+    Example 2: Amnlock the sorcerer starts the first round by chanting "Flamestrike," a powerful ability that uses 200 speed of Amnlock's 100, and then chanting "Air shield," a quick ability that produces a shield to prevent damage, using 80 speed.
+    The second round elapses while Amnlock chants, and the flamestrike hits during the third round. At the beginning of the fourth round, Air Shield executes.
+</p>
+<h5>Hit points</h5>
+<p>
+    Hit points represent a character's ability to withstand damage. When hit points are reduced to zero, the character will collapse and the fight is over.
+</p>
+<h5>Experience</h5>
+<p>
+    Experience is a universal stat that represents how much a character has learned from combat and exploration. It can be spent to increase a character's unique class attributes and skills.
+</p>
+<p>
+    Spent experience is tracked to determine what tier a character is. Characters with the same tier are matched against each other to ensure that the matches will be fair.
+</p>
+<h5>Character class</h5>
+<p>
+    Character classes represent defining characteristics that make each class unique. Click on the relevant tab on the left to learn more about individual classes.
+</p>
+<h5>Armor Class (AC)</h5>
+<p>
+    Armor class represents a character's ability to absorb attacks without taking damage. When a character is attacked, the attacking player makes a "hit roll" to determine if the attack connects with its target.
+    If the hitroll does not exceed the armor class of the victim, the attack does no damage.
+</p>
+<h5>Dodge, block and parry</h5>
+<p>
+    Dodge, block and parry are different statistical lines for the same concept. If an attack is dodged, blocked or parried, the attack does no damage. Certain classes do not have access to one or more of these stats.
+    One point of any of them represents 1% chance.
+</p>
+<h5>Damage</h5>
+<p>
+    Damage as a stat represents a character's ability to inflict harm upon a victim. Inflicted damage is represented by removing the victim's hit points.
+</p>
+<h5>Damage Resistance (DR)</h5>
+<p>
+    DR represents flat damage reduction after an attack lands and has its inflicted damage calculated.
+</p>
+{% endblock %}

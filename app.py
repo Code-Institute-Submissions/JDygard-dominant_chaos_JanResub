@@ -57,6 +57,31 @@ def play():
     return render_template("play.html")
 
 
+# Library source routes:
+@app.route("/library/general")
+def general():
+    return render_template("library/general.html")
+
+
+@app.route("/library/chi-xin")
+def chi_xin():
+    return render_template("library/chi-xin.html")
+
+
+@app.route("/library/inward-fist")
+def inward_fist():
+    return render_template("library/inward-fist.html")
+
+
+@app.route("/library/sorcerer")
+def sorcerer():
+    return render_template("library/sorcerer.html")
+
+
+@app.route("/library/outward-fist")
+def outward_fist():
+    return render_template("library/outward-fist.html")
+
 
 @socketio.on('message')
 def handle_message(data):
@@ -97,7 +122,7 @@ def profile(username):
             new_char = {
                 "name": request.form.get("name").lower(),
                 "chclass": request.form.get("class"),
-                "current_exp": 0,
+                "current_exp": 99999999,
                 "spent_exp": 0,
                 "max_hp": 100,
                 "max_energy": 100,

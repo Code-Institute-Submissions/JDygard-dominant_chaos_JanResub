@@ -1,3 +1,5 @@
+/* General definitions */
+
 :root {
     --contrast-color-1: #7cbec0;
     --contrast-color-2: #003049;
@@ -8,17 +10,7 @@
     --main-color-bg:    #EAe2b7;
 }
 
-/* General */
-
-body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-}
-
-main {
-    flex: 1 0 auto;
-}
+/* Modals */
 
 .modal-field {
     display:inline-block;
@@ -29,13 +21,31 @@ main {
     padding-bottom:10px;
 }
 
-.page-footer {
-    background-color:var(--main-color-bright);
-    margin-top: 100px;
+
+/* base.html */
+
+body {
+}
+
+main {
+}
+
+main:after {
+}
+
+.page-footer, main:after {
+    background-color: var(--main-color-bright);
 }
 
 footer{
-    background-color: var(--main-color-dark);
+    position:fixed;
+    bottom:0;
+    left: 0;
+    right:0;
+}
+
+.footer-copyright {
+    background-color: var(--main-color-dark)
 }
 
 nav {
@@ -57,6 +67,7 @@ nav {
 
 html {
     background-color: var(--main-color-bg);
+    height:100%;
 }
 
 .container{
@@ -64,6 +75,7 @@ html {
     margin-top:40px;
 }
 
+/* index.html */
 
 .hero-container {
     background-image: url( ../images/hero.png );
@@ -82,7 +94,7 @@ html {
 }
 
 
-/* Character page specific */
+/* character.html */
 
 #stats {
     display:inline-block;
@@ -116,8 +128,13 @@ html {
 }
 
 .card {
-    margin: 0, auto;
+    margin-top: 0px;   
     height: 500px;
+    background-color: var(--contrast-color-1);
+}
+
+.card > h3, .card > div > h3, .card > div > h4 {
+    margin-top: 0px;
 }
 
 li > a {
@@ -161,7 +178,7 @@ li > a {
     display: block
 }
 
-/* Profile page */
+/* profile.html */
 
 #user-settings {
     margin-top:50px;
@@ -194,7 +211,7 @@ li > a {
     background-color: var(--contrast-color-3);
 }
 
-/* About page style */
+/* about.html */
 
 .about-page h4, .about-page h2 {
     margin-bottom: 0;
@@ -212,8 +229,17 @@ li > a {
     padding: 0;
 }
 
-/* Library page 
+/* library.html
 Thanks to https://www.w3schools.com/howto/howto_js_vertical_tabs.asp for the code adapted here */
+
+.scrollable {
+    height: 71vh;
+    overflow-y: auto;
+}
+
+.library-container {
+    height:120vh;
+}
 
 .tab-library {
     float: left;
@@ -221,6 +247,7 @@ Thanks to https://www.w3schools.com/howto/howto_js_vertical_tabs.asp for the cod
     background-color: #f1f1f1;
     width: 30%;
     height: 300px;
+    position:fixed;
   }
   
   /* Style the buttons that are used to open the tab content */
@@ -254,5 +281,5 @@ Thanks to https://www.w3schools.com/howto/howto_js_vertical_tabs.asp for the cod
     border: 1px solid #ccc;
     width: 70%;
     border-left: none;
-    height: 300px;
+    height: 100%;
   }
