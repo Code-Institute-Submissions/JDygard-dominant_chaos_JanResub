@@ -120,6 +120,7 @@ def profile(username):
                 new_char["torso"] = 0
                 new_char["arms"] = 0
                 new_char["discipline"] = 0
+                new_char["max_ki"] = 0
             mongo.db.characters.insert_one(new_char)
             flash("Character Created")
             return redirect(url_for("profile", username=session["user"]))
@@ -168,86 +169,30 @@ def character(charactername):
 
     if request.method == "POST":
         form_name = request.form['form-name']
-        if form_name == "arms":
-            training = int(request.form.get('flask-arms'))
-            arms = int(charactername["arms"])
-            spent_experience = charactername["spent_exp"]
-            experience = int(charactername["current_exp"])
-            cost = calculateCost(arms, training)
-            updatefilter= {"name": charactername["name"]}
-            if experience >= cost and training + arms <= 100:
-                submit = {
-                    "arms": training + arms,
-                    "current_exp": experience - cost,
-                    "spent_exp": spent_experience + cost              
-                }
-                mongo.db.characters.update_one(updatefilter, {"$set": submit})
-                flash("Training complete")
-                return redirect(url_for("character", charactername=charactername['name']))
-            else:
-                flash("Insufficient experience for training")
-                return redirect(url_for("character", charactername=charactername['name']))
+        bodytrain_strings = ["arms", "hands", "legs", "torso"]
+        """ Following code block builds four statements to listen for bodytraining POSTs """
+        for string in range(len(bodytrain_strings)):
+            if form_name == bodytrain_strings[string]:
+                training = int(request.form.get('flask-' + bodytrain_strings[string]))
+                bodytrain = int(charactername[bodytrain_strings[string]])
+                spent_experience = charactername["spent_exp"]
+                experience = int(charactername["current_exp"])
+                cost = calculateCost(bodytrain, training)
+                updatefilter= {"name": charactername["name"]}
+                if experience >= cost and training + bodytrain <= 100:
+                    submit = {
+                        bodytrain_strings[string]: training + bodytrain,
+                        "current_exp": experience - cost,
+                        "spent_exp": spent_experience + cost              
+                    }
+                    mongo.db.characters.update_one(updatefilter, {"$set": submit})
+                    flash("Training complete")
+                    return redirect(url_for("character", charactername=charactername['name']))
+                else:
+                    flash("Insufficient experience for training")
+                    return redirect(url_for("character", charactername=charactername['name']))
 
-        if form_name == "hands":
-            training = int(request.form.get('flask-hands'))
-            hands = int(charactername["hands"])
-            spent_experience = charactername["spent_exp"]
-            experience = int(charactername["current_exp"])
-            cost = calculateCost(hands, training)
-            updatefilter= {"name": charactername["name"]}
-            if experience >= cost and training + hands <= 100:
-                submit = {
-                    "hands": training + hands,
-                    "current_exp": experience - cost,
-                    "spent_exp": spent_experience + cost              
-                }
-                mongo.db.characters.update_one(updatefilter, {"$set": submit})
-                flash("Training complete")
-                return redirect(url_for("character", charactername=charactername['name']))
-            else:
-                flash("Insufficient experience for training")
-                return redirect(url_for("character", charactername=charactername['name']))
-
-        if form_name == "legs":
-            training = int(request.form.get('flask-legs'))
-            legs = int(charactername["legs"])
-            spent_experience = charactername["spent_exp"]
-            experience = int(charactername["current_exp"])
-            cost = calculateCost(legs, training)
-            updatefilter= {"name": charactername["name"]}
-            if experience >= cost and training + legs <= 100:
-                submit = {
-                    "legs": training + legs,
-                    "current_exp": experience - cost,
-                    "spent_exp": spent_experience + cost              
-                }
-                mongo.db.characters.update_one(updatefilter, {"$set": submit})
-                flash("Training complete")
-                return redirect(url_for("character", charactername=charactername['name']))
-            else:
-                flash("Insufficient experience for training")
-                return redirect(url_for("character", charactername=charactername['name']))
-
-        if form_name == "torso":
-            training = int(request.form.get('flask-torso'))
-            torso = int(charactername["torso"])
-            spent_experience = charactername["spent_exp"]
-            experience = int(charactername["current_exp"])
-            cost = calculateCost(torso, training)
-            updatefilter= {"name": charactername["name"]}
-            if experience >= cost and training + torso <= 100:
-                submit = {
-                    "torso": training + torso,
-                    "current_exp": experience - cost,
-                    "spent_exp": spent_experience + cost              
-                }
-                mongo.db.characters.update_one(updatefilter, {"$set": submit})
-                flash("Training complete")
-                return redirect(url_for("character", charactername=charactername['name']))
-            else:
-                flash("Insufficient experience for training")
-                return redirect(url_for("character", charactername=charactername['name']))
-
+        """ Following code block listens for discipline training POSTs """
         if form_name == "discipline":
             discipline = int(charactername["discipline"])
             cost = disciplineCost(discipline)

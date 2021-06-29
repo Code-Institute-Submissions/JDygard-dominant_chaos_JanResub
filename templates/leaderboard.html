@@ -5,7 +5,7 @@
     {% for character in characters %}
         {% if loop.first %}
             <div class="col">
-                <div class="row center-align">
+                <div class="row center-align first-place">
                     <h3 class="center-align light-blue-text text-darken-4">
                         #1: {{ character.name|capitalize }}
                     </h3> 
@@ -15,7 +15,7 @@
             </div>
         {% elif loop.index == 2 %}
         <!-- if it's 2 or 3 -->
-            <div class="row center-align">
+            <div class="row center-align second-third-place">
                 <div class="col m6">
                     <h3 class="center-align light-blue-text text-darken-4">
                         #2: {{ character.name|capitalize }}
