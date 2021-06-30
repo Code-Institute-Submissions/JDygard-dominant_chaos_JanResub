@@ -1,7 +1,24 @@
 import math
-import numbers
-import charbase
+import assets.py.charbase as charbase
 import time
+import random
+
+
+""" FIXME
+
+Build character building function
+Build opponent
+rebuild timer function
+build command queue
+build unload function
+    With awarding experience
+    offloading new stats
+    track winner
+Rebuild it to track with the new backend
+remove deprecated functions
+
+"""
+
 
 aghast = charbase.Aghast()
 skynet = charbase.Skynet()
@@ -12,7 +29,7 @@ def rth(ch, vict, type):
     # because of the nature of different classes having some varies hit or damage effects.
     if ch.is_dead != True and vict.is_dead != True:
         if type == "auto":
-            hitroll = numbers.dice_roll( ch.hitroll[0], ch.hitroll[1] ) # Call the dice roll function
+            hitroll = dice_roll( ch.hitroll[0], ch.hitroll[1] ) # Call the dice roll function
             if hitroll >= vict.ac:   # If it clears their armor class
                 dbp(ch, vict, type)           # Call on the Dodge Block and Parry function
             else:                       # Otherwise
@@ -22,21 +39,21 @@ def rth(ch, vict, type):
 def dbp(ch, vict, type): # dodge block parry
     # Check dodge roll
     dodge = vict.dodge
-    dodgeroll = numbers.dice_roll( 1, 100 )
+    dodgeroll = dice_roll( 1, 100 )
     if dodgeroll <= dodge:
         miss("dodge")
         return
 
     # Check block roll
     block = vict.block
-    blockroll = numbers.dice_roll( 1, 100 )
+    blockroll = dice_roll( 1, 100 )
     if blockroll <= block:
         miss("block")
         return
 
     # Check parry roll
     parry = vict.parry
-    parryroll = numbers.dice_roll( 1, 100 )
+    parryroll = dice_roll( 1, 100 )
     if parryroll <= parry:
         miss("parry")
         return
@@ -49,7 +66,7 @@ def dmg(ch, vict, type):
     damage_dice = ch.damage[0]  # Collect the number of damage dice to be rolled
     damage_sides = ch.damage[1] # and how many facets those dice have
     damage_resistance = ch.dr  # Collect the damage resistance
-    damage = numbers.dice_roll( damage_dice, damage_sides)    #roll damage
+    damage = dice_roll( damage_dice, damage_sides)    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict.hp -= damage    #apply damage
     print(f"You hit your opponent with some force ({damage})") # this will someday refer to a function full of different descriptors for different damage amounts
@@ -94,4 +111,12 @@ def tick(player1, player2):
     player1.speed += player1.speed_max
     player2.speed += player2.speed_max
 
-turn_queue(aghast, skynet)
+def dice_roll(dice, sides):
+    rolls = []
+    result = 0
+    for i in range(0,dice):
+        n = random.randint(0,sides)
+        rolls.append(n)
+    for x in rolls:
+        result += x
+    return result
