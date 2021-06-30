@@ -4,10 +4,10 @@ class Preloader extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('background', ".../assets/images/phaser-assets/background.png")
+        this.load.image('background', "https://chaos-legacy-imgserve.s3.eu-north-1.amazonaws.com/backround.png")
     }
     create(){
         this.scene.start('CharSelect')
-        
+
     }
 }

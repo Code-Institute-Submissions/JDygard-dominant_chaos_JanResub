@@ -67,7 +67,9 @@ def play():
 @socket_.on('message', namespace="/test")
 def handle_message(data):
     print(session["user"].upper() + " is connected.")
-    print(data)
+    print(data)    
+    emit('response', "Get your dicks out boys",
+         broadcast=True)
     if data == 45:
         fightbase.turn_queue(fightbase.aghast, fightbase.skynet)
     """ FIXME 

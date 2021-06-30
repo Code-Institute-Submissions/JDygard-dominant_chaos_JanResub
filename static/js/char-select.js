@@ -6,6 +6,14 @@ class CharSelect extends Phaser.Scene{
     preload(){
     }
 
+    socketData(message) {
+        var socket = io(namespace);
+        socket.on('connect', function() {
+            socket.emit('message', message);
+        });
+    }
+    
+
     showText(message, duration){            // A method for displaying text with the message and duration variables
         if (timer == false){                // Check if there is currently a message being displayed
             timer = true;                   // Show that there is current a message being displayed
@@ -24,8 +32,11 @@ class CharSelect extends Phaser.Scene{
         }
     }
 
+    socketConnect(){
+    }
+
     create(){
-        let background = this.add.image(0, 0, 'background')
+        let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8)
         let gameText = this.add.text(400, 300, '', {fontFamily: 'sans serif'})        
         gameText                // The text object
             .setScrollFactor(0) // Make the text fixed in the viewport
@@ -33,6 +44,24 @@ class CharSelect extends Phaser.Scene{
             .setFontSize(40)    // Set the font size to a visible size
             .setColor(0xe60022) // The color for the text
             .setDepth(5)        // Set the depth to 5 so it appears in front of everything
-            .setAlpha(0);       // Make it start invisible
+        this.socketData("CharSelect connected")
+        namespace = '/test';
+        var socket = io(namespace);
+        socket.on('response', function(message, dn) {
+            gameText.setText(message);      // Display the message
+            }
+        )
+
     }
+    
 }
+
+/* Alright.
+We take out all the shit that's here already.
+Send a message through the socket that asks for a character list.
+Include an error message for bad connection.
+Double-check on the backend to make sure the character belongs to them before sending it up.
+The version that is sent up should be a battle-ready version with hp and whatnot.
+Maybe prepare the chclass classes before you do all this.
+
+*/
