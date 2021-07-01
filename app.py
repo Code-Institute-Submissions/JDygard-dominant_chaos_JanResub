@@ -10,8 +10,14 @@ import datetime # For... you know. The date... and the time.
 from flask_mail import Mail, Message
 from flask_socketio import SocketIO, emit, disconnect
 from threading import Lock
+
+#from bson import json_util
+#from bson.json_util import loads
+#from bson.json_util import dumps
+
+import time
 import math
-import importlib.resources as pkg_resources
+import json
 import assets.py.fightbase as fightbase
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
@@ -41,6 +47,11 @@ mail = Mail(app)
 mongo = PyMongo(app)
 socket_ = SocketIO(app, async_mode=async_mode)
 
+# Combat system variables
+combat_switch = False
+curtime = time.time()
+
+
 # app route for home page(index)
 @app.route("/")
 @app.route("/about")
@@ -67,20 +78,92 @@ def play():
 @socket_.on('message', namespace="/test")
 def handle_message(data):
     print(session["user"].upper() + " is connected.")
-    print(data)    
-    emit('response', "Get your dicks out boys",
+    player1 = prepare_character("amn", session["user"])
+    emit('response', player1["name"],
          broadcast=True)
     if data == 45:
         fightbase.turn_queue(fightbase.aghast, fightbase.skynet)
+    if data == "requestcharacterlist":
+        lookup = character_dump(session["user"])
+        emit('response', lookup,
+            broadcast=True)
+
+
+class MongoJsonEncoder(json.JSONEncoder):
+    """Encode JSON, supporting bson.ObjectID."""
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        return super().default(obj)
+
+
+def character_dump(username):
+    cursor = mongo.db.characters.find({"owner": username},
+        projection={"name": 1, "chclass": 1})
+    return json.dumps(list(cursor),
+        cls=MongoJsonEncoder)
+
+
+
+
+@socket_.on('queue', namespace="/test")
+def handle_queue(data):
+    print(data)
     """ FIXME 
     Here we will have:
     character building from the database (function)
+        We can keep this in fightbase.py
     opponent build from template (function)
+        same in fightbase.py
     call timer (function)
+        I mean start the combat timer/build queue thing
     dump info from combat to frontend
 
 
+
+
+    FIXME
+    Receive commands from the frontend and put them in the queue.
+    Setup calculations and feed them back through to phaser.
+    Determine the winner and add experience.
+    Death penalty?
+    
+
     """
+
+
+def prepare_character(chname, chusername):
+    """ FIXME I think the actual stats as affected by body, etc. could be calculated here if not done in the combat code """
+    name = mongo.db.characters.find_one({"name": chname})
+    if name["owner"] == chusername:
+        chclass = name["chclass"]
+        stats = {
+            "name": name["name"],
+            "hp": name["max_hp"],
+            "max_hp": name["max_hp"],
+            "ac": name["ac"],
+            "hitroll": name["hitroll"],
+            "dodge": name["dodge"],
+            "block": name["block"],
+            "parry": name["parry"],
+            "speed": name["speed_max"],
+            "speed_max": name["speed_max"],
+            "damage": name["damage"],
+            "dr": name["dr"],
+            "is_dead": False
+        }
+        if chclass == "fist":
+            stats["torso"] = name["torso"]
+            stats["hands"] = name["hands"]
+            stats["arms"] = name["arms"]
+            stats["legs"] = name["legs"]
+            stats["discipline"] = name["discipline"]
+            stats["ki"] = name["ki"]
+            stats["max_ki"] = name["ki"]
+        return stats
+    else:
+        return False
+
 
 # Library source routes:
 @app.route("/library/general")
@@ -394,7 +477,43 @@ def disciplineCost(current):
 #        html=template,
 #    )
 #    mail.send(msg)
+"""
+Turns out that this is straight up garbage-trash.
+We'll be using APEventscheduler for this.
 
+This is the most elegant way to do it, but we may be forced to do something more... brutish. To maintain the sort of control I want, and make it extensible.
+
+Issues to solve:
+    Build it up in a way that it can do this by seconds for queue abilities.
+    How does it know which players to be issuing commands for?
+
+THIS is for autoattacks and submitting items from the frontend to the queue
+while combat_switch == True:
+    curtime = time.time()
+
+    if curtime % 5 == 0:
+        execute_command()
+
+
+THIS will be for player-issued commands. This way speed can JUST be for autoattacks.
+while combat_switch == True:
+    curtime = time.time()
+
+    for cmd in cmds:
+        if curtime % cmd["interval"] == 0:
+        execute_command(cmd["command"])
+      
+cmds = [
+    {
+        "command": "doNothing",
+        "delay": 5
+    },
+    {
+        "command": "doSomething",
+        "interval": 3
+    }
+]
+"""
 
 
 if __name__ == "__main__":  # If the name is valid

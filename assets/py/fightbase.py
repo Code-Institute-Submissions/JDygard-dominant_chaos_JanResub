@@ -1,6 +1,7 @@
 import math
 import assets.py.charbase as charbase
 import time
+curtime = time.time()
 import random
 
 
@@ -18,8 +19,6 @@ Rebuild it to track with the new backend
 remove deprecated functions
 
 """
-
-
 aghast = charbase.Aghast()
 skynet = charbase.Skynet()
 
@@ -120,3 +119,6 @@ def dice_roll(dice, sides):
     for x in rolls:
         result += x
     return result
+
+
+

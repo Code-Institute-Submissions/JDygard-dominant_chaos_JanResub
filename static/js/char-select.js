@@ -44,11 +44,13 @@ class CharSelect extends Phaser.Scene{
             .setFontSize(40)    // Set the font size to a visible size
             .setColor(0xe60022) // The color for the text
             .setDepth(5)        // Set the depth to 5 so it appears in front of everything
-        this.socketData("CharSelect connected")
+        this.socketData("requestcharacterlist")
         namespace = '/test';
         var socket = io(namespace);
         socket.on('response', function(message, dn) {
-            gameText.setText(message);      // Display the message
+            var data = JSON.parse(JSON.stringify(message))
+            console.log(data)
+            socket.emit('queue', data)
             }
         )
 
