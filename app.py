@@ -79,14 +79,18 @@ def play():
 def handle_message(data):
     print(session["user"].upper() + " is connected.")
     player1 = prepare_character("amn", session["user"])
-    emit('response', player1["name"],
-         broadcast=True)
     if data == 45:
         fightbase.turn_queue(fightbase.aghast, fightbase.skynet)
     if data == "requestcharacterlist":
         lookup = character_dump(session["user"])
         emit('response', lookup,
             broadcast=True)
+
+@socket_.on('chardata', namespace="/test")
+def chardata(data):
+    prepare_character(data)
+    print(data + " is prepared")
+    emit('response', "prepared")
 
 
 class MongoJsonEncoder(json.JSONEncoder):
