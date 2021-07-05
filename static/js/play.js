@@ -1,24 +1,33 @@
 class Play extends Phaser.Scene {
     constructor() {
-        super ("play")
+        super ("Play")
     }
 
     preload(){
         
     }
 
-    create(){
-        let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8)
-    }
-    /*
-    Message log system:
-    create empty text array
-    new function(Message){
-        slice in a new text box at the front
-        show the message
-    }
+    displayText(message){
+        let newText = this.add.text(0,0,message)
+        for (let i = 0; i < textDisplay.length; i++){
+            let oldPos = textDisplay[i].y;
+            textDisplay[i].setY(oldPos+30);
+        }
+        textDisplay.unshift(newText)
+    }    
     
-    Put the background in.
+    socketData(message) {
+        var socket = io(namespace);
+        socket.emit('playdata', message);
+    }
+
+    create(){
+        let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
+        this.socketData("play init")
+    }
+
+    
+    /*
 
     Maybe the character collector should be in here, fed by the select screen.
 

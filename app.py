@@ -1,4 +1,5 @@
 import os
+import static.py.cfg as cfg
 from re import M # os module for accessing the os on the machine running flask
 from flask import (Flask, render_template, make_response,  #Importing Flask and the ability to render templates
     redirect, request, session, url_for, flash, copy_current_request_context) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
@@ -77,10 +78,8 @@ def play():
 
 @socket_.on('message', namespace="/test")
 def handle_message(data):
+    """ Handle character list request from char-select"""
     print(session["user"].upper() + " is connected.")
-    player1 = prepare_character("amn", session["user"])
-    if data == 45:
-        fightbase.turn_queue(fightbase.aghast, fightbase.skynet)
     if data == "requestcharacterlist":
         lookup = character_dump(session["user"])
         emit('response', lookup,
@@ -88,9 +87,21 @@ def handle_message(data):
 
 @socket_.on('chardata', namespace="/test")
 def chardata(data):
-    prepare_character(data)
+    """ Prepare fighter data for fight instance """
+    cfg.fighter1 = prepare_character(data, session["user"])
+    cfg.fighter2 = prepare_opponent()
     print(data + " is prepared")
-    emit('response', "prepared")
+    emit('character', "prepared",
+        broadcast=True)
+
+
+@socket_.on('playdata', namespace="/test")
+def playdata(data):
+    """ Handle activation of the """
+    if data == "play init":
+        cfg.print(fighter1)
+        cfg.print(fighter2)
+        fightbase.turn_queue(cfg.fighter1, cfg.fighter2)
 
 
 class MongoJsonEncoder(json.JSONEncoder):
@@ -167,6 +178,25 @@ def prepare_character(chname, chusername):
         return stats
     else:
         return False
+
+def prepare_opponent():
+    stats = {
+        "name": "Meanie",
+        "hp": 100,
+        "max_hp": 100,
+        "ac": 30,
+        "hitroll": [5, 20],
+        "dodge": 20,
+        "block": 10,
+        "parry": 0,
+        "speed": 100,
+        "speed_max": 100,
+        "damage": [2, 40],
+        "dr": 0,
+        "is_dead": False
+    }
+    return stats
+
 
 
 # Library source routes:

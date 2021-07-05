@@ -12,21 +12,17 @@ class CharSelect extends Phaser.Scene{
             socket.emit('message', message);
         });
     }
-
     /* FIXME 
     
     Capitalize names
+    fix class names
     Style that shit up
     
     */
 
     displayCharacters(data){
-        var char = []
-        var text = []
         var scene = this
         for (let i = 0; i < data.length; i++){
-            console.log(data[i])
-            let chname = data[i].name
             text[i] = this.add.text(400, (120 * (i + 1)), data[i].name + ": " + data[i].chclass).setOrigin(0.5).setFontSize(40)
             char[i] = {
                 "name": data[i].name,
@@ -34,20 +30,17 @@ class CharSelect extends Phaser.Scene{
             }
         }
         this.input.on('pointerdown', function(pointer){
-            for (var i = 0; i < text.length; i++)
-                console.log(char[i]["name"]);
-                let loc = (char[i]["name"])
-                console.log(loc)
+            for (var i = 0; i < text.length; i++){
+                let loc = (char[i]["loc"])
                 if (pointer.y > loc - 50 && pointer.y < loc + 50){
                     var socket = io(namespace);
-                    console.log(char.name)
                     socket.emit('chardata', char[i]["name"]);
                 }
+            }
         })
     }
 
     create(){
-        let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8)
         this.socketData("requestcharacterlist")
         namespace = '/test';
         var socket = io(namespace);
@@ -57,6 +50,11 @@ class CharSelect extends Phaser.Scene{
             scene.displayCharacters(data)
             }
         )
+        socket.on('character', function(data){
+            if (data == "prepared"){
+                scene.scene.start('Play')
+            }
+        })
 
     }
     

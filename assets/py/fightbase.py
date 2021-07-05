@@ -1,5 +1,6 @@
 import math
 import assets.py.charbase as charbase
+import static.py.cfg as cfg
 import time
 curtime = time.time()
 import random
@@ -19,8 +20,6 @@ Rebuild it to track with the new backend
 remove deprecated functions
 
 """
-aghast = charbase.Aghast()
-skynet = charbase.Skynet()
 
 #Roll to hit. "type" will refer to different attacks so that this function is multipurpose
 def rth(ch, vict, type): 
