@@ -99,8 +99,6 @@ def chardata(data):
 def playdata(data):
     """ Handle activation of the """
     if data == "play init":
-        cfg.print(fighter1)
-        cfg.print(fighter2)
         fightbase.turn_queue(cfg.fighter1, cfg.fighter2)
 
 
@@ -113,6 +111,7 @@ class MongoJsonEncoder(json.JSONEncoder):
 
 
 def character_dump(username):
+    """ Package character list into a JSON with only relevant info """
     cursor = mongo.db.characters.find({"owner": username},
         projection={"name": 1, "chclass": 1})
     return json.dumps(list(cursor),
