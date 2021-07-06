@@ -24,6 +24,11 @@ class Play extends Phaser.Scene {
     create(){
         let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
         this.socketData("play init")
+        var socket = io(namespace);
+        socket.on('display', function(message) {
+            displayText(message)
+            }
+        )
     }
 
     

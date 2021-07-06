@@ -20,3 +20,4 @@ var textDisplay = []; //Build an array to house text display objects
 var char = []
 var text = []
 var game = new Phaser.Game(config);         // Uses the config object keys to set the start conditions for the game
+var socket = io(namespace);

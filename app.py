@@ -2,15 +2,14 @@ import os
 import static.py.cfg as cfg
 from re import M # os module for accessing the os on the machine running flask
 from flask import (Flask, render_template, make_response,  #Importing Flask and the ability to render templates
-    redirect, request, session, url_for, flash, copy_current_request_context) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
+    redirect, request, session, url_for, flash) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
 from bson.objectid import ObjectId #Importing the ability to reference MongoDB object ids
 from flask_pymongo import PyMongo   # Importing a module to use python with MongoDB
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
-from itsdangerous import URLSafeTimedSerializer # Importing the ability to generate safe serialized id strings
 import datetime # For... you know. The date... and the time.
-from flask_mail import Mail, Message
 from flask_socketio import SocketIO, emit, disconnect
 from threading import Lock
+import random
 
 #from bson import json_util
 #from bson.json_util import loads
@@ -19,7 +18,6 @@ from threading import Lock
 import time
 import math
 import json
-import assets.py.fightbase as fightbase
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
 
@@ -33,18 +31,9 @@ thread_lock = Lock()
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
-app.config["MAIL_SERVER"]= os.environ.get("MAIL_SERVER")
-app.config["MAIL_PORT"]= os.environ.get("MAIL_PORT")
-app.config["MAIL_USE_TLS"]= os.environ.get("MAIL_USE_TLS")
-app.config["MAIL_USE_SSL"]= os.environ.get("MAIL_USE_SSL")
-app.config["MAIL_USERNAME"]= os.environ.get("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"]= os.environ.get("MAIL_PASSWORD")
-app.config["MAIL_DEFAULT_SENDER"]= os.environ.get("MAIL_DEFAULT_SENDER")
 app.secret_key = os.environ.get("SECRET_KEY")               # Getting the secret key for accessing the DB
 app.security_password_salt = os.environ.get("SECURITY_PASSWORD_SALT")
-app.mail_default_sender = os.environ.get("MAIL_DEFAULT_SENDER")
 
-mail = Mail(app)
 mongo = PyMongo(app)
 socket_ = SocketIO(app, async_mode=async_mode)
 
@@ -53,61 +42,121 @@ combat_switch = False
 curtime = time.time()
 
 
-# app route for home page(index)
-@app.route("/")
-@app.route("/about")
-def about():
-    return render_template("about.html")
+#####                  Fight instance logic                    #####
+##### This is where all of the functions related to resolving  #####
+##### the actual combat instances will be located.             #####
+##### There is a better solution involving blueprints that was #####
+##### scrapped due to time constraints. This uglier solution   #####
+##### will have to suffice.                                    #####
 
 
-@app.errorhandler(404)
-def not_found():
-    """Page not found."""
-    return make_response(render_template("404.html"), 404)
+#Roll to hit. "type" will refer to different attacks so that this function is multipurpose
+def rth(ch, vict, type): 
+    # This will wind up having to be significantly more complex
+    # because of the nature of different classes having some varies hit or damage effects.
+    if ch["is_dead"] != True and vict["is_dead"] != True:
+        if type == "auto":
+            hitroll = dice_roll( ch["hitroll"][0], ch["hitroll"][1] ) # Call the dice roll function
+            if hitroll >= vict["ac"]:   # If it clears their armor class
+                dbp(ch, vict, type)           # Call on the Dodge Block and Parry function
+            else:                       # Otherwise
+                miss("miss", ch, vict)               # Send it to the miss function with "hit"
 
 
-@app.route("/library")
-def library():
-    return render_template("library.html")
+# After a hit registers, run the dbp function, short for dodge, block and parry
+def dbp(ch, vict, type): # dodge block parry
+    # Check dodge roll
+    dodge = vict["dodge"]
+    dodgeroll = dice_roll( 1, 100 )
+    if dodgeroll <= dodge:
+        miss("dodge", ch, vict)
+        return
+
+    # Check block roll
+    block = vict["block"]
+    blockroll = dice_roll( 1, 100 )
+    if blockroll <= block:
+        miss("block", ch, vict)
+        return
+
+    # Check parry roll
+    parry = vict["parry"]
+    parryroll = dice_roll( 1, 100 )
+    if parryroll <= parry:
+        miss("parry", ch, vict)
+        return
+
+    # If damage isn't prevented, calculate damage
+    dmg(ch,vict, type)
 
 
-@app.route("/play")
-def play():
-    return render_template("play.html", sync_mode=socket_.async_mode)
+# dmg( Damage ) function for calculating damage and checking for death
+def dmg(ch, vict, type):
+    damage_dice = ch["damage"][0]  # Collect the number of damage dice to be rolled
+    damage_sides = ch["damage"][1] # and how many facets those dice have
+    damage_resistance = ch["dr"]  # Collect the damage resistance
+    damage = dice_roll( damage_dice, damage_sides )    #roll damage
+    damage -= damage_resistance   #subtract vict["dr"]
+    vict["hp"] -= damage    #apply damage
+    print(f"You hit your opponent with some force ({damage})") # this will someday refer to a function full of different descriptors for different damage amounts
+    if vict["hp"] <= 0:
+        victory(ch, vict)
 
 
-@socket_.on('message', namespace="/test")
-def handle_message(data):
-    """ Handle character list request from char-select"""
-    print(session["user"].upper() + " is connected.")
-    if data == "requestcharacterlist":
-        lookup = character_dump(session["user"])
-        emit('response', lookup,
-            broadcast=True)
-
-@socket_.on('chardata', namespace="/test")
-def chardata(data):
-    """ Prepare fighter data for fight instance """
-    cfg.fighter1 = prepare_character(data, session["user"])
-    cfg.fighter2 = prepare_opponent()
-    print(data + " is prepared")
-    emit('character', "prepared",
-        broadcast=True)
+def miss(case, ch, vict):
+    if case == "miss" and ch["name"] == cfg.fighter1["name"]:
+        print("You swing for your opponent, but miss.")
+    if case == "dodge" and ch["name"] == cfg.fighter1["name"]:
+        print("You swing for your opponent, but your attack is dodged.")
+    if case == "block" and ch["name"] == cfg.fighter1["name"]:
+        print("You swing for your opponent, but your attack is blocked.")
+    if case == "parry" and ch["name"] == cfg.fighter1["name"]:
+        print("You swing for your opponent, but your attack is parried.") 
 
 
-@socket_.on('playdata', namespace="/test")
-def playdata(data):
-    """ Handle activation of the """
-    if data == "play init":
-        fightbase.turn_queue(cfg.fighter1, cfg.fighter2)
+
+def auto_atk(ch, vict):
+    spd = ch["speed"]
+    aps = spd // 40
+    ch["speed"] = spd % 40 
+    for attacks in range(0, aps):
+        rth(ch, vict, "auto")
 
 
-class MongoJsonEncoder(json.JSONEncoder):
-    """Encode JSON, supporting bson.ObjectID."""
-    def default(self, obj):
-        if isinstance(obj, ObjectId):
-            return str(obj)
-        return super().default(obj)
+def victory(ch, vict):
+    vict["is_dead"] = True
+    print(f"{vict['name']} is incapacitated and will die soon, if not aided.")
+
+
+def turn_timer(player1, player2):
+    print("")
+    print(f"<hp: {player1['hp']}/{player1['max_hp']}>")
+    tick(player1, player2)
+    time.sleep(3)
+    turn_queue(player1, player2)
+
+
+def turn_queue(player1, player2):
+    if player1["is_dead"] == False and player2["is_dead"] == False:
+        auto_atk(player1, player2)
+        auto_atk(player2, player1)
+        turn_timer(player1, player2)
+
+
+def tick(player1, player2):
+    player1["speed"] += player1["speed_max"]
+    player2["speed"] += player2["speed_max"]
+
+
+def dice_roll(dice, sides):
+    rolls = []
+    result = 0
+    for i in range(0,dice):
+        n = random.randint(0,sides)
+        rolls.append(n)
+    for x in rolls:
+        result += x
+    return result
 
 
 def character_dump(username):
@@ -118,32 +167,7 @@ def character_dump(username):
         cls=MongoJsonEncoder)
 
 
-
-
-@socket_.on('queue', namespace="/test")
-def handle_queue(data):
-    print(data)
-    """ FIXME 
-    Here we will have:
-    character building from the database (function)
-        We can keep this in fightbase.py
-    opponent build from template (function)
-        same in fightbase.py
-    call timer (function)
-        I mean start the combat timer/build queue thing
-    dump info from combat to frontend
-
-
-
-
-    FIXME
-    Receive commands from the frontend and put them in the queue.
-    Setup calculations and feed them back through to phaser.
-    Determine the winner and add experience.
-    Death penalty?
-    
-
-    """
+##### Functions that app.py uses to prepare data for the above fight logic #####
 
 
 def prepare_character(chname, chusername):
@@ -197,6 +221,101 @@ def prepare_opponent():
     return stats
 
 
+### SocketIO emit event handlers ###
+
+
+# SocketIO handler for character list request
+@socket_.on('message', namespace="/test")
+def handle_message(data):
+    """ Handle character list request from char-select"""
+    print(session["user"].upper() + " is connected.")
+    if data == "requestcharacterlist":
+        lookup = character_dump(session["user"])
+        emit('response', lookup,
+            broadcast=True)
+
+
+# SocketIO handler for preparing the fight logic
+@socket_.on('chardata', namespace="/test")
+def chardata(data):
+    """ Prepare fighter data for fight instance """
+    cfg.fighter1 = prepare_character(data, session["user"])
+    cfg.fighter2 = prepare_opponent()
+    print(data + " is prepared")
+    emit('character', "prepared",
+        broadcast=True)
+
+
+@socket_.on('playdata', namespace="/test")
+def playdata(data):
+    """ Handle activation of the """
+    if data == "play init":
+        turn_queue(cfg.fighter1, cfg.fighter2)
+
+
+@socket_.on('queue', namespace="/test")
+def handle_queue(data):
+    print(data)
+    """ FIXME 
+    Here we will have:
+    character building from the database (function)
+        We can keep this in fightbase.py
+    opponent build from template (function)
+        same in fightbase.py
+    call timer (function)
+        I mean start the combat timer/build queue thing
+    dump info from combat to frontend
+
+
+
+
+    FIXME
+    Receive commands from the frontend and put them in the queue.
+    Setup calculations and feed them back through to phaser.
+    Determine the winner and add experience.
+    Death penalty?
+    
+
+    """
+####            App routes                 ####
+#### This is where app routes for html pages###
+#### and sockets will be located           ####
+
+
+# app route for home page(index)
+@app.route("/")
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+# 404 error handler
+@app.errorhandler(404)
+def not_found():
+    """Page not found."""
+    return make_response(render_template("404.html"), 404)
+
+
+# Library page route
+@app.route("/library")
+def library():
+    return render_template("library.html")
+
+
+# Play page route
+@app.route("/play")
+def play():
+    return render_template("play.html", sync_mode=socket_.async_mode)
+
+
+# Process JSON data with objectid intact
+class MongoJsonEncoder(json.JSONEncoder):
+    """Encode JSON, supporting bson.ObjectID."""
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        return super().default(obj)
+
 
 # Library source routes:
 @app.route("/library/general")
@@ -222,9 +341,6 @@ def sorcerer():
 @app.route("/library/outward-fist")
 def outward_fist():
     return render_template("library/outward-fist.html")
-
-
-
 
 
 @app.route("/leaderboard")
@@ -453,6 +569,7 @@ def logout():
     session.pop("user")
     return redirect(url_for("login"))
 
+
 def calculateCost(current, iterations):
     initialValue = current
     result = 0
@@ -463,53 +580,11 @@ def calculateCost(current, iterations):
         i += 1
     return round(result)
 
+
 def disciplineCost(current):
     return (current + 1) * 500000
 
 
-#@app.route('/confirm/<token>')
-#def confirm_email(token):
-#    try:
-#        email = confirm_token(token)
-#    except:
-##        flash("The confirmation link is invalid or has expired.")
-#    user = mongo.db.users.find_on({"email": email})
-#    if user.confirmed:
-#        flash("Account already confirmed, please login.")
-#    else:
-##        user.confirmed = True
-#        session["user"] = user
-#        flash("You have confirmed your account. High five!")
-#    return redirect(url_for("character"))
-
-
-# Generate key for confirmation email
-#def generate_confirmation_token(email):
-#    serializer = URLSafeTimedSerializer(app.secret_key)
-#    return serializer.dumps(email, salt=app.security_password_salt)
-
-
-#def confirm_token(token, expiration=3600):
-#    serializer = URLSafeTimedSerializer(app.secret_key)
-#    try:
-#        email = serializer.loads(
-#            token,
-#            salt=app.security_password_salt,
-#            max_age=expiration
-#        )
-#    except:
-#        return False
-#    return email
-
-
-#def send_email(to, subject, template):
-#    print(app.config["MAIL_SERVER"])
-#    msg = Message(
-#        subject,
-#        recipients=[to],
-#        html=template,
-#    )
-#    mail.send(msg)
 """
 Turns out that this is straight up garbage-trash.
 We'll be using APEventscheduler for this.

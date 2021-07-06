@@ -4,13 +4,11 @@ import static.py.cfg as cfg
 import time
 curtime = time.time()
 import random
+from flask_socketio import SocketIO, emit, disconnect
 
 
 """ FIXME
 
-Build character building function
-Build opponent
-rebuild timer function
 build command queue
 build unload function
     With awarding experience
@@ -32,6 +30,7 @@ def rth(ch, vict, type):
                 dbp(ch, vict, type)           # Call on the Dodge Block and Parry function
             else:                       # Otherwise
                 miss("miss")               # Send it to the miss function with "hit"
+
 
 # After a hit registers, run the dbp function, short for dodge, block and parry
 def dbp(ch, vict, type): # dodge block parry
@@ -59,6 +58,7 @@ def dbp(ch, vict, type): # dodge block parry
     # If damage isn't prevented, calculate damage
     dmg(ch,vict, type)
 
+
 # dmg( Damage ) function for calculating damage and checking for death
 def dmg(ch, vict, type):
     damage_dice = ch["damage"][0]  # Collect the number of damage dice to be rolled
@@ -71,15 +71,18 @@ def dmg(ch, vict, type):
     if vict["hp"] <= 0:
         victory(ch, vict)
 
-def miss(case):
-    if case == "miss":
+
+def miss(case, ch, vict):
+    if case == "miss" and ch["name"] == cfg.fighter1["name"]:
         print("You swing for your opponent, but miss.")
-    if case == "dodge":
+    if case == "dodge" and ch["name"] == cfg.fighter1["name"]:
         print("You swing for your opponent, but your attack is dodged.")
-    if case == "block":
+    if case == "block" and ch["name"] == cfg.fighter1["name"]:
         print("You swing for your opponent, but your attack is blocked.")
-    if case == "parry":
-        print("You swing for your opponent, but your attack is parried.")
+    if case == "parry" and ch["name"] == cfg.fighter1["name"]:
+        print("You swing for your opponent, but your attack is parried.") 
+
+
 
 def auto_atk(ch, vict):
     spd = ch["speed"]
@@ -88,9 +91,11 @@ def auto_atk(ch, vict):
     for attacks in range(0, aps):
         rth(ch, vict, "auto")
 
+
 def victory(ch, vict):
     vict["is_dead"] = True
     print(f"{vict['name']} is incapacitated and will die soon, if not aided.")
+
 
 def turn_timer(player1, player2):
     print("")
@@ -99,16 +104,18 @@ def turn_timer(player1, player2):
     time.sleep(3)
     turn_queue(player1, player2)
 
+
 def turn_queue(player1, player2):
-    print(player1)
     if player1["is_dead"] == False and player2["is_dead"] == False:
         auto_atk(player1, player2)
         auto_atk(player2, player1)
         turn_timer(player1, player2)
 
+
 def tick(player1, player2):
     player1["speed"] += player1["speed_max"]
     player2["speed"] += player2["speed_max"]
+
 
 def dice_roll(dice, sides):
     rolls = []
@@ -119,6 +126,3 @@ def dice_roll(dice, sides):
     for x in rolls:
         result += x
     return result
-
-
-

@@ -195,3 +195,11 @@ look into method controller view (MCV) theory
 ## field control/defensive programming
 
 pattern="^[a-zA-Z0-9]{5,15}$" can be added to any sort of input field. This is an example that limits the input to alphanumeric strings between 5 and 15 characters
+
+## Total restructure
+
+SocketIO is functioning in app.py, but fightbase.py needs to be able to route through the socket also. I found several examples of how to make this work, but it involved a total restructure of my code and heroku configuration. It would be using blueprints and total separation of code.
+
+Considering that the workload of this project has ballooned way larger than I had ever expected, in the interests of time I will just be moving all of the fight logic into app.py.
+
+It's an uglier solution than I would like, but it makes the schedule fit better.
