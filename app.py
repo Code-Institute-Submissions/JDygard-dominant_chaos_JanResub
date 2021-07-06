@@ -98,7 +98,7 @@ def dmg(ch, vict, type):
     damage = dice_roll( damage_dice, damage_sides )    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
-    print(f"You hit your opponent with some force ({damage})") # this will someday refer to a function full of different descriptors for different damage amounts
+    add_to_queue("auto", damage)
     if vict["hp"] <= 0:
         victory(ch, vict)
 
@@ -159,15 +159,24 @@ def dice_roll(dice, sides):
     return result
 
 
+def add_to_queue(method, dmg):
+    data = {
+        "method": method,
+        "damage": dmg,
+        "extra": None
+    }
+    cfg.queue.append(data)
+
+
+##### Functions that app.py uses to prepare data for the above fight logic #####
+
+
 def character_dump(username):
     """ Package character list into a JSON with only relevant info """
     cursor = mongo.db.characters.find({"owner": username},
         projection={"name": 1, "chclass": 1})
     return json.dumps(list(cursor),
         cls=MongoJsonEncoder)
-
-
-##### Functions that app.py uses to prepare data for the above fight logic #####
 
 
 def prepare_character(chname, chusername):
@@ -222,6 +231,20 @@ def prepare_opponent():
 
 
 ### SocketIO emit event handlers ###
+
+
+@socket_.on('query', namespace="/test")
+def handle_query(data):
+    print(data)
+    time.sleep(0.5)
+    if cfg.queue == []:
+        emit('reply', "empty")
+        print("reply (empty)")
+    else:
+        print("reply (loaded)")
+        emit('reply', cfg.queue,
+            broadcast=True)
+    cfg.queue = []
 
 
 # SocketIO handler for character list request
