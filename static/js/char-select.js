@@ -21,7 +21,6 @@ class CharSelect extends Phaser.Scene{
     */
 
     displayCharacters(data){
-        var scene = this
         for (let i = 0; i < data.length; i++){
             text[i] = this.add.text(400, (120 * (i + 1)), data[i].name + ": " + data[i].chclass).setOrigin(0.5).setFontSize(40)
             char[i] = {
@@ -41,10 +40,10 @@ class CharSelect extends Phaser.Scene{
     }
 
     create(){
-        this.socketData("requestcharacterlist")
-        namespace = '/test';
-        var socket = io(namespace);
         var scene = this
+        this.socketData("requestcharacterlist")
+        var namespace = '/test';
+        var socket = io(namespace);
         socket.on('response', function(message) {
             var data = JSON.parse(message)
             scene.displayCharacters(data)

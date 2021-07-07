@@ -26,19 +26,20 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        var scene = this;
         let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
         this.socketData("play init")
         var namespace = "/test"
         var socket = io(namespace);
-        var scene = this;
-        socket.on('reply', function(message) {
-            console.log(message)
-            console.log("tick")
-            for (let i = 0; i < message.length; i++) {
-                //let newText = scene.add.text(0,0,message.method + ' (' + message.damage + ")")
-                scene.displayText(message[i]["method"] + ' (' + message[i]["damage"] + ")")
+        socket.on('query', function(message) {
+            if (message == "conclude") {
+                conclude = true;
             }
-            socket.emit('query', '');
+            else if (message !== "empty")
+                for (let i = 0; i < message.length; i++) {
+                    //let newText = scene.add.text(0,0,message.method + ' (' + message.damage + ")")
+                    scene.displayText(message[i]["method"] + ' (' + message[i].damage + ")")
+                }
             /*
             for (let i = 0; i < textDisplay.length; i++){
                 let oldPos = textDisplay[i].y;
@@ -48,7 +49,14 @@ class Play extends Phaser.Scene {
             }
         )*/
         })
-        this.queryData()
+        timer = setInterval(function() {
+            console.log(this.conclude)
+            if (conclude == true){
+                clearInterval(timer)
+                console.log("conclude")
+            }
+            socket.emit("query", 'empty')
+        },500)
     }
 
     

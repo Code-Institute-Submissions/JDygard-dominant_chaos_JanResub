@@ -51,7 +51,7 @@ curtime = time.time()
 
 
 #Roll to hit. "type" will refer to different attacks so that this function is multipurpose
-def rth(ch, vict, type): 
+def roll_to_hit(ch, vict, type): 
     # This will wind up having to be significantly more complex
     # because of the nature of different classes having some varies hit or damage effects.
     if ch["is_dead"] != True and vict["is_dead"] != True:
@@ -120,7 +120,7 @@ def auto_atk(ch, vict):
     aps = spd // 40
     ch["speed"] = spd % 40 
     for attacks in range(0, aps):
-        rth(ch, vict, "auto")
+        roll_to_hit(ch, vict, "auto")
 
 
 def victory(ch, vict):
@@ -132,8 +132,6 @@ def turn_timer(player1, player2):
     print("")
     print(f"<hp: {player1['hp']}/{player1['max_hp']}>")
     tick(player1, player2)
-    time.sleep(3)
-    turn_queue(player1, player2)
 
 
 def turn_queue(player1, player2):
@@ -214,8 +212,8 @@ def prepare_character(chname, chusername):
 def prepare_opponent():
     stats = {
         "name": "Meanie",
-        "hp": 100,
-        "max_hp": 100,
+        "hp": 1000,
+        "max_hp": 1000,
         "ac": 30,
         "hitroll": [5, 20],
         "dodge": 20,
@@ -235,16 +233,20 @@ def prepare_opponent():
 
 @socket_.on('query', namespace="/test")
 def handle_query(data):
-    print(data)
-    time.sleep(0.5)
-    if cfg.queue == []:
-        emit('reply', "empty")
-        print("reply (empty)")
-    else:
-        print("reply (loaded)")
-        emit('reply', cfg.queue,
+    cfg.timer += 1
+    if cfg.timer >= 6:
+        turn_queue(cfg.fighter1, cfg.fighter2)
+        cfg.timer = 0
+    if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
+        print("conclude")
+        emit('query', "conclude")
+    elif cfg.queue == []:
+        emit('query', "empty",
             broadcast=True)
-    cfg.queue = []
+    else:
+        emit('query', cfg.queue,
+            broadcast=True)
+        cfg.queue = []
 
 
 # SocketIO handler for character list request

@@ -16,6 +16,9 @@ const config = {
     ]
 };
 
+var conclude = false
+var scene = this;
+var timer
 var textDisplay = []; //Build an array to house text display objects
 var char = []
 var text = []
