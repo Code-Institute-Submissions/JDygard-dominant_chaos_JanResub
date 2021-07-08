@@ -60,7 +60,7 @@ def roll_to_hit(ch, vict, type):
             if hitroll >= vict["ac"]:   # If it clears their armor class
                 dbp(ch, vict, type)           # Call on the Dodge Block and Parry function
             else:                       # Otherwise
-                miss("miss", ch, vict)               # Send it to the miss function with "hit"
+                miss("miss", ch, type)               # Send it to the miss function with "hit"
 
 
 # After a hit registers, run the dbp function, short for dodge, block and parry
@@ -69,25 +69,25 @@ def dbp(ch, vict, type): # dodge block parry
     dodge = vict["dodge"]
     dodgeroll = dice_roll( 1, 100 )
     if dodgeroll <= dodge:
-        miss("dodge", ch, vict)
+        miss("dodge", ch, type)
         return
 
     # Check block roll
     block = vict["block"]
     blockroll = dice_roll( 1, 100 )
     if blockroll <= block:
-        miss("block", ch, vict)
+        miss("block", ch, type)
         return
 
     # Check parry roll
     parry = vict["parry"]
     parryroll = dice_roll( 1, 100 )
     if parryroll <= parry:
-        miss("parry", ch, vict)
+        miss("parry", ch, type)
         return
 
     # If damage isn't prevented, calculate damage
-    dmg(ch,vict, type)
+    dmg(ch, vict, type)
 
 
 # dmg( Damage ) function for calculating damage and checking for death
@@ -98,21 +98,20 @@ def dmg(ch, vict, type):
     damage = dice_roll( damage_dice, damage_sides )    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
-    add_to_queue("auto", damage)
+    add_to_queue(ch["name"], "auto", damage, None)
     if vict["hp"] <= 0:
         victory(ch, vict)
 
 
-def miss(case, ch, vict):
-    if case == "miss" and ch["name"] == cfg.fighter1["name"]:
-        print("You swing for your opponent, but miss.")
-    if case == "dodge" and ch["name"] == cfg.fighter1["name"]:
-        print("You swing for your opponent, but your attack is dodged.")
-    if case == "block" and ch["name"] == cfg.fighter1["name"]:
-        print("You swing for your opponent, but your attack is blocked.")
-    if case == "parry" and ch["name"] == cfg.fighter1["name"]:
-        print("You swing for your opponent, but your attack is parried.") 
-
+def miss(case, ch, method):
+    if case == "miss":
+        add_to_queue(ch["name"], method, 0, "miss")
+    if case == "dodge":
+        add_to_queue(ch["name"], method, 0, "dodge")
+    if case == "block":
+        add_to_queue(ch["name"], method, 0, "block")
+    if case == "parry":
+        add_to_queue(ch["name"], method, 0, "parry")
 
 
 def auto_atk(ch, vict):
@@ -157,11 +156,12 @@ def dice_roll(dice, sides):
     return result
 
 
-def add_to_queue(method, dmg):
+def add_to_queue(name, method, dmg, extra):
     data = {
+        "name": name,
         "method": method,
         "damage": dmg,
-        "extra": None
+        "extra": extra
     }
     cfg.queue.append(data)
 
@@ -273,9 +273,21 @@ def chardata(data):
 
 @socket_.on('playdata', namespace="/test")
 def playdata(data):
-    """ Handle activation of the """
+    """ Handle requests for specific data """
     if data == "play init":
-        turn_queue(cfg.fighter1, cfg.fighter2)
+        print("play init")
+        players = [
+            {
+                "name": cfg.fighter1["name"],
+                "max_hp": cfg.fighter1["max_hp"],
+            },
+            {
+                "name": cfg.fighter2["name"],
+                "max_hp": cfg.fighter2["max_hp"],
+            }
+        ]
+        emit('query', players, broadcast=True)
+
 
 
 @socket_.on('queue', namespace="/test")

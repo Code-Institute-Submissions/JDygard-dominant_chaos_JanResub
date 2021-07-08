@@ -16,12 +16,16 @@ const config = {
     ]
 };
 
-var conclude = false
+var roundTimer = -1;
+var conclude = false;
 var scene = this;
-var timer
+var timer;
 var textDisplay = []; //Build an array to house text display objects
-var char = []
-var text = []
+var char = [];
+var text = [];
+var instructionQueue = [];
 var game = new Phaser.Game(config);         // Uses the config object keys to set the start conditions for the game
-var namespace = "/test"
+var namespace = "/test";
 var socket = io(namespace);
+var player1;
+var player2;
