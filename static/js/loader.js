@@ -16,6 +16,9 @@ const config = {
     ]
 };
 
+var hpText;
+var referenceHP;
+var energyMask;
 var roundTimer = -1;
 var conclude = false;
 var scene = this;

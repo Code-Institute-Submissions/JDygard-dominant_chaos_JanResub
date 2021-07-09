@@ -67,7 +67,10 @@ class Play extends Phaser.Scene {
     parseSocketData(data){  
         if (data[0]["max_hp"]){
             player1 = data[0];
+            player1["hp"] = player1["max_hp"]
             player2 = data[1];
+            player2["hp"] = player2["max_hp"]
+            
         } else {
             console.log("data pushed to queue:")
             console.log(data)
@@ -81,13 +84,7 @@ class Play extends Phaser.Scene {
         scene = this
         let intervalTimer = 3000 / instructionQueue.length;
         let tempQueue = instructionQueue;
-        console.log("Temp queue:")
-        console.log(tempQueue)
-        console.log("----------")
         instructionQueue = [];
-        console.log("Emptied queue:")
-        console.log(instructionQueue)
-        console.log("--------------")
         for (let i = 0; i < tempQueue.length; i++){
             setTimeout(function(){                                                          // Wait for a moment
                 scene.damageHandler(tempQueue[i]["name"], tempQueue[i]["damage"]);                                                           // before removing the tint
@@ -107,7 +104,13 @@ class Play extends Phaser.Scene {
     }
 
     damageHandler(name, damage){
-
+        var stepWidth = (energyMask.displayWidth - 30) / player1["max_hp"];  // Figure out how much the bar should move for each point based on the max value
+        if (name == player2["name"]){
+            energyMask.x -= damage * stepWidth;             // Move the mask
+            player1["hp"] -= damage
+            let newText = `${player1["hp"]}/${player1["max_hp"]}`
+            hpText.setText(newText); 
+        }
     }
 
     animationHandler(name, method){
@@ -115,27 +118,23 @@ class Play extends Phaser.Scene {
     }
 
     create(){
-        /*
-        Healthbar mask system from evo.
+        // Healthbar mask system from evo.
+        hpText = this.add.text(207, 90, "")
+            .setFontSize(18)
+            .setDepth(10);
+            
+        let emptyBar = this.add.sprite(207, 90, 'emptybar')
+            .setDepth(6)                                        // Set the depth so it appears on top of everything
+            .setScale(1.5);                                     // Make it a little bigger :)
         let energyBar = this.add.sprite(207, 90, 'energybar')   // Make an energy bar
             .setDepth(6)                                        // Set the depth so it appears on top of everything
-            .setScrollFactor(0)                                 // Fix it in viewport
             .setScale(1.5);                                     // Make it a little bigger :)
         energyMask = this.add.sprite(207, 90, 'energybar')      // Make a mask to hide some of the bar when the health is below max
-            .setDepth(6)                                        // Set the depth so it appears on top of everything                                    
-            .setScrollFactor(0)                                 // Fix it in viewport
+            .setDepth(6)                                        // Set the depth so it appears on top of everything       
             .setScale(1.5);                                     // Make it a little bigger :)
         energyMask.visible = false;                             // Make it invisble
         energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, energyMask); // Make the mask act like a mask
 
-        if (playerHP >= 1){                                     // If the player has hp left
-            stepWidth = energyMask.displayWidth / playerMaxHP;  // Figure out how much the bar should move for each point based on the max value
-            if (playerHP !== referenceHP){                      // If the hp has changed since last update
-                let lostHP = referenceHP - playerHP;            // Figure out how much it has changed
-                referenceHP = playerHP;                         // Reset the expected hp
-                energyMask.x -= lostHP * stepWidth;             // Move the mask
-            }
-        */
         var scene = this; // Establish context
         let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
         var namespace = "/test"; // Namespace used to identify which user this is
@@ -153,7 +152,6 @@ class Play extends Phaser.Scene {
         timer = setInterval(function() {
             roundTimer += 1;
             if (roundTimer == 6){
-                console.log("queuehandler fires")
                 scene.queueHandler();
                 roundTimer = 0;
             }
@@ -165,7 +163,6 @@ class Play extends Phaser.Scene {
 
         this.socketData("play init");
     }
-
     
     /*
 

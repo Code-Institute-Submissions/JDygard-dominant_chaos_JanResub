@@ -1,5 +1,5 @@
-import os
-import static.py.cfg as cfg
+import os                       # To access the operating system
+import static.py.cfg as cfg     # A module with useful variables
 from re import M # os module for accessing the os on the machine running flask
 from flask import (Flask, render_template, make_response,  #Importing Flask and the ability to render templates
     redirect, request, session, url_for, flash) # Importing the ability to redirect users to other templates, request form data, use session cookies, standin urls with python and jinja, and flash information
@@ -9,15 +9,10 @@ from werkzeug.security import generate_password_hash, check_password_hash   # Im
 import datetime # For... you know. The date... and the time.
 from flask_socketio import SocketIO, emit, disconnect
 from threading import Lock
-import random
-
-#from bson import json_util
-#from bson.json_util import loads
-#from bson.json_util import dumps
-
+import random                   # Used for the dice_roll() method
 import time
-import math
-import json
+import math                     # Used to calculate damage, experience, block values and more
+import json                     # Used to format data sent to the frontend
 if os.path.exists("env.py"):    # If statement so that the program works without env.py present
     import env                  # import secret information
 
@@ -25,9 +20,9 @@ if os.path.exists("env.py"):    # If statement so that the program works without
 app = Flask(__name__)           # setting flask to the standard __name__
 app.config.from_object(__name__)
 
-async_mode = None
-thread = None
-thread_lock = Lock()
+async_mode = None               # Async mode is a bit complex for a beginner
+thread = None                   # No threading
+thread_lock = Lock()            # With locked threads
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME") # Getting the DBNAME defined in env.py
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")       # Getting the URI for the DB
@@ -58,36 +53,36 @@ def roll_to_hit(ch, vict, type):
         if type == "auto":
             hitroll = dice_roll( ch["hitroll"][0], ch["hitroll"][1] ) # Call the dice roll function
             if hitroll >= vict["ac"]:   # If it clears their armor class
-                dbp(ch, vict, type)           # Call on the Dodge Block and Parry function
+                dodge_block_parry(ch, vict, type)           # Call on the Dodge Block and Parry function
             else:                       # Otherwise
                 miss("miss", ch, type)               # Send it to the miss function with "hit"
 
 
 # After a hit registers, run the dbp function, short for dodge, block and parry
-def dbp(ch, vict, type): # dodge block parry
+def dodge_block_parry(ch, vict, type): # dodge block parry
     # Check dodge roll
-    dodge = vict["dodge"]
-    dodgeroll = dice_roll( 1, 100 )
-    if dodgeroll <= dodge:
-        miss("dodge", ch, type)
+    dodge = vict["dodge"]               # Gather the victim's dodge value
+    dodgeroll = dice_roll( 1, 100 )     # Roll the dice
+    if dodgeroll <= dodge:              # Check if it hits
+        miss("dodge", ch, type)         # And send them to the miss() method if it misses
         return
 
     # Check block roll
-    block = vict["block"]
-    blockroll = dice_roll( 1, 100 )
-    if blockroll <= block:
-        miss("block", ch, type)
+    block = vict["block"]               # Gather the victim's block value
+    blockroll = dice_roll( 1, 100 )     # Roll the dice
+    if blockroll <= block:              # Check if it hits
+        miss("block", ch, type)         # If it doesn't, send them to the miss() method
         return
 
     # Check parry roll
-    parry = vict["parry"]
-    parryroll = dice_roll( 1, 100 )
-    if parryroll <= parry:
-        miss("parry", ch, type)
+    parry = vict["parry"]               # Gather the victim's parry value
+    parryroll = dice_roll( 1, 100 )     # Roll the dice
+    if parryroll <= parry:              # If it misses
+        miss("parry", ch, type)         # send them to the miss() method
         return
 
     # If damage isn't prevented, calculate damage
-    dmg(ch, vict, type)
+    dmg(ch, vict, type)                 # If they don't dodge, block or parry, go calculate damage
 
 
 # dmg( Damage ) function for calculating damage and checking for death
@@ -98,11 +93,13 @@ def dmg(ch, vict, type):
     damage = dice_roll( damage_dice, damage_sides )    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
-    add_to_queue(ch["name"], "auto", damage, None)
+    print(damage)
+    add_to_queue(ch["name"], type, damage, None)
     if vict["hp"] <= 0:
         victory(ch, vict)
 
 
+# The miss() method prepares data to be passed to the frontend
 def miss(case, ch, method):
     if case == "miss":
         add_to_queue(ch["name"], method, 0, "miss")
@@ -114,17 +111,18 @@ def miss(case, ch, method):
         add_to_queue(ch["name"], method, 0, "parry")
 
 
+# Auto attacks are executed every round regardless of what the user does.
 def auto_atk(ch, vict):
-    spd = ch["speed"]
-    aps = spd // 40
-    ch["speed"] = spd % 40 
-    for attacks in range(0, aps):
-        roll_to_hit(ch, vict, "auto")
+    spd = ch["speed"]       # The number of attacks is based on the speed stat
+    aps = spd // 40         # Calculate the number of attacks
+    ch["speed"] = spd % 40  # Retain whatever speed was not used
+    for attacks in range(0, aps):       #Resolve the number of attacks
+        roll_to_hit(ch, vict, "auto")   # at the roll_to_hit() method
 
 
 def victory(ch, vict):
     vict["is_dead"] = True
-    print(f"{vict['name']} is incapacitated and will die soon, if not aided.")
+    add_to_queue(ch["name"], "victor", 0, None)
 
 
 def turn_timer(player1, player2):
@@ -238,7 +236,7 @@ def handle_query(data):
         turn_queue(cfg.fighter1, cfg.fighter2)
         cfg.timer = 0
     if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
-        print("conclude")
+        
         emit('query', "conclude")
     elif cfg.queue == []:
         emit('query', "empty",
@@ -293,27 +291,8 @@ def playdata(data):
 @socket_.on('queue', namespace="/test")
 def handle_queue(data):
     print(data)
-    """ FIXME 
-    Here we will have:
-    character building from the database (function)
-        We can keep this in fightbase.py
-    opponent build from template (function)
-        same in fightbase.py
-    call timer (function)
-        I mean start the combat timer/build queue thing
-    dump info from combat to frontend
 
 
-
-
-    FIXME
-    Receive commands from the frontend and put them in the queue.
-    Setup calculations and feed them back through to phaser.
-    Determine the winner and add experience.
-    Death penalty?
-    
-
-    """
 ####            App routes                 ####
 #### This is where app routes for html pages###
 #### and sockets will be located           ####
