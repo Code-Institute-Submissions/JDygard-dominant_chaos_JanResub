@@ -122,7 +122,16 @@ def auto_atk(ch, vict):
 
 def victory(ch, vict):
     vict["is_dead"] = True
-    add_to_queue(ch["name"], "victor", 0, None)
+    victor = mongo.db.characters.find_one({"name": ch["name"]})
+    if victor == None:
+        victor = cfg.fighter2["name"]
+    else:
+        reward = 100000
+        experience = int(victor["current_exp"])
+        submit = {"current_exp": experience + reward}
+        mongo.db.characters.update_one(victor, {"$set": submit})
+    add_to_queue(ch["name"], "victor", 0, 100000)
+    
 
 
 def turn_timer(player1, player2):
@@ -236,8 +245,8 @@ def handle_query(data):
         turn_queue(cfg.fighter1, cfg.fighter2)
         cfg.timer = 0
     if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
-        
-        emit('query', "conclude")
+        emit('query', cfg.queue, broadcast=True)
+        cfg.queue = []
     elif cfg.queue == []:
         emit('query', "empty",
             broadcast=True)

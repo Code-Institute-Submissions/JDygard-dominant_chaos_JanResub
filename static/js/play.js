@@ -43,11 +43,10 @@ class Play extends Phaser.Scene {
             message = `${name} ${verb}s ${opponent}. (${damage})`
         }
         this.displayText(message)
-
     }
 
     displayText(message){
-        let newText = this.add.text(0,0,message)
+        let newText = this.add.text(20,630,message)
         for (let i = 0; i < textDisplay.length; i++){
             let oldPos = textDisplay[i].y;
             textDisplay[i].setY(oldPos+30);
@@ -55,6 +54,10 @@ class Play extends Phaser.Scene {
         textDisplay.unshift(newText)
     }    
     
+    announceText(message){
+        centerText.setText(message)
+    }
+
     socketData(message) {
         var socket = io(namespace);
         socket.emit('playdata', message);
@@ -70,11 +73,19 @@ class Play extends Phaser.Scene {
             player1["hp"] = player1["max_hp"]
             player2 = data[1];
             player2["hp"] = player2["max_hp"]
-            
+        
         } else {
             console.log("data pushed to queue:")
             console.log(data)
             for (let i in data){
+                if (data[i]["method"] == "victor"){
+                    victor = data[i]["name"];
+                    reward = data[i]["extra"];
+                    conclude = true;
+                    setTimeout(function(){
+                        scene.announceText(`${victor} wins, ${reward} exp awarded.`);
+                    }, 1000);
+                }
                 instructionQueue.push(data[i]);
             }
         }
@@ -104,7 +115,7 @@ class Play extends Phaser.Scene {
     }
 
     damageHandler(name, damage){
-        var stepWidth = (energyMask.displayWidth - 30) / player1["max_hp"];  // Figure out how much the bar should move for each point based on the max value
+        var stepWidth = (energyMask.displayWidth - 50) / player1["max_hp"];  // Figure out how much the bar should move for each point based on the max value
         if (name == player2["name"]){
             energyMask.x -= damage * stepWidth;             // Move the mask
             player1["hp"] -= damage
@@ -118,7 +129,13 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        var scene = this; // Establish context
         // Healthbar mask system from evo.
+        centerText = this.add.text(400, 300, "")
+            .setFontSize(30)
+            .setDepth(10)
+            .setOrigin(0.5);
+
         hpText = this.add.text(207, 90, "")
             .setFontSize(18)
             .setDepth(10);
@@ -135,7 +152,6 @@ class Play extends Phaser.Scene {
         energyMask.visible = false;                             // Make it invisble
         energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, energyMask); // Make the mask act like a mask
 
-        var scene = this; // Establish context
         let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
         var namespace = "/test"; // Namespace used to identify which user this is
         var socket = io(namespace); // Establish socket variable
@@ -156,6 +172,7 @@ class Play extends Phaser.Scene {
                 roundTimer = 0;
             }
             if (conclude == true){
+                scene.queueHandler();
                 clearInterval(timer);
             }
             socket.emit("query", 'empty');
