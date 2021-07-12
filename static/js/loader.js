@@ -16,6 +16,9 @@ const config = {
     ]
 };
 
+var punch;
+var playerOne;
+var playerTwo;
 var centerText;
 var reward;
 var victor;

@@ -4,7 +4,26 @@ class Play extends Phaser.Scene {
     }
 
     preload(){
-        
+        this.anims.create({                                                 // Creating our water animation
+            key: "punch1",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 3 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "punch2",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 4, end: 7 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "kick",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 8, end: 11 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "idle",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 0 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
     }
 
     lexicalParser(name, method, damage, extra){
@@ -101,7 +120,7 @@ class Play extends Phaser.Scene {
                 scene.damageHandler(tempQueue[i]["name"], tempQueue[i]["damage"]);                                                           // before removing the tint
             }, intervalTimer * i);    
             setTimeout(function(){                                                          // Wait for a moment
-                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"]);                                                           // before removing the tint
+                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"], intervalTimer);                                                           // before removing the tint
             }, intervalTimer * i);     
             setTimeout(function(){                                                          // Wait for a moment
                 scene.lexicalParser(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["damage"], tempQueue[i]["extra"]);                                                           // before removing the tint
@@ -124,8 +143,31 @@ class Play extends Phaser.Scene {
         }
     }
 
-    animationHandler(name, method){
-
+    animationHandler(name, method, duration){
+        let aggressor;
+        let defender;
+        if (player1["name"] == name){
+            aggressor = playerOne
+            defender = playerTwo
+        } else {
+            aggressor = playerTwo
+            defender = playerOne
+        }
+        if (punch == 0){
+            aggressor.anims.play({
+                key: 'punch1',
+                repeat: 1,
+                duration: duration
+            });
+            punch = 1;
+        } else {
+            aggressor.anims.play({
+                key: 'punch2',
+                repeat: 1,
+                duration: duration
+            });
+            punch = 0;
+        }
     }
 
     create(){
@@ -153,6 +195,15 @@ class Play extends Phaser.Scene {
         energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, energyMask); // Make the mask act like a mask
 
         let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
+        playerOne = this.add.sprite(250, 400, 'idle')
+            .setScale(2)
+        playerTwo = this.add.sprite(500, 400, 'idle')
+            .setScale(2)
+            .setFlip(true, false)
+        playerOne.anims.play({
+            key: 'idle',
+            repeat: -1,
+        })
         var namespace = "/test"; // Namespace used to identify which user this is
         var socket = io(namespace); // Establish socket variable
 
