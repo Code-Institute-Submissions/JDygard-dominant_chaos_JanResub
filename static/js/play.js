@@ -87,7 +87,7 @@ class Play extends Phaser.Scene {
     }
 
     queryData(){
-        socket.emit('query', 'empty from JS');
+        socket.emit('query', "empty");
     }
 
     parseSocketData(data){  // A method for parsing and distrubiting data from the frontend
@@ -98,8 +98,6 @@ class Play extends Phaser.Scene {
             player2["hp"] = player2["max_hp"]
         
         } else {    // All other data should be bulk data with attacks, so a for loop parses the data
-            console.log("data pushed to queue:")
-            console.log(data)
             for (let i in data){  
 
                 if (data[i]["method"] == "victor"){ // I had to run the victory data through the autoattack queue in order to allow the UI a chance to catch up with the server before announcing the victory
@@ -229,6 +227,7 @@ class Play extends Phaser.Scene {
             if (event.keyCode === kick)
             {
                 socket.emit("query", "kick");
+                console.log("Kick sent")
             }
     
         });

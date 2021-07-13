@@ -96,17 +96,67 @@ def dmg(ch, vict, type):
     if type == "kick":
         #Calculate the damage of the kick
         # weapon damage *2, weapon damage * 4 + legs * 15
-        print(ch)
         damage = dice_roll( damage_dice, damage_sides )
-        damage += 4 + ch["legs"] *15
+        damage += 4 + ch["legs"] * 15
     if type == "auto":
         damage = dice_roll( damage_dice, damage_sides )    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
-    print(damage)
     add_to_queue(ch["name"], type, damage, None)
     if vict["hp"] <= 0:
         victory(ch, vict)
+
+
+def user_initialized_attack_processing(ch, vict, type):
+    #This prepares abilities coming from the frontend and puts them in the userinit queue
+    cost = 60
+    if type == "kick":
+        cost = 80
+    data = { 
+            "ch": ch,
+            "vict": vict,
+            "type": type,
+            "speed_cost": cost
+        }
+    
+    cfg.user_queue.append(data)
+
+
+def user_initialized_attack_queue():
+    speed = cfg.fighter1["ability_speed"]
+    max_speed = cfg.fighter1["speed_max"]
+    speed += max_speed
+    if speed >= 1.5 * max_speed:
+        cfg.fighter1["ability_speed"] = max_speed * 1.5
+
+    speed = cfg.fighter2["ability_speed"]
+    max_speed = cfg.fighter2["speed_max"]
+    speed += max_speed
+    if speed >= 1.5 * max_speed:
+        cfg.fighter2["ability_speed"] = speed
+    print(speed)
+
+    if cfg.user_queue != []:
+        while True:
+            if cfg.user_queue != []:
+                ch = cfg.user_queue[0]["ch"]
+                vict = cfg.user_queue[0]["vict"]
+                type = cfg.user_queue[0]["type"]
+                speed_cost = cfg.user_queue[0]["speed_cost"]
+            else:
+                print("While loop broken because it's empty")
+                break
+
+            if ch["ability_speed"] < speed_cost:
+                print("While loop broken because of speed")
+                break
+
+            else:
+                print(cfg.timer)
+                ch["ability_speed"] = ch["ability_speed"] - speed_cost
+                dmg(ch, vict, type)
+                cfg.user_queue.pop(0)
+
 
 
 # The miss() method prepares data to be passed to the frontend
@@ -145,8 +195,6 @@ def victory(ch, vict):
 
 
 def turn_timer(player1, player2):
-    print("")
-    print(f"<hp: {player1['hp']}/{player1['max_hp']}>")
     tick(player1, player2)
 
 
@@ -209,6 +257,7 @@ def prepare_character(chname, chusername):
             "block": name["block"],
             "parry": name["parry"],
             "speed": name["speed_max"],
+            "ability_speed": name["speed_max"],
             "speed_max": name["speed_max"],
             "damage": name["damage"],
             "dr": name["dr"],
@@ -237,6 +286,7 @@ def prepare_opponent():
         "block": 10,
         "parry": 0,
         "speed": 100,
+        "ability_speed": 100,
         "speed_max": 100,
         "damage": [2, 40],
         "dr": 0,
@@ -251,9 +301,11 @@ def prepare_opponent():
 @socket_.on('query', namespace="/test")
 def handle_query(data):
     """ Handle regular queries from the frontend"""
-    cfg.timer += 1
+    if data == "empty":
+        cfg.timer += 1
     if cfg.timer >= 6:
         turn_queue(cfg.fighter1, cfg.fighter2)
+        user_initialized_attack_queue()
         cfg.timer = 0
 
     if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
@@ -266,9 +318,10 @@ def handle_query(data):
         emit('query', cfg.queue,
             broadcast=True)
         cfg.queue = [] # Gonna have to put a system here that adds stuff to the actual broadcast queue when there is speed available to do so. You'll have to build a separate user init attacks queue that only dispenses commands when speed if available.
-        
-    if data == "kick":
-        dmg(cfg.fighter1, cfg.fighter2, "kick")
+    
+    if data != "empty":
+        # FIXME this initialization means only the user player can attack
+        user_initialized_attack_processing(cfg.fighter1, cfg.fighter2, data)
 
 
 # SocketIO handler for character list request
