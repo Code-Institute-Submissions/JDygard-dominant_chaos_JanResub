@@ -87,10 +87,20 @@ def dodge_block_parry(ch, vict, type): # dodge block parry
 
 # dmg( Damage ) function for calculating damage and checking for death
 def dmg(ch, vict, type):
+    # Going to be calculating different user init attack damage in here.
+    # Combo attacks like maiden masher will have to be added into a separate function that calls dmg() multiple times.
     damage_dice = ch["damage"][0]  # Collect the number of damage dice to be rolled
     damage_sides = ch["damage"][1] # and how many facets those dice have
     damage_resistance = ch["dr"]  # Collect the damage resistance
-    damage = dice_roll( damage_dice, damage_sides )    #roll damage
+
+    if type == "kick":
+        #Calculate the damage of the kick
+        # weapon damage *2, weapon damage * 4 + legs * 15
+        print(ch)
+        damage = dice_roll( damage_dice, damage_sides )
+        damage += 4 + ch["legs"] *15
+    if type == "auto":
+        damage = dice_roll( damage_dice, damage_sides )    #roll damage
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
     print(damage)
@@ -204,14 +214,14 @@ def prepare_character(chname, chusername):
             "dr": name["dr"],
             "is_dead": False
         }
-        if chclass == "fist":
+        if chclass == "inward_fist":
             stats["torso"] = name["torso"]
             stats["hands"] = name["hands"]
             stats["arms"] = name["arms"]
             stats["legs"] = name["legs"]
             stats["discipline"] = name["discipline"]
-            stats["ki"] = name["ki"]
-            stats["max_ki"] = name["ki"]
+            stats["ki"] = name["max_ki"]
+            stats["max_ki"] = name["max_ki"]
         return stats
     else:
         return False
@@ -240,10 +250,12 @@ def prepare_opponent():
 
 @socket_.on('query', namespace="/test")
 def handle_query(data):
+    """ Handle regular queries from the frontend"""
     cfg.timer += 1
     if cfg.timer >= 6:
         turn_queue(cfg.fighter1, cfg.fighter2)
         cfg.timer = 0
+
     if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
         emit('query', cfg.queue, broadcast=True)
         cfg.queue = []
@@ -253,7 +265,10 @@ def handle_query(data):
     else:
         emit('query', cfg.queue,
             broadcast=True)
-        cfg.queue = []
+        cfg.queue = [] # Gonna have to put a system here that adds stuff to the actual broadcast queue when there is speed available to do so. You'll have to build a separate user init attacks queue that only dispenses commands when speed if available.
+        
+    if data == "kick":
+        dmg(cfg.fighter1, cfg.fighter2, "kick")
 
 
 # SocketIO handler for character list request
@@ -403,7 +418,7 @@ def profile(username):
                 "chclass": request.form.get("class"),
                 "current_exp": 99999999,
                 "spent_exp": 0,
-                "max_hp": 100,
+                "max_hp": 1000,
                 "max_energy": 100,
                 "ac": 30,
                 "hitroll": [5, 20],

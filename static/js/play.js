@@ -41,6 +41,10 @@ class Play extends Phaser.Scene {
             verb = "strike"
         }
 
+        if (method == "kick"){
+            verb = "kick"
+        }
+
         if (damage == 0){
             if (extra == "miss"){
                 message = `${name} attempts to ${verb} ${opponent}, but misses!`
@@ -86,18 +90,19 @@ class Play extends Phaser.Scene {
         socket.emit('query', 'empty from JS');
     }
 
-    parseSocketData(data){  
-        if (data[0]["max_hp"]){
-            player1 = data[0];
-            player1["hp"] = player1["max_hp"]
+    parseSocketData(data){  // A method for parsing and distrubiting data from the frontend
+        if (data[0]["max_hp"]){ // Using the "max hp" key to identify the 'welcome package' containing
+            player1 = data[0];  // data about the two combatants.
+            player1["hp"] = player1["max_hp"]   // Get an hp total for the UI
             player2 = data[1];
             player2["hp"] = player2["max_hp"]
         
-        } else {
+        } else {    // All other data should be bulk data with attacks, so a for loop parses the data
             console.log("data pushed to queue:")
             console.log(data)
-            for (let i in data){
-                if (data[i]["method"] == "victor"){
+            for (let i in data){  
+
+                if (data[i]["method"] == "victor"){ // I had to run the victory data through the autoattack queue in order to allow the UI a chance to catch up with the server before announcing the victory
                     victor = data[i]["name"];
                     reward = data[i]["extra"];
                     conclude = true;
@@ -153,20 +158,29 @@ class Play extends Phaser.Scene {
             aggressor = playerTwo
             defender = playerOne
         }
-        if (punch == 0){
+        if (method == "kick"){
             aggressor.anims.play({
-                key: 'punch1',
+                key: 'kick',
                 repeat: 1,
                 duration: duration
             });
-            punch = 1;
-        } else {
-            aggressor.anims.play({
-                key: 'punch2',
-                repeat: 1,
-                duration: duration
-            });
-            punch = 0;
+        }
+        if (method == "auto"){
+            if (punch == 0){
+                aggressor.anims.play({
+                    key: 'punch1',
+                    repeat: 1,
+                    duration: duration
+                });
+                punch = 1;
+            } else {
+                aggressor.anims.play({
+                    key: 'punch2',
+                    repeat: 1,
+                    duration: duration
+                });
+                punch = 0;
+            }
         }
     }
 
@@ -206,6 +220,19 @@ class Play extends Phaser.Scene {
         })
         var namespace = "/test"; // Namespace used to identify which user this is
         var socket = io(namespace); // Establish socket variable
+        
+        // I'm putting a bunch of variables here that could later be converted to be customizable for the user.
+        var kick = Phaser.Input.Keyboard.KeyCodes.A
+
+        this.input.keyboard.on('keydown', function (event) {
+
+            if (event.keyCode === kick)
+            {
+                socket.emit("query", "kick");
+            }
+    
+        });
+
 
         socket.on('query', function(message) { // Listen for incoming data
             if (message == "conclude") { // If the script says someone won
