@@ -6,22 +6,67 @@ class Play extends Phaser.Scene {
     preload(){
         this.anims.create({                                                 // Creating our water animation
             key: "punch1",                                          // Declaring the key to which it will be referred
-            frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 3 }), // Getting the spritesheet and numbering the frames for the array
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 1 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
         this.anims.create({                                                 // Creating our water animation
             key: "punch2",                                          // Declaring the key to which it will be referred
-            frames: this.anims.generateFrameNumbers("spritesheet", { start: 4, end: 7 }), // Getting the spritesheet and numbering the frames for the array
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 8, end: 9 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
         this.anims.create({                                                 // Creating our water animation
             key: "kick",                                          // Declaring the key to which it will be referred
-            frames: this.anims.generateFrameNumbers("spritesheet", { start: 8, end: 11 }), // Getting the spritesheet and numbering the frames for the array
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 32, end: 35 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
         this.anims.create({                                                 // Creating our water animation
             key: "idle",                                          // Declaring the key to which it will be referred
-            frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 0 }), // Getting the spritesheet and numbering the frames for the array
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 24, end: 25 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "dodge",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 40, end: 41 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "block",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 48, end: 49 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "parry",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 16, end: 17 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "shinkick",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 12, end: 13 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "jab",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 1 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "spinkick",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 56, end: 57 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "knee",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 4, end: 5 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "elbow",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 20, end: 21 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
+        this.anims.create({                                                 // Creating our water animation
+            key: "uppercut",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 28, end: 29 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
     }
@@ -94,8 +139,12 @@ class Play extends Phaser.Scene {
         if (data[0]["max_hp"]){ // Using the "max hp" key to identify the 'welcome package' containing
             player1 = data[0];  // data about the two combatants.
             player1["hp"] = player1["max_hp"]   // Get an hp total for the UI
+            if (player1["ch_class"] == "inward_fist")
+                player1["ki"] = 0
             player2 = data[1];
             player2["hp"] = player2["max_hp"]
+            if (player2["ch_class"] == "inward_fist")
+                player2["ki"] = 0
         
         } else {    // All other data should be bulk data with attacks, so a for loop parses the data
             for (let i in data){  
@@ -123,7 +172,7 @@ class Play extends Phaser.Scene {
                 scene.damageHandler(tempQueue[i]["name"], tempQueue[i]["damage"]);                                                           // before removing the tint
             }, intervalTimer * i);    
             setTimeout(function(){                                                          // Wait for a moment
-                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"], intervalTimer);                                                           // before removing the tint
+                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["extra"], intervalTimer);                                                           // before removing the tint
             }, intervalTimer * i);     
             setTimeout(function(){                                                          // Wait for a moment
                 scene.lexicalParser(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["damage"], tempQueue[i]["extra"]);                                                           // before removing the tint
@@ -146,7 +195,7 @@ class Play extends Phaser.Scene {
         }
     }
 
-    animationHandler(name, method, duration){
+    animationHandler(name, method, extra, duration){
         let aggressor;
         let defender;
         if (player1["name"] == name){
@@ -156,6 +205,7 @@ class Play extends Phaser.Scene {
             aggressor = playerTwo
             defender = playerOne
         }
+
         if (method == "kick"){
             aggressor.anims.play({
                 key: 'kick',
@@ -163,6 +213,42 @@ class Play extends Phaser.Scene {
                 duration: duration
             });
         }
+        console.log(aggressor["ch_class"])
+        if (aggressor["ch_class"] == "inward_fist"){
+            console.log("checking fist animations")
+            let methods = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"];
+            let aggressorKi = aggressor["ki"];
+            for (i in methods){
+                if (method == i){
+                    aggressor.anims.play({
+                        key: i,
+                        repeat: 1,
+                        duration: duration
+                    });
+                    aggressor["ki"] = aggressorKi + extra;
+                }
+            }
+        }
+        if (extra == "dodge"){
+            defender.anims.play({
+                key: 'dodge',
+                repeat: 1,
+                duration: duration
+            });
+        } else if (extra == "block"){
+            defender.anims.play({
+                key: 'block',
+                repeat: 1,
+                duration: duration
+            });
+        } else if (extra == "parry"){
+            defender.anims.play({
+                key: 'parry',
+                repeat: 1,
+                duration: duration
+            });
+        }
+
         if (method == "auto"){
             if (punch == 0){
                 aggressor.anims.play({
@@ -207,9 +293,9 @@ class Play extends Phaser.Scene {
         energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, energyMask); // Make the mask act like a mask
 
         let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
-        playerOne = this.add.sprite(250, 400, 'idle')
+        playerOne = this.add.sprite(325, 400, 'idle')
             .setScale(2)
-        playerTwo = this.add.sprite(500, 400, 'idle')
+        playerTwo = this.add.sprite(425, 400, 'idle')
             .setScale(2)
             .setFlip(true, false)
         playerOne.anims.play({
@@ -221,14 +307,56 @@ class Play extends Phaser.Scene {
         
         // I'm putting a bunch of variables here that could later be converted to be customizable for the user.
         var kick = Phaser.Input.Keyboard.KeyCodes.A
+        var shinkick = Phaser.Input.Keyboard.KeyCodes.ONE
+        var jab = Phaser.Input.Keyboard.KeyCodes.TWO
+        var spinkick = Phaser.Input.Keyboard.KeyCodes.THREE
+        var knee = Phaser.Input.Keyboard.KeyCodes.FOUR
+        var elbow = Phaser.Input.Keyboard.KeyCodes.FIVE
+        var uppercut = Phaser.Input.Keyboard.KeyCodes.SIX
 
         this.input.keyboard.on('keydown', function (event) {
 
             if (event.keyCode === kick)
             {
                 socket.emit("query", "kick");
-                console.log("Kick sent")
             }
+
+            if (event.keyCode === shinkick)
+            {
+                socket.emit("query", "shinkick");
+            }
+    
+
+            if (event.keyCode === jab)
+            {
+                socket.emit("query", "jab");
+            }
+    
+
+            if (event.keyCode === spinkick)
+            {
+                socket.emit("query", "spinkick");
+            }
+    
+
+            if (event.keyCode === knee)
+            {
+                socket.emit("query", "knee");
+            }
+    
+
+            if (event.keyCode === elbow)
+            {
+                socket.emit("query", "elbow");
+            }
+    
+
+            if (event.keyCode === uppercut)
+            {
+                socket.emit("query", "uppercut");
+                console.log("uppercut")
+            }
+    
     
         });
 

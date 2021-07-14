@@ -105,4 +105,36 @@ Discipline training
         Increased damage and hit, reduced move
     dim-mak 
         Poison?
+
+finished animations and grid location
+
+spritesheet 1:
+0-1: punch 1
+8-9: punch 2
+16-17: parry
+24-25: idle animation
+32-35: side kick
+40-41: dodge
+48-49: block
+56-57: Spinkick
+4-5: Knee
+12-13: shinkick
+20-21: - Elbow
+28-29: - uppercut
+0-1: - Jab maybe use punch1
+36-38: Aura tier 1
+44-46: aura tier 2
+52-54: aura tier 3
+
+spritesheet 2:
+17: Palm
+18: Toe stomp
+19: lame attack
+20: Hadoken
+21: jumpkick
+22: bodyslam
+23: touch of death
+24: touch of death self
+25: death animation
+26: kiflame
 """

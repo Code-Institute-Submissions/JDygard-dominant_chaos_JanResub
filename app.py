@@ -92,17 +92,44 @@ def dmg(ch, vict, type):
     damage_dice = ch["damage"][0]  # Collect the number of damage dice to be rolled
     damage_sides = ch["damage"][1] # and how many facets those dice have
     damage_resistance = ch["dr"]  # Collect the damage resistance
+    extra = None
 
     if type == "kick":
         #Calculate the damage of the kick
         # weapon damage *2, weapon damage * 4 + legs * 15
         damage = dice_roll( damage_dice, damage_sides )
-        damage += 4 + ch["legs"] * 15
+        if ch["chclass"] == "inward_fist":
+            damage += 4 + ch["legs"] * 15
+    
+
     if type == "auto":
         damage = dice_roll( damage_dice, damage_sides )    #roll damage
+    
+    if ch["ch_class"] == "inward_fist": # If it's a fist
+        ki = ch["ki"]   # Establish current ki cost
+        ki_value = 0    # Establish an iterable that also is used in calculating the value of the relevant move
+        moves = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"] # An array of the ki-gaining moves this function is testing for
+        for i in moves: # Go through the array
+            ki_value += 1 # Iterate the iterable
+            if type == i:   # If the command being processed is one of those being targeted, calculate it
+                result = dice_roll( 1, 100) # Gather a 1-100 dice roll
+                ki = ch["ki"]               # Establish the character's current ki
+                if result >= 31:            # If the result is not going to be modified
+                    ch["ki"] = int(ki) + int(ki_value) # Give them the advertised ki amount
+                    extra = int(ki) + int(ki_value)
+                elif result <= 15:          # Test for 1-15
+                    ch["ki"] = int(ki) + int(ki_value) - 1    # If it's there, then one less ki is gained
+                    extra = int(ki) + int(ki_value) -1
+                else:
+                    ch["ki"] = int(ki) + int(ki_value) + 1    # If it's in the 16-30 range, they get a bonus ki
+                    extra = int(ki) + int(ki_value) + 1
+                damage = dice_roll( damage_dice, damage_sides ) / 2 # Roll the paltry damage these moves inflict
+                break # Stop the for loop for efficiency, since there can't be two positive results
+        
+
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
-    add_to_queue(ch["name"], type, damage, None)
+    add_to_queue(ch["name"], type, damage, extra)
     if vict["hp"] <= 0:
         victory(ch, vict)
 
@@ -128,14 +155,14 @@ def user_initialized_attack_queue():
     speed += max_speed
     if speed >= 1.5 * max_speed:
         cfg.fighter1["ability_speed"] = max_speed * 1.5
+    print(speed)
 
     speed = cfg.fighter2["ability_speed"]
     max_speed = cfg.fighter2["speed_max"]
     speed += max_speed
     if speed >= 1.5 * max_speed:
-        cfg.fighter2["ability_speed"] = speed
-    print(speed)
-
+        cfg.fighter2["ability_speed"] = 1.5 * max_speed
+    
     if cfg.user_queue != []:
         while True:
             if cfg.user_queue != []:
@@ -237,7 +264,7 @@ def add_to_queue(name, method, dmg, extra):
 def character_dump(username):
     """ Package character list into a JSON with only relevant info """
     cursor = mongo.db.characters.find({"owner": username},
-        projection={"name": 1, "chclass": 1})
+        projection={"name": 1, "chclass": 1, "max_ki": 1,})
     return json.dumps(list(cursor),
         cls=MongoJsonEncoder)
 
@@ -249,6 +276,7 @@ def prepare_character(chname, chusername):
         chclass = name["chclass"]
         stats = {
             "name": name["name"],
+            "ch_class": chclass,
             "hp": name["max_hp"],
             "max_hp": name["max_hp"],
             "ac": name["ac"],
@@ -278,6 +306,7 @@ def prepare_character(chname, chusername):
 def prepare_opponent():
     stats = {
         "name": "Meanie",
+        "ch_class": None,
         "hp": 1000,
         "max_hp": 1000,
         "ac": 30,
@@ -317,7 +346,7 @@ def handle_query(data):
     else:
         emit('query', cfg.queue,
             broadcast=True)
-        cfg.queue = [] # Gonna have to put a system here that adds stuff to the actual broadcast queue when there is speed available to do so. You'll have to build a separate user init attacks queue that only dispenses commands when speed if available.
+        cfg.queue = [] 
     
     if data != "empty":
         # FIXME this initialization means only the user player can attack
