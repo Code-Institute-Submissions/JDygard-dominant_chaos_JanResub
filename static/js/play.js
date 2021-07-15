@@ -71,8 +71,86 @@ class Play extends Phaser.Scene {
         });
     }
 
+    animationHandler(name, method, extra, duration){
+        let aggressor;
+        let defender;
+        let ch_class;
+        let aggressorObj;
+        if (player1["name"] == name){
+            aggressor = playerOne
+            defender = playerTwo
+            ch_class = player1["ch_class"]
+            aggressorObj = player1
+        } else {
+            aggressor = playerTwo
+            defender = playerOne
+            ch_class = player2["ch_class"]
+            aggressorObj = player2
+        }
+
+        if (method == "kick"){
+            aggressor.anims.play({
+                key: 'kick',
+                repeat: 1,
+                duration: duration
+            });
+        }
+        if (ch_class == "inward_fist"){
+            let methods = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"];
+            let aggressorKi = aggressorObj["ki"];
+            for (let i in methods){
+                if (method == methods[i]){
+                    aggressor.anims.play({
+                        key: methods[i],
+                        repeat: 1,
+                        duration: duration
+                    });
+                    aggressorObj["ki"] = aggressorKi + extra;
+                    console.log(methods[i])
+                }
+            }
+        }
+        if (extra == "dodge"){
+            defender.anims.play({
+                key: 'dodge',
+                repeat: 1,
+                duration: duration
+            });
+        } else if (extra == "block"){
+            defender.anims.play({
+                key: 'block',
+                repeat: 1,
+                duration: duration
+            });
+        } else if (extra == "parry"){
+            defender.anims.play({
+                key: 'parry',
+                repeat: 1,
+                duration: duration
+            });
+        }
+
+        if (method == "auto"){
+            if (punch == 0){
+                aggressor.anims.play({
+                    key: 'punch1',
+                    repeat: 1,
+                    duration: duration
+                });
+                punch = 1;
+            } else {
+                aggressor.anims.play({
+                    key: 'punch2',
+                    repeat: 1,
+                    duration: duration
+                });
+                punch = 0;
+            }
+        }
+    }
+
     lexicalParser(name, method, damage, extra){
-        let verb;
+        let verb = method;
         let message;
         let opponent;
 
@@ -89,6 +167,7 @@ class Play extends Phaser.Scene {
         if (method == "kick"){
             verb = "kick"
         }
+
 
         if (damage == 0){
             if (extra == "miss"){
@@ -135,16 +214,30 @@ class Play extends Phaser.Scene {
         socket.emit('query', "empty");
     }
 
+    buttonMaker(data){
+        let iterator = 0
+        for (let i in data){
+            let keyData = {}
+            keyData[i] = data[i]
+            buttonList[iterator] = keyData
+            iterator += 1
+        }
+        console.log(buttonList)
+    }
+
     parseSocketData(data){  // A method for parsing and distrubiting data from the frontend
-        if (data[0]["max_hp"]){ // Using the "max hp" key to identify the 'welcome package' containing
-            player1 = data[0];  // data about the two combatants.
-            player1["hp"] = player1["max_hp"]   // Get an hp total for the UI
-            if (player1["ch_class"] == "inward_fist")
-                player1["ki"] = 0
-            player2 = data[1];
-            player2["hp"] = player2["max_hp"]
-            if (player2["ch_class"] == "inward_fist")
-                player2["ki"] = 0
+        if (data[0] != undefined)
+            if (data[0]["max_hp"]){ // Using the "max hp" key to identify the 'welcome package' containing
+                player1 = data[0];  // data about the two combatants.
+                player1["hp"] = player1["max_hp"]   // Get an hp total for the UI
+                if (player1["ch_class"] == "inward_fist")
+                    player1["ki"] = 0
+                this.buttonMaker(player1["abilities"])
+
+                player2 = data[1];
+                player2["hp"] = player2["max_hp"]
+                if (player2["ch_class"] == "inward_fist")
+                    player2["ki"] = 0
         
         } else {    // All other data should be bulk data with attacks, so a for loop parses the data
             for (let i in data){  
@@ -164,7 +257,7 @@ class Play extends Phaser.Scene {
 
     queueHandler(){
         scene = this
-        let intervalTimer = 3000 / instructionQueue.length;
+        let intervalTimer = 5000 / instructionQueue.length;
         let tempQueue = instructionQueue;
         instructionQueue = [];
         for (let i = 0; i < tempQueue.length; i++){
@@ -195,78 +288,6 @@ class Play extends Phaser.Scene {
         }
     }
 
-    animationHandler(name, method, extra, duration){
-        let aggressor;
-        let defender;
-        if (player1["name"] == name){
-            aggressor = playerOne
-            defender = playerTwo
-        } else {
-            aggressor = playerTwo
-            defender = playerOne
-        }
-
-        if (method == "kick"){
-            aggressor.anims.play({
-                key: 'kick',
-                repeat: 1,
-                duration: duration
-            });
-        }
-        console.log(aggressor["ch_class"])
-        if (aggressor["ch_class"] == "inward_fist"){
-            console.log("checking fist animations")
-            let methods = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"];
-            let aggressorKi = aggressor["ki"];
-            for (i in methods){
-                if (method == i){
-                    aggressor.anims.play({
-                        key: i,
-                        repeat: 1,
-                        duration: duration
-                    });
-                    aggressor["ki"] = aggressorKi + extra;
-                }
-            }
-        }
-        if (extra == "dodge"){
-            defender.anims.play({
-                key: 'dodge',
-                repeat: 1,
-                duration: duration
-            });
-        } else if (extra == "block"){
-            defender.anims.play({
-                key: 'block',
-                repeat: 1,
-                duration: duration
-            });
-        } else if (extra == "parry"){
-            defender.anims.play({
-                key: 'parry',
-                repeat: 1,
-                duration: duration
-            });
-        }
-
-        if (method == "auto"){
-            if (punch == 0){
-                aggressor.anims.play({
-                    key: 'punch1',
-                    repeat: 1,
-                    duration: duration
-                });
-                punch = 1;
-            } else {
-                aggressor.anims.play({
-                    key: 'punch2',
-                    repeat: 1,
-                    duration: duration
-                });
-                punch = 0;
-            }
-        }
-    }
 
     create(){
         var scene = this; // Establish context
@@ -277,6 +298,10 @@ class Play extends Phaser.Scene {
             .setOrigin(0.5);
 
         hpText = this.add.text(207, 90, "")
+            .setFontSize(18)
+            .setDepth(10);
+
+        kiText = this.add.text(350, 90, "Ki: 0")
             .setFontSize(18)
             .setDepth(10);
             
@@ -292,7 +317,9 @@ class Play extends Phaser.Scene {
         energyMask.visible = false;                             // Make it invisble
         energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, energyMask); // Make the mask act like a mask
 
-        let background = this.add.image(0, 0, 'background').setOrigin(0).setScale(0.8); // Show and orient the background image
+        let background = this.add.image(0, 0, 'background')
+            .setOrigin(0)
+            .setScale(0.8); // Show and orient the background image
         playerOne = this.add.sprite(325, 400, 'idle')
             .setScale(2)
         playerTwo = this.add.sprite(425, 400, 'idle')
@@ -304,60 +331,22 @@ class Play extends Phaser.Scene {
         })
         var namespace = "/test"; // Namespace used to identify which user this is
         var socket = io(namespace); // Establish socket variable
-        
-        // I'm putting a bunch of variables here that could later be converted to be customizable for the user.
-        var kick = Phaser.Input.Keyboard.KeyCodes.A
-        var shinkick = Phaser.Input.Keyboard.KeyCodes.ONE
-        var jab = Phaser.Input.Keyboard.KeyCodes.TWO
-        var spinkick = Phaser.Input.Keyboard.KeyCodes.THREE
-        var knee = Phaser.Input.Keyboard.KeyCodes.FOUR
-        var elbow = Phaser.Input.Keyboard.KeyCodes.FIVE
-        var uppercut = Phaser.Input.Keyboard.KeyCodes.SIX
 
-        this.input.keyboard.on('keydown', function (event) {
 
-            if (event.keyCode === kick)
-            {
-                socket.emit("query", "kick");
+// ========================== Input listener ============================
+// ===== This little block of code listens for keypresses and then ======
+// ===== compares it to the list of user-customized command keys and ====
+// ===== list of available abilities. It will emit a command to the =====
+// ===== backend when it all matches.                               =====
+
+        this.input.keyboard.on('keydown', function (event) { // Listen for any keypress
+            for (let i = 0; i < buttonList.length; i++){     // Loop through the saved commands
+                let string = Object.keys(buttonList[i])[0]  // Get the key string out
+                if (event.keyCode == eval("Phaser.Input.Keyboard.KeyCodes." + buttonList[i][string]) ){ // Compare the keyCode to the one saved in the character profile
+                    socket.emit("query", string); // Then send the command to the backend
+                    break // Break the for loop, because there's no such thing as a double-positive
+                }
             }
-
-            if (event.keyCode === shinkick)
-            {
-                socket.emit("query", "shinkick");
-            }
-    
-
-            if (event.keyCode === jab)
-            {
-                socket.emit("query", "jab");
-            }
-    
-
-            if (event.keyCode === spinkick)
-            {
-                socket.emit("query", "spinkick");
-            }
-    
-
-            if (event.keyCode === knee)
-            {
-                socket.emit("query", "knee");
-            }
-    
-
-            if (event.keyCode === elbow)
-            {
-                socket.emit("query", "elbow");
-            }
-    
-
-            if (event.keyCode === uppercut)
-            {
-                socket.emit("query", "uppercut");
-                console.log("uppercut")
-            }
-    
-    
         });
 
 
@@ -385,15 +374,13 @@ class Play extends Phaser.Scene {
 
         this.socketData("play init");
     }
-    
-    /*
 
-    Put in our placeholder graphics.
-    This should have its own preloader because ventually I should be feeding in commands on what graphics to load.
-
-    Set up the fight.
-
-    Figure out how to get the animations to trigger from socket commands.
-
-    */
+    update(){
+        var scene = this;
+        if (player1 != undefined)
+            if (currentKi != player1["ki"]){
+                currentKi = player1["ki"];
+                kiText.setText(currentKi);
+            }
+    }
 }

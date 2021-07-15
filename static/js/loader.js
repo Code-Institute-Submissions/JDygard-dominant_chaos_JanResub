@@ -16,6 +16,9 @@ const config = {
     ]
 };
 
+var buttonList = [];
+var kiText;
+var currentKi = 0;
 var punch;
 var playerOne;
 var playerTwo;

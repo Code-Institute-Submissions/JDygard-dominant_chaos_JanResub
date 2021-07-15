@@ -98,7 +98,7 @@ def dmg(ch, vict, type):
         #Calculate the damage of the kick
         # weapon damage *2, weapon damage * 4 + legs * 15
         damage = dice_roll( damage_dice, damage_sides )
-        if ch["chclass"] == "inward_fist":
+        if ch["ch_class"] == "inward_fist":
             damage += 4 + ch["legs"] * 15
     
 
@@ -136,7 +136,7 @@ def dmg(ch, vict, type):
 
 def user_initialized_attack_processing(ch, vict, type):
     #This prepares abilities coming from the frontend and puts them in the userinit queue
-    cost = 60
+    cost = 80
     if type == "kick":
         cost = 80
     data = { 
@@ -155,7 +155,8 @@ def user_initialized_attack_queue():
     speed += max_speed
     if speed >= 1.5 * max_speed:
         cfg.fighter1["ability_speed"] = max_speed * 1.5
-    print(speed)
+    else:
+        cfg.fighter1["ability_speed"] = speed
 
     speed = cfg.fighter2["ability_speed"]
     max_speed = cfg.fighter2["speed_max"]
@@ -171,16 +172,14 @@ def user_initialized_attack_queue():
                 type = cfg.user_queue[0]["type"]
                 speed_cost = cfg.user_queue[0]["speed_cost"]
             else:
-                print("While loop broken because it's empty")
                 break
 
             if ch["ability_speed"] < speed_cost:
-                print("While loop broken because of speed")
                 break
-
             else:
-                print(cfg.timer)
                 ch["ability_speed"] = ch["ability_speed"] - speed_cost
+                print("Method = " + type)
+                print(cfg.round)
                 dmg(ch, vict, type)
                 cfg.user_queue.pop(0)
 
@@ -289,7 +288,8 @@ def prepare_character(chname, chusername):
             "speed_max": name["speed_max"],
             "damage": name["damage"],
             "dr": name["dr"],
-            "is_dead": False
+            "is_dead": False,
+            "abilities": name["abilities"]
         }
         if chclass == "inward_fist":
             stats["torso"] = name["torso"]
@@ -319,7 +319,8 @@ def prepare_opponent():
         "speed_max": 100,
         "damage": [2, 40],
         "dr": 0,
-        "is_dead": False
+        "is_dead": False,
+        "abilities": {}
     }
     return stats
 
@@ -332,10 +333,11 @@ def handle_query(data):
     """ Handle regular queries from the frontend"""
     if data == "empty":
         cfg.timer += 1
-    if cfg.timer >= 6:
+    if cfg.timer >= 10:
         turn_queue(cfg.fighter1, cfg.fighter2)
         user_initialized_attack_queue()
         cfg.timer = 0
+        cfg.round += 1
 
     if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
         emit('query', cfg.queue, broadcast=True)
@@ -384,12 +386,20 @@ def playdata(data):
             {
                 "name": cfg.fighter1["name"],
                 "max_hp": cfg.fighter1["max_hp"],
+                "ch_class": cfg.fighter1["ch_class"],
+                "abilities": cfg.fighter1["abilities"]
             },
             {
                 "name": cfg.fighter2["name"],
                 "max_hp": cfg.fighter2["max_hp"],
+                "ch_class": cfg.fighter2["ch_class"],
+                "abilities": cfg.fighter2["abilities"]
             }
         ]
+        if cfg.fighter1["ch_class"] == "inward_fist":
+            players[0]["max_ki"] = cfg.fighter1["max_ki"]
+        if cfg.fighter2["ch_class"] == "inward_fist":
+            players[1]["max_ki"] = cfg.fighter1["max_ki"]
         emit('query', players, broadcast=True)
 
 
@@ -512,7 +522,8 @@ def profile(username):
                 "dr": 0,
                 "owner": username,
                 "href": "character/" + request.form.get("name").lower(),
-                "winloss": [0, 0]
+                "winloss": [0, 0],
+                "abilities": {"kick": "A"}
             }
             if request.form.get("class") == "inward_fist":
                 new_char["icon"] = "images/fist-icon.png"
@@ -522,6 +533,12 @@ def profile(username):
                 new_char["arms"] = 0
                 new_char["discipline"] = 0
                 new_char["max_ki"] = 0
+                new_char["abilities"]["spinkick"] = "ONE"
+                new_char["abilities"]["jab"] = "TWO"
+                new_char["abilities"]["spinkick"] = "THREE"
+                new_char["abilities"]["knee"] = "FOUR"
+                new_char["abilities"]["elbow"] = "FIVE"
+                new_char["abilities"]["uppercut"] = "SIX"
             mongo.db.characters.insert_one(new_char)
             flash("Character Created")
             return redirect(url_for("profile", username=session["user"]))
