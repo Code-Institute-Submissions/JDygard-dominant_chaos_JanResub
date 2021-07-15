@@ -4,67 +4,67 @@ class Play extends Phaser.Scene {
     }
 
     preload(){
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our punch animation
             key: "punch1",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 1 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our punch animation
             key: "punch2",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 8, end: 9 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our kick animation
             key: "kick",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 32, end: 35 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our idle animation
             key: "idle",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 24, end: 25 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our dodge animation
             key: "dodge",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 40, end: 41 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our block animation
             key: "block",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 48, end: 49 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our parry animation
             key: "parry",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 16, end: 17 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our shinkick animation
             key: "shinkick",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 12, end: 13 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our jab animation
             key: "jab",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 0, end: 1 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our spinkick animation
             key: "spinkick",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 56, end: 57 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our knee animation
             key: "knee",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 4, end: 5 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our elbow animation
             key: "elbow",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 20, end: 21 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
-        this.anims.create({                                                 // Creating our water animation
+        this.anims.create({                                                 // Creating our uppercut animation
             key: "uppercut",                                          // Declaring the key to which it will be referred
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 28, end: 29 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
@@ -214,7 +214,7 @@ class Play extends Phaser.Scene {
         socket.emit('query', "empty");
     }
 
-    buttonMaker(data){
+    buttonListMaker(data){
         let iterator = 0
         for (let i in data){
             let keyData = {}
@@ -222,7 +222,23 @@ class Play extends Phaser.Scene {
             buttonList[iterator] = keyData
             iterator += 1
         }
-        console.log(buttonList)
+        this.buttonMaker()
+        
+    }
+
+    buttonMaker(){
+        let length = buttonList.length;
+        let numberOfRows = Math.ceil(length / 4);
+        let lastRow = length % 4;
+        for (let i = 0; i < buttonList.length; i++){     // Loop through the saved commands
+            buttons[i] = this.add.sprite(5,475, 'button')
+            console.log("button2")
+            let string = Object.keys(buttonList[i])[0]  // Get the key string out
+            buttons[i].on('pointerdown', function(){
+                socket.emit('query', string)
+                console.log("button")
+            })
+        }
     }
 
     parseSocketData(data){  // A method for parsing and distrubiting data from the frontend
@@ -232,7 +248,7 @@ class Play extends Phaser.Scene {
                 player1["hp"] = player1["max_hp"]   // Get an hp total for the UI
                 if (player1["ch_class"] == "inward_fist")
                     player1["ki"] = 0
-                this.buttonMaker(player1["abilities"])
+                this.buttonListMaker(player1["abilities"])
 
                 player2 = data[1];
                 player2["hp"] = player2["max_hp"]
@@ -349,6 +365,9 @@ class Play extends Phaser.Scene {
             }
         });
 
+// ====================== Main socket listener ====================
+// ===== This is the socket listener that sends and receives ======
+// ===== socket information to and from the backend.         ======
 
         socket.on('query', function(message) { // Listen for incoming data
             if (message == "conclude") { // If the script says someone won
@@ -359,20 +378,24 @@ class Play extends Phaser.Scene {
             }
         })
 
-        timer = setInterval(function() {
-            roundTimer += 1;
-            if (roundTimer == 6){
-                scene.queueHandler();
-                roundTimer = 0;
+// ===================== Main timer ============================
+// ===== This is the main function for controlling the game ====
+// ===== temporally. The timing set here in half-second     ====
+// ===== increments controls the flow of the game.
+        timer = setInterval(function() { // Set the interval to a global variable
+            roundTimer += 1;             // Increment to keep track of the rounds
+            if (roundTimer == 6){        // When a round is over
+                scene.queueHandler();    // Call the queue handler to process the data for the next round
+                roundTimer = 0;          // Reset the round timer
             }
-            if (conclude == true){
-                scene.queueHandler();
-                clearInterval(timer);
+            if (conclude == true){       // If the variable for conclude has been set
+                scene.queueHandler();    // Run the last bits of the queue
+                clearInterval(timer);    // And dump this interval
             }
-            socket.emit("query", 'empty');
+            socket.emit("query", 'empty'); // Empty queries are requests for information
         },500);
 
-        this.socketData("play init");
+        this.socketData("play init"); // Call the backend to start the show
     }
 
     update(){
