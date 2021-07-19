@@ -69,6 +69,11 @@ class Play extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers("spritesheet", { start: 28, end: 29 }), // Getting the spritesheet and numbering the frames for the array
             frameRate: 3,                                                   // Speed at which the frames are cycled
         });
+        this.anims.create({                                                 // Creating our uppercut animation
+            key: "hit",                                          // Declaring the key to which it will be referred
+            frames: this.anims.generateFrameNumbers("spritesheet", { start: 60, end: 61 }), // Getting the spritesheet and numbering the frames for the array
+            frameRate: 3,                                                   // Speed at which the frames are cycled
+        });
     }
 
     animationHandler(name, method, extra, duration){
@@ -110,6 +115,7 @@ class Play extends Phaser.Scene {
                 }
             }
         }
+
         if (extra == "dodge"){
             defender.anims.play({
                 key: 'dodge',
@@ -128,6 +134,18 @@ class Play extends Phaser.Scene {
                 repeat: 1,
                 duration: duration
             });
+        } else if (extra == "miss"){
+            defender.anims.play({
+                key: 'idle',
+                repeat: 1,
+                duration: duration
+            })
+        } else {
+            defender.anims.play({
+                key: 'hit',
+                repeat: 1,
+                duration: duration
+            })
         }
 
         if (method == "auto"){
@@ -399,11 +417,30 @@ class Play extends Phaser.Scene {
     }
 
     update(){
-        var scene = this;
-        if (player1 != undefined)
-            if (currentKi != player1["ki"]){
-                currentKi = player1["ki"];
-                kiText.setText(currentKi);
+        var scene = this; // Establish context
+        if (player1 != undefined)   // Only run this when the player1 object has been established from the backend
+            if (currentKi != player1["ki"]){    // If the amount of ki the player has is higher than the amount being displayed
+                currentKi = player1["ki"];      // Gather the current ki
+                kiText.setText(currentKi);      // And display the correct amount
             }
     }
 }
+
+/* Read var for button locations:
+    -Make it adjustable
+    -Make it appear in order
+Visuals:
+    Commands list:
+        Displays items as they are entered
+        Eliminates items as they are executed
+    Rounds timer visual
+        -this is the bracketed display that shows round timing
+        -use a phaser group to move them in concert
+        -put bars on it to show timing
+        -Can a user submit a command in the interim between the server round and the client round so that the display show it incorrectly?
+        -You could have the server to deliver a handshake that sets the timing for the display
+        -You could sync the rounds with a failsafe that adjusts the round timing after a desync
+            -this could replace the "empty" part of the query message from the client
+        -The server queue emitter itself could append a round timing message when submitting the display queue to the client.
+        
+*/
