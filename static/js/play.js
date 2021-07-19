@@ -245,13 +245,18 @@ class Play extends Phaser.Scene {
     }
 
     buttonMaker(){
+        // Dude this is going to be so hard to get really right.
         let length = buttonList.length;
         let numberOfRows = Math.ceil(length / 4);
         let lastRow = length % 4;
         for (let i = 0; i < buttonList.length; i++){     // Loop through the saved commands
-            buttons[i] = this.add.sprite(5,475, 'button')
-            console.log("button2")
+            let buttonX
+            let buttonY
+            buttonX = (i % 4) * 200
+            buttonY = ( Math.floor(i / 4) * 45 ) + 525
+            buttons[i] = this.add.sprite(buttonX, buttonY, 'button').setScale(0.8).setOrigin(0)
             let string = Object.keys(buttonList[i])[0]  // Get the key string out
+            this.add.text(buttonX, buttonY, string + ": " + buttonList[i][string])
             buttons[i].on('pointerdown', function(){
                 socket.emit('query', string)
                 console.log("button")
