@@ -12,13 +12,6 @@ class CharSelect extends Phaser.Scene{
             socket.emit('message', message);
         });
     }
-    /* FIXME 
-    
-    Capitalize names
-    fix class names
-    Style that shit up
-    
-    */
 
     displayCharacters(data){
         for (let i = 0; i < data.length; i++){
