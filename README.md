@@ -94,6 +94,9 @@ Typical splash page.
 - Canvas with whatever graphics I can scrounge. 
 - Mutable control scheme below.
 
+#### Play page synchronous calculation
+![alt text](assets/images/readme/async-structure.png)
+
 ### Character page
 - Contains all training and upgrades for the character
 - Contains all control scheme customization

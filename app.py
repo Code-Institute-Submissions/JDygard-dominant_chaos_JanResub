@@ -47,7 +47,6 @@ curtime = time.time()
 
 #Roll to hit. "type" will refer to different attacks so that this function is multipurpose
 def roll_to_hit(ch, vict, type): 
-    # This will wind up having to be significantly more complex
     # because of the nature of different classes having some varies hit or damage effects.
     if ch["is_dead"] != True and vict["is_dead"] != True:
         if type == "auto":
@@ -85,6 +84,69 @@ def dodge_block_parry(ch, vict, type): # dodge block parry
     dmg(ch, vict, type)                 # If they don't dodge, block or parry, go calculate damage
 
 
+def combo_calculator(ch, vict, data):
+    if data > 10:
+        cfg.fighter1["ki"] = 0
+        return
+    if data == 10:
+        # Quivering palm
+        print(data)
+        return
+    if data == 11:
+        # Toe stomp
+        return
+    if data == 12:
+        # Di amon mega rotation death
+        return
+    if data == 13:
+        # Hadoken
+        return
+    if data == 14:
+        # Figure 8
+        return
+    if data == 15:
+        # Jumpkick
+        return
+    if data == 16:
+        # Failed bodyslam
+        return
+    if data == 17:
+        # Fists of fury
+        return
+    if data == 18:
+        return
+    if data == 19:
+        roll_to_hit(ch, vict, ["jab", "combo", 6, 8])
+        roll_to_hit(ch, vict, ["jab", "combo", 6, 8])
+        roll_to_hit(ch, vict, ["jab", "combo", 6, 8])
+        roll_to_hit(ch, vict, ["uppercut", "combo", 15, 6])
+        ch["ki"] = 0
+        return
+    if data == 20:
+        return
+    if data == 21:
+        return
+    if data == 22:
+        return
+    if data == 23:
+        return
+    if data == 24:
+        return
+    if data == 25:
+        return
+    if data == 26:
+        return
+    if data == 27:
+        return
+    if data == 28:
+        return
+    if data == 29:
+        return
+    if data == 30:
+        return
+
+
+
 # dmg( Damage ) function for calculating damage and checking for death
 def dmg(ch, vict, type):
     # Going to be calculating different user init attack damage in here.
@@ -93,6 +155,7 @@ def dmg(ch, vict, type):
     damage_sides = ch["damage"][1] # and how many facets those dice have
     damage_resistance = ch["dr"]  # Collect the damage resistance
     extra = None
+    damage = 0
 
     if type == "kick":
         #Calculate the damage of the kick
@@ -113,19 +176,39 @@ def dmg(ch, vict, type):
             ki_value += 1 # Iterate the iterable
             if type == i:   # If the command being processed is one of those being targeted, calculate it
                 result = dice_roll( 1, 100) # Gather a 1-100 dice roll
-                ki = ch["ki"]               # Establish the character's current ki
+                max_ki = int(ch["max_ki"])
+                ki = int(ch["ki"])               # Establish the character's current ki
                 if result >= 31:            # If the result is not going to be modified
                     ch["ki"] = int(ki) + int(ki_value) # Give them the advertised ki amount
                     extra = int(ki) + int(ki_value)
+                    if ch["ki"] > max_ki:
+                        subtractVariable = max_ki - ki
+                        newKi = ki_value - subtractVariable
+                        extra = newKi
+                        ch["ki"] = newKi
                 elif result <= 15:          # Test for 1-15
                     ch["ki"] = int(ki) + int(ki_value) - 1    # If it's there, then one less ki is gained
                     extra = int(ki) + int(ki_value) -1
+                    if ch["ki"] > max_ki:
+                        subtractVariable = max_ki - ki
+                        newKi = ki_value - subtractVariable
+                        extra = newKi
+                        ch["ki"] = newKi
                 else:
                     ch["ki"] = int(ki) + int(ki_value) + 1    # If it's in the 16-30 range, they get a bonus ki
                     extra = int(ki) + int(ki_value) + 1
+                    if ch["ki"] > max_ki:
+                        subtractVariable = max_ki - ki
+                        newKi = ki_value - subtractVariable
+                        extra = newKi
+                        ch["ki"] = newKi
                 damage = dice_roll( damage_dice, damage_sides ) / 2 # Roll the paltry damage these moves inflict
                 break # Stop the for loop for efficiency, since there can't be two positive results
-        
+    
+    print(type)
+    if type[1] == "combo":
+        damage = dice_roll(int(type[2]), int[type[3]])
+        type = type[1]
 
     damage -= damage_resistance   #subtract vict["dr"]
     vict["hp"] -= damage    #apply damage
@@ -136,50 +219,48 @@ def dmg(ch, vict, type):
 
 def user_initialized_attack_processing(ch, vict, type):
     #This prepares abilities coming from the frontend and puts them in the userinit queue
-    cost = 80
+    cost = 80 # Standard speed cost
     if type == "kick":
-        cost = 80
-    data = { 
-            "ch": ch,
-            "vict": vict,
-            "type": type,
-            "speed_cost": cost
+        cost = 80 # Variable speed cost for kick
+    data = { # Prepare unit data for processing
+            "ch": ch, # The character initiating
+            "vict": vict, # The victim
+            "type": type, # Type of attack
+            "speed_cost": cost # And the cost
         }
     
-    cfg.user_queue.append(data)
+    cfg.user_queue.append(data) # Put the command in the queue
 
 
 def user_initialized_attack_queue():
-    speed = cfg.fighter1["ability_speed"]
-    max_speed = cfg.fighter1["speed_max"]
-    speed += max_speed
-    if speed >= 1.5 * max_speed:
-        cfg.fighter1["ability_speed"] = max_speed * 1.5
-    else:
-        cfg.fighter1["ability_speed"] = speed
+    speed = cfg.fighter1["ability_speed"] #Gather attacker speed
+    max_speed = cfg.fighter1["speed_max"] #Gather attacker maximum speed
+    speed += max_speed #Regenerate max ki
+    if speed >= 1.5 * max_speed: #If ki is more than 150% max
+        cfg.fighter1["ability_speed"] = max_speed * 1.5 #Set it to 150% max
+    else:                                               #Otherwise
+        cfg.fighter1["ability_speed"] = speed           #Just leave it alone
 
-    speed = cfg.fighter2["ability_speed"]
+    speed = cfg.fighter2["ability_speed"]               # And do the same with fighter2
     max_speed = cfg.fighter2["speed_max"]
     speed += max_speed
     if speed >= 1.5 * max_speed:
         cfg.fighter2["ability_speed"] = 1.5 * max_speed
     
-    if cfg.user_queue != []:
-        while True:
-            if cfg.user_queue != []:
-                ch = cfg.user_queue[0]["ch"]
+    if cfg.user_queue != []: # If the user queue isn't empty
+        while True:         # Start going through the queue
+            if cfg.user_queue != []: # Check every iteration that it isn't empty
+                ch = cfg.user_queue[0]["ch"] # And package the values into something the dmg() function can parse
                 vict = cfg.user_queue[0]["vict"]
                 type = cfg.user_queue[0]["type"]
                 speed_cost = cfg.user_queue[0]["speed_cost"]
             else:
                 break
 
-            if ch["ability_speed"] < speed_cost:
+            if ch["ability_speed"] < speed_cost: # If the player runs out of speed, stop the loop
                 break
-            else:
+            else:   # Otherwise send it to the dmg() function and pop the item off the queue
                 ch["ability_speed"] = ch["ability_speed"] - speed_cost
-                print("Method = " + type)
-                print(cfg.round)
                 dmg(ch, vict, type)
                 cfg.user_queue.pop(0)
 
@@ -187,6 +268,8 @@ def user_initialized_attack_queue():
 
 # The miss() method prepares data to be passed to the frontend
 def miss(case, ch, method):
+    if method[0]:
+        method = method[0]
     if case == "miss":
         add_to_queue(ch["name"], method, 0, "miss")
     if case == "dodge":
@@ -206,6 +289,7 @@ def auto_atk(ch, vict):
         roll_to_hit(ch, vict, "auto")   # at the roll_to_hit() method
 
 
+# A function that is invoked when a player reaches 0 hp, signalling the frontend to display a victory message and providing exp to the user character
 def victory(ch, vict):
     vict["is_dead"] = True
     victor = mongo.db.characters.find_one({"name": ch["name"]})
@@ -219,23 +303,26 @@ def victory(ch, vict):
     add_to_queue(ch["name"], "victor", 0, 100000)
     
 
-
+# A timer that activates regeneration. This was intended to cover a lot more ground but the project is cancelled.
 def turn_timer(player1, player2):
     tick(player1, player2)
 
 
+# The turn queue that is launched every 10 queries, aka 5 seconds. It launches the autoattacks and regeneration tics.
 def turn_queue(player1, player2):
-    if player1["is_dead"] == False and player2["is_dead"] == False:
+    if player1["is_dead"] == False and player2["is_dead"] == False: # Gotta make sure they're not dead
         auto_atk(player1, player2)
         auto_atk(player2, player1)
         turn_timer(player1, player2)
 
 
+# Regeneration ticks
 def tick(player1, player2):
     player1["speed"] += player1["speed_max"]
     player2["speed"] += player2["speed_max"]
 
 
+# A simple dice roll function
 def dice_roll(dice, sides):
     rolls = []
     result = 0
@@ -247,6 +334,7 @@ def dice_roll(dice, sides):
     return result
 
 
+# A function used to add simple commands to the queue
 def add_to_queue(name, method, dmg, extra):
     data = {
         "name": name,
@@ -269,7 +357,7 @@ def character_dump(username):
 
 
 def prepare_character(chname, chusername):
-    """ FIXME I think the actual stats as affected by body, etc. could be calculated here if not done in the combat code """
+    """ Prepare a character to be used in the combat module. """
     name = mongo.db.characters.find_one({"name": chname})
     if name["owner"] == chusername:
         chclass = name["chclass"]
@@ -304,6 +392,7 @@ def prepare_character(chname, chusername):
         return False
 
 def prepare_opponent():
+    """ Prepare a generic character to be used in the combat module """
     stats = {
         "name": "Meanie",
         "ch_class": None,
@@ -331,28 +420,30 @@ def prepare_opponent():
 @socket_.on('query', namespace="/test")
 def handle_query(data):
     """ Handle regular queries from the frontend"""
-    if data == "empty":
-        cfg.timer += 1
-    if cfg.timer >= 10:
-        turn_queue(cfg.fighter1, cfg.fighter2)
-        user_initialized_attack_queue()
-        cfg.timer = 0
-        cfg.round += 1
+    if data == "empty": # Empty queries are used by the frontend to request data and to coordinate timing
+        cfg.timer += 1  # Measuring how many queries have elaapsed
+    if cfg.timer >= 10: # When it gets to 10 (5ish seconds)
+        turn_queue(cfg.fighter1, cfg.fighter2) # Initiate the round with the turn queue
+        user_initialized_attack_queue()        # Tell the queue function to check how much the character can do with the remaining speed 
+        cfg.timer = 0                           # Reset the timer
+        cfg.round += 1                          # Keep track of how many rounds have elapsed
 
-    if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True:
-        emit('query', cfg.queue, broadcast=True)
-        cfg.queue = []
-    elif cfg.queue == []:
-        emit('query', "empty",
+    if cfg.fighter1["is_dead"] == True or cfg.fighter2["is_dead"] == True: #If someone has died
+        emit('query', cfg.queue, broadcast=True)                            # Let the frontend know
+        cfg.queue = []                                                      # And empty the queue
+    elif cfg.queue == []:                                                   # If there's nothing to submit,
+        emit('query', "empty",                                              # Just send an empty message
             broadcast=True)
-    else:
-        emit('query', cfg.queue,
+    else:                                       
+        emit('query', cfg.queue,                                            # Otherwise, send the commands to be executed on the frontend
             broadcast=True)
-        cfg.queue = [] 
+        cfg.queue = []                                                      # and empty the queue
     
+    if data == "combo":
+        combo_calculator(cfg.fighter1, cfg.fighter2, cfg.fighter1["ki"])    # This is used to separate the combos from other, less complex commands
+
     if data != "empty":
-        # FIXME this initialization means only the user player can attack
-        user_initialized_attack_processing(cfg.fighter1, cfg.fighter2, data)
+        user_initialized_attack_processing(cfg.fighter1, cfg.fighter2, data) # This is, in a sense, some placeholder code since it only permits the user character to execute command attacks.
 
 
 # SocketIO handler for character list request
@@ -496,16 +587,16 @@ def profile(username):
         form_name = request.form['form-name']
         #####      Create character modal form      #####
         if form_name == "create-character":
-            existing_char = mongo.db.characters.find_one(
+            existing_char = mongo.db.characters.find_one( # Check and see if the name already exists
                 {"name": request.form.get("name").lower()}
             )
 
-            if existing_char:
+            if existing_char:   # And let the user know, redirecting them back to the form
                 flash("Character name taken, try again with a more differenter name")
                 return redirect(
                         url_for("profile", username=session["user"]))
 
-            new_char = {
+            new_char = { # Setting all the stats for a base character
                 "name": request.form.get("name").lower(),
                 "chclass": request.form.get("class"),
                 "current_exp": 99999999,
@@ -525,7 +616,7 @@ def profile(username):
                 "winloss": [0, 0],
                 "abilities": {"kick": "A"}
             }
-            if request.form.get("class") == "inward_fist":
+            if request.form.get("class") == "inward_fist": # Tacking on all the specific stuff for a fist
                 new_char["icon"] = "images/fist-icon.png"
                 new_char["hands"] = 0
                 new_char["legs"] = 0
@@ -533,17 +624,18 @@ def profile(username):
                 new_char["arms"] = 0
                 new_char["discipline"] = 0
                 new_char["max_ki"] = 0
-                new_char["abilities"]["spinkick"] = "ONE"
+                new_char["abilities"]["shinkick"] = "ONE"
                 new_char["abilities"]["jab"] = "TWO"
                 new_char["abilities"]["spinkick"] = "THREE"
                 new_char["abilities"]["knee"] = "FOUR"
                 new_char["abilities"]["elbow"] = "FIVE"
                 new_char["abilities"]["uppercut"] = "SIX"
+                new_char["abilities"]["combo"] = "S"
             mongo.db.characters.insert_one(new_char)
             flash("Character Created")
             return redirect(url_for("profile", username=session["user"]))
         
-        if form_name == "delete-account":
+        if form_name == "delete-account":   # Deleting a user account
             user = mongo.db.users.find_one({"username":username})
             if check_password_hash(user["password"], request.form.get("password")) and request.form.get("username").lower() == username:
                     mongo.db.characters.delete_many({"owner": user["username"]})
@@ -551,7 +643,7 @@ def profile(username):
                     session.pop("user")
         
 
-        if form_name == "change-password":
+        if form_name == "change-password":  # Changing a user password
             user = mongo.db.users.find_one({"username":username})
             if check_password_hash(user["password"], request.form.get("password")):
                 if request.form.get("new-password") == request.form.get("password2"):
@@ -564,7 +656,7 @@ def profile(username):
                 flash("Password not updated: Current password entered incorrectly.")
 
 
-        if form_name == "change-email":
+        if form_name == "change-email": # Changing a user email
             if request.form.get("email") == request.form.get("confirm-email"):
                 mongo.db.user.update_one({"username": username}, {"$set": {"email": request.form.get("email")}})
                 flash("Email updated")
@@ -576,130 +668,133 @@ def profile(username):
         return render_template("profile.html", username=username, characters=characters)
 
 
-
 @app.route("/character/<charactername>", methods=["GET", "POST"])
 def character(charactername):
-    username = mongo.db.users.find_one(
+    """ The character page for each character """
+    username = mongo.db.users.find_one( # Find the user
         {"username": session["user"]})["username"]
-    charactername = mongo.db.characters.find_one(
+    charactername = mongo.db.characters.find_one( # Find the selected character
         {"name": charactername}
     )
 
     if request.method == "POST":
-        form_name = request.form['form-name']
-        bodytrain_strings = ["arms", "hands", "legs", "torso"]
+        form_name = request.form['form-name'] # Get the form-name
+        bodytrain_strings = ["arms", "hands", "legs", "torso"] # Setting up the strings for the following for loop
         """ Following code block builds four statements to listen for bodytraining POSTs """
         for string in range(len(bodytrain_strings)):
-            if form_name == bodytrain_strings[string]:
-                training = int(request.form.get('flask-' + bodytrain_strings[string]))
-                bodytrain = int(charactername[bodytrain_strings[string]])
-                spent_experience = charactername["spent_exp"]
-                experience = int(charactername["current_exp"])
-                cost = calculateCost(bodytrain, training)
-                updatefilter= {"name": charactername["name"]}
-                if experience >= cost and training + bodytrain <= 100:
-                    submit = {
-                        bodytrain_strings[string]: training + bodytrain,
-                        "current_exp": experience - cost,
-                        "spent_exp": spent_experience + cost              
+            if form_name == bodytrain_strings[string]:  # If it's a bodytraining form
+                training = int(request.form.get('flask-' + bodytrain_strings[string]))  # Collect how much is being trained
+                bodytrain = int(charactername[bodytrain_strings[string]])   # Collect the current training
+                spent_experience = charactername["spent_exp"]   # Collect the current experience level
+                experience = int(charactername["current_exp"])  # Collect the unspent experience
+                cost = calculateCost(bodytrain, training)       # Calculate the cost of what is being trained
+                updatefilter= {"name": charactername["name"]}   # Make a filter for finding items in the database
+                if experience >= cost and training + bodytrain <= 100:  # If they have enough experience and this wouldn't train them any higher than the maximum (100)
+                    submit = {                                          # prepare the information
+                        bodytrain_strings[string]: training + bodytrain,# Using the data from above
+                        "current_exp": experience - cost,               # While deducting the right amount of experience
+                        "spent_exp": spent_experience + cost            # And adding to the spent experience
                     }
-                    mongo.db.characters.update_one(updatefilter, {"$set": submit})
-                    flash("Training complete")
-                    return redirect(url_for("character", charactername=charactername['name']))
+                    mongo.db.characters.update_one(updatefilter, {"$set": submit}) # Get the character in the db
+                    flash("Training complete")                                      # Let the user know it worked
+                    return redirect(url_for("character", charactername=charactername['name']))  # And send them back to the page
                 else:
-                    flash("Insufficient experience for training")
+                    flash("Insufficient experience for training") #Otherwise tell them it didn't work and send them back
                     return redirect(url_for("character", charactername=charactername['name']))
 
         """ Following code block listens for discipline training POSTs """
-        if form_name == "discipline":
-            discipline = int(charactername["discipline"])
-            cost = disciplineCost(discipline)
-            spent_experience = int(charactername["spent_exp"])
-            experience = int(charactername["current_exp"])
-            if experience > cost:
-                submit = {
-                    "discipline": discipline + 1,
-                    "current_exp": experience - cost,
-                    "spent_exp": spent_experience + cost
+        if form_name == "discipline":                               #If it's a discipline form
+            discipline = int(charactername["discipline"])           # Collect current discipline
+            cost = disciplineCost(discipline)                       # Calculate the cost
+            spent_experience = int(charactername["spent_exp"])      # Collect spent exp
+            experience = int(charactername["current_exp"])          # Collect current unspent exp
+            if experience > cost:                                   # If they have enough exp
+                submit = {                                          # Prepare some data
+                    "discipline": discipline + 1,                   # Add a discipline
+                    "current_exp": experience - cost,               # Subtract the cost
+                    "spent_exp": spent_experience + cost            # Add the spent exp
                 }
-                mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit})
+                mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit})   # Update the DB
             else:
-                flash("Insufficient experience for training")
-                return redirect(url_for("character", charactername=charactername['name']))
+                flash("Insufficient experience for training")                               # Otherwise let the user know it didn't work
+                return redirect(url_for("character", charactername=charactername['name']))  # And send them back to the page
 
             
-        if form_name == "char-bio":
-            submit = {
+        if form_name == "char-bio": # If they are updating their bio
+            submit = {              # Prepare some data
                 "charbio": request.form.get('char-bio')
             }
-            mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit})
-            flash("Bio updated")
+            mongo.db.characters.update_one({"name": charactername["name"]}, {"$set": submit}) # Submit it to the db
+            flash("Bio updated")    # And let the user know it worked
 
-        if form_name == "delete":
-            if request.form.get('delete').lower() == charactername['name']:
-                mongo.db.characters.remove({"name": charactername["name"]})
-                flash("Character deleted")
-                return redirect(url_for("profile", username=session["user"]))
+        if form_name == "delete":                                           # If the user is deleting a character
+            if request.form.get('delete').lower() == charactername['name']: # Get the name of the character and make sure it matches
+                mongo.db.characters.remove({"name": charactername["name"]}) # Remove the character from the DB
+                flash("Character deleted")                                  # Let the user know it worked
+                return redirect(url_for("profile", username=session["user"])) # And take them back to the profile page to make a new one
             else:
-                flash("Character not deleted, check name and try again.")
+                flash("Character not deleted, check name and try again.")   # Otherwise let them know it didn't work for some reason
  
-    return render_template("character.html", username=username, charactername=charactername)
+    return render_template("character.html", username=username, charactername=charactername) # No matter what happens, we're sending them back to the character page.
 
 
 @app.route("/index")
 def index():
+    """ Route for the index page """
     return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """ Route for the login page """
     if request.method == "POST":
-        existing_user = mongo.db.users.find_one(
+        existing_user = mongo.db.users.find_one( # Check the username
             {"username": request.form.get("username").lower()})
 
-        if existing_user:
+        if existing_user: # If they exists, check the password
             if check_password_hash(existing_user["password"], request.form.get("password")):
                     session["user"] = request.form.get("username").lower()
-                    flash("Welcome, {}".format(request.form.get("username")))
-                    return redirect(
+                    flash("Welcome, {}".format(request.form.get("username"))) # Let the user know it worked out
+                    return redirect(    #And redirect them to the profile page
                         url_for("profile", username=session["user"]))
             else:
-                flash("Incorrect Username and/or Password")
-                return redirect(url_for("login"))
+                flash("Incorrect Username and/or Password") #Otherwise indicate failure
+                return redirect(url_for("login"))   # And send them back to login page
 
         else:
-            flash("Incorrect Username and/or Password")
-            return redirect(url_for("login"))
+            flash("Incorrect Username and/or Password") # Same error for other failures
+            return redirect(url_for("login"))   # Redirect to login
             
-    return render_template("login.html")
+    return render_template("login.html")    
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
-    if request.method == "POST":
-        existing_user = mongo.db.users.find_one(
+    """ Route for registration page """
+    if request.method == "POST":    # If they're posting something
+        existing_user = mongo.db.users.find_one(    # Get that name
             {"username": request.form.get("username").lower()})# Check if the username already exists
 
-        if existing_user:
-            flash("Username already exists")
-            return redirect(url_for("register"))
+        if existing_user:   # If it exists
+            flash("Username already exists") # Let them know
+            return redirect(url_for("register")) # and redirect
         
-        if request.form.get("password") == request.form.get("password_confirm"):
-            register = {
+        if request.form.get("password") == request.form.get("password_confirm"): # If the passwords match
+            register = {    # Prepare some data
                 "username": request.form.get("username").lower(),
                 "password": generate_password_hash(request.form.get("password")),
                 "email": request.form.get("email"),
                 "registered_on": datetime.datetime.now(),
             }
-            mongo.db.users.insert_one(register)
+            mongo.db.users.insert_one(register) # And put it in the DB
         else:
-            flash("Password fields do not match")
-            return redirect(url_for("register"))
+            flash("Password fields do not match")   # Otherwise let them know the field didn't match
+            return redirect(url_for("register"))    # And send them back
 
-        session["user"] = request.form.get("username").lower()
-        flash("Registration Successful")
-        return redirect(url_for("profile", username=session["user"]))
-    return render_template("register.html")
+        session["user"] = request.form.get("username").lower()  # Set the session user
+        flash("Registration Successful")    # Let them know it worked out
+        return redirect(url_for("profile", username=session["user"]))   # And redirect them to the profile page
+    return render_template("register.html") # Display the registration form
 
 
 @app.route("/logout")
@@ -722,45 +817,6 @@ def calculateCost(current, iterations):
 
 def disciplineCost(current):
     return (current + 1) * 500000
-
-
-"""
-Turns out that this is straight up garbage-trash.
-We'll be using APEventscheduler for this.
-
-This is the most elegant way to do it, but we may be forced to do something more... brutish. To maintain the sort of control I want, and make it extensible.
-
-Issues to solve:
-    Build it up in a way that it can do this by seconds for queue abilities.
-    How does it know which players to be issuing commands for?
-
-THIS is for autoattacks and submitting items from the frontend to the queue
-while combat_switch == True:
-    curtime = time.time()
-
-    if curtime % 5 == 0:
-        execute_command()
-
-
-THIS will be for player-issued commands. This way speed can JUST be for autoattacks.
-while combat_switch == True:
-    curtime = time.time()
-
-    for cmd in cmds:
-        if curtime % cmd["interval"] == 0:
-        execute_command(cmd["command"])
-      
-cmds = [
-    {
-        "command": "doNothing",
-        "delay": 5
-    },
-    {
-        "command": "doSomething",
-        "interval": 3
-    }
-]
-"""
 
 
 if __name__ == "__main__":  # If the name is valid

@@ -100,6 +100,7 @@ class Play extends Phaser.Scene {
                 duration: duration
             });
         }
+
         if (ch_class == "inward_fist"){
             let methods = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"];
             let aggressorKi = aggressorObj["ki"];
@@ -110,7 +111,9 @@ class Play extends Phaser.Scene {
                         repeat: 1,
                         duration: duration
                     });
-                    aggressorObj["ki"] = aggressorKi + extra;
+                    if (extra) {
+                        aggressorObj["ki"] = extra;
+                    }
                     console.log(methods[i])
                 }
             }
@@ -234,33 +237,35 @@ class Play extends Phaser.Scene {
 
     buttonListMaker(data){
         let iterator = 0
+        console.log(data)
         for (let i in data){
             let keyData = {}
             keyData[i] = data[i]
             buttonList[iterator] = keyData
             iterator += 1
         }
+        // This should make an entirely separate list of values also, in order and formatted for display, to be used by buttonmaker()
         this.buttonMaker()
         
     }
 
     buttonMaker(){
-        // Dude this is going to be so hard to get really right.
         let length = buttonList.length;
         let numberOfRows = Math.ceil(length / 4);
         let lastRow = length % 4;
         for (let i = 0; i < buttonList.length; i++){     // Loop through the saved commands
-            let buttonX
-            let buttonY
-            buttonX = (i % 4) * 200
-            buttonY = ( Math.floor(i / 4) * 45 ) + 525
-            buttons[i] = this.add.sprite(buttonX, buttonY, 'button').setScale(0.8).setOrigin(0)
+            let buttonX = (i % 4) * 200;
+            let buttonY = ( Math.floor(i / 4) * 45 ) + 525;
+            buttons[i] = this.add.sprite(buttonX, buttonY, 'button')
+                .setScale(0.8)
+                .setOrigin(0)
+                .setInteractive();
             let string = Object.keys(buttonList[i])[0]  // Get the key string out
             this.add.text(buttonX, buttonY, string + ": " + buttonList[i][string])
             buttons[i].on('pointerdown', function(){
                 socket.emit('query', string)
                 console.log("button")
-            })
+            }, this)
         }
     }
 
@@ -407,7 +412,7 @@ class Play extends Phaser.Scene {
 // ===== increments controls the flow of the game.
         timer = setInterval(function() { // Set the interval to a global variable
             roundTimer += 1;             // Increment to keep track of the rounds
-            if (roundTimer == 6){        // When a round is over
+            if (roundTimer == 10){        // When a round is over
                 scene.queueHandler();    // Call the queue handler to process the data for the next round
                 roundTimer = 0;          // Reset the round timer
             }
