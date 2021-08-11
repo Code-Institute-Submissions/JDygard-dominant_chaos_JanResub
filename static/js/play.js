@@ -76,11 +76,15 @@ class Play extends Phaser.Scene {
         });
     }
 
+    // This is the animationHandler(). As expected, it handles which animations should be played
     animationHandler(name, method, extra, duration){
+        // Setting up some local variables
         let aggressor;
         let defender;
         let ch_class;
         let aggressorObj;
+
+        // Making sure we are working with the correct character
         if (player1["name"] == name){
             aggressor = playerOne
             defender = playerTwo
@@ -93,6 +97,7 @@ class Play extends Phaser.Scene {
             aggressorObj = player2
         }
 
+        // A separate statement for kicks
         if (method == "kick"){
             aggressor.anims.play({
                 key: 'kick',
@@ -101,24 +106,24 @@ class Play extends Phaser.Scene {
             });
         }
 
+        // A for loop that checks for any of the combo-building moves used by the Fist class
         if (ch_class == "inward_fist"){
-            let methods = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"];
-            let aggressorKi = aggressorObj["ki"];
+            let methods = ["shinkick", "jab", "spinkick", "knee", "elbow", "uppercut"]; // A list of moves to be iterated over
             for (let i in methods){
-                if (method == methods[i]){
-                    aggressor.anims.play({
+                if (method == methods[i]){ // If the method that activated the animation handler is found
+                    aggressor.anims.play({ // Play the relevant animation (defined in the preload() method above)
                         key: methods[i],
                         repeat: 1,
                         duration: duration
                     });
-                    if (extra) {
-                        aggressorObj["ki"] = extra;
+                    if (extra) { // If it is a fist combo-building move, the extras part is the amount of Ki gained
+                        aggressorObj["ki"] = extra; // So we will add that just as the animation plays for the illusion of continuity
                     }
-                    console.log(methods[i])
                 }
             }
         }
 
+        // Various animations for the victim of the attack
         if (extra == "dodge"){
             defender.anims.play({
                 key: 'dodge',
@@ -151,6 +156,7 @@ class Play extends Phaser.Scene {
             })
         }
 
+        // And some animations for executing auto attacks
         if (method == "auto"){
             if (punch == 0){
                 aggressor.anims.play({
@@ -170,17 +176,21 @@ class Play extends Phaser.Scene {
         }
     }
 
+    // The lexical parser takes the information sent from the backend and parses it into readable text in a combat log.
     lexicalParser(name, method, damage, extra){
+        // Some useful local variables
         let verb = method;
         let message;
         let opponent;
 
+        // Getting the name positions right.
         if (name == player1["name"]){
             opponent = player2["name"];
         } else {
             opponent = player1["name"];
         }
 
+        // Picking the right verb
         if (method == "auto"){
             verb = "strike"
         }
@@ -189,7 +199,7 @@ class Play extends Phaser.Scene {
             verb = "kick"
         }
 
-
+        // Some messages for 0 damage states
         if (damage == 0){
             if (extra == "miss"){
                 message = `${name} attempts to ${verb} ${opponent}, but misses!`
@@ -207,25 +217,29 @@ class Play extends Phaser.Scene {
                 message = `${name} ${verb}s ${opponent}, oh so gently. (0)`
             }
         }
+        // And a message for successful attacks
         if (damage >= 1){
             message = `${name} ${verb}s ${opponent}. (${damage})`
         }
-        this.displayText(message)
+        this.displayText(message) // Send it to the text display function
     }
 
+    // This is the method that shows text in the combat log.
     displayText(message){
-        let newText = this.add.text(20,630,message)
-        for (let i = 0; i < textDisplay.length; i++){
-            let oldPos = textDisplay[i].y;
+        let newText = this.add.text(20,630,message) // Pop a new message into place at the top
+        for (let i = 0; i < textDisplay.length; i++){   // Iterate through current messages
+            let oldPos = textDisplay[i].y;          // Move each message down a little to make space for the new one.
             textDisplay[i].setY(oldPos+30);
         }
-        textDisplay.unshift(newText)
+        textDisplay.unshift(newText)                // And add the new text to the textDisplay array.
     }    
     
+    // A text field for showing high priority messages like victory
     announceText(message){
         centerText.setText(message)
     }
 
+    // This was an early solution for sending messages to the backend. There's a much more focused method of communication in place now, but this is still in use for initializing the combat
     socketData(message) {
         var socket = io(namespace);
         socket.emit('playdata', message);
@@ -235,9 +249,9 @@ class Play extends Phaser.Scene {
         socket.emit('query', "empty");
     }
 
+    // This creates a list of buttons from the abilities available to the character
     buttonListMaker(data){
         let iterator = 0
-        console.log(data)
         for (let i in data){
             let keyData = {}
             keyData[i] = data[i]
@@ -249,6 +263,7 @@ class Play extends Phaser.Scene {
         
     }
 
+    // This uses the list of buttons from the above method to create interactable buttons.
     buttonMaker(){
         let length = buttonList.length;
         let numberOfRows = Math.ceil(length / 4);
@@ -264,7 +279,6 @@ class Play extends Phaser.Scene {
             this.add.text(buttonX, buttonY, string + ": " + buttonList[i][string])
             buttons[i].on('pointerdown', function(){
                 socket.emit('query', string)
-                console.log("button")
             }, this)
         }
     }
@@ -299,29 +313,26 @@ class Play extends Phaser.Scene {
         }
     }
 
+    // This method goes through the queue and unpacks it to its relevant sections
     queueHandler(){
-        scene = this
-        let intervalTimer = 5000 / instructionQueue.length;
-        let tempQueue = instructionQueue;
-        instructionQueue = [];
-        for (let i = 0; i < tempQueue.length; i++){
-            setTimeout(function(){                                                          // Wait for a moment
-                scene.damageHandler(tempQueue[i]["name"], tempQueue[i]["damage"]);                                                           // before removing the tint
-            }, intervalTimer * i);    
-            setTimeout(function(){                                                          // Wait for a moment
-                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["extra"], intervalTimer);                                                           // before removing the tint
+        scene = this // Establishing some context
+        let intervalTimer = 5000 / instructionQueue.length; // This sets the amount of time each command should take, split up through the whole round.
+        let tempQueue = instructionQueue;   // Gather the current queue
+        instructionQueue = [];              // And empty it
+        for (let i = 0; i < tempQueue.length; i++){ // Iterate through the commands
+            setTimeout(function(){                  // Set a timeout
+                scene.damageHandler(tempQueue[i]["name"], tempQueue[i]["damage"]); // damage handler needs the name of the aggressor and the damage amount.
+            }, intervalTimer * i);                  // each iteration has its timer multiplied by the number of iterations to evenly spread the commands out and give the illusion of continuous motion
+            setTimeout(function(){
+                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["extra"], intervalTimer); // animation handler needs the aggressor's name, the method of attack, and the extra info (For KI)
             }, intervalTimer * i);     
-            setTimeout(function(){                                                          // Wait for a moment
-                scene.lexicalParser(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["damage"], tempQueue[i]["extra"]);                                                           // before removing the tint
+            setTimeout(function(){
+                scene.lexicalParser(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["damage"], tempQueue[i]["extra"]); // The lexical parser needs all of the information
             }, intervalTimer * i); 
-
-            /* 
-            read extras, we will work with that when shields come
-            */
-
         }
     }
 
+    // Damage handler controls the health bar for the player.
     damageHandler(name, damage){
         var stepWidth = (energyMask.displayWidth - 50) / player1["max_hp"];  // Figure out how much the bar should move for each point based on the max value
         if (name == player2["name"]){
@@ -435,22 +446,3 @@ class Play extends Phaser.Scene {
             }
     }
 }
-
-/* Read var for button locations:
-    -Make it adjustable
-    -Make it appear in order
-Visuals:
-    Commands list:
-        Displays items as they are entered
-        Eliminates items as they are executed
-    Rounds timer visual
-        -this is the bracketed display that shows round timing
-        -use a phaser group to move them in concert
-        -put bars on it to show timing
-        -Can a user submit a command in the interim between the server round and the client round so that the display show it incorrectly?
-        -You could have the server to deliver a handshake that sets the timing for the display
-        -You could sync the rounds with a failsafe that adjusts the round timing after a desync
-            -this could replace the "empty" part of the query message from the client
-        -The server queue emitter itself could append a round timing message when submitting the display queue to the client.
-        
-*/

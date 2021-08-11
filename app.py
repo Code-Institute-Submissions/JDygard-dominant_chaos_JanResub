@@ -799,23 +799,24 @@ def register():
 
 @app.route("/logout")
 def logout():
+    """ Route for logout """
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
 
 
-def calculateCost(current, iterations):
+def calculateCost(current, iterations): # Calculate the cost of a body training
     initialValue = current
     result = 0
     i = 0
-    while i < int(iterations):
+    while i < int(iterations): # This is capable of calculating any number of simultaneous trainings
         result += math.sqrt(initialValue) * 1500
         initialValue += 1
         i += 1
     return round(result)
 
 
-def disciplineCost(current):
+def disciplineCost(current): # Calculate the cost of a discipline training
     return (current + 1) * 500000
 
 
