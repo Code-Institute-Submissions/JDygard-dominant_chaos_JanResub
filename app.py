@@ -568,7 +568,7 @@ def outward_fist():
 
 @app.route("/leaderboard")
 def leaderboard():
-    characters = list(mongo.db.characters.find().sort("spent_experience", 1))
+    characters = list(mongo.db.characters.find().sort("spent_exp", -1))
     return render_template("leaderboard.html", characters=characters)
 
 

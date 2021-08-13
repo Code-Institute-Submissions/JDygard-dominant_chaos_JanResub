@@ -1,41 +1,65 @@
-<!-- Gather all characters and sort by experience earned. Display the top ten. Maybe display it as a pyramid, #1 at the top, #2 and #3 underneath, and then the rest as a list. -->
-
 {% extends "base.html" %}
 {% block content %}
+<h2 id="top-10">Top 10 Fighters</h2>
+<table class="centered responsive-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th> </th>
+            <th>Character</th>
+            <th>User</th>
+            <th>Experience</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for character in characters %}
-        {% if loop.first %}
-            <div class="col">
-                <div class="row center-align first-place">
-                    <h3 class="center-align light-blue-text text-darken-4">
-                        #1: {{ character.name|capitalize }}
-                    </h3> 
-                    <img src="{{ url_for('static', filename = character.icon) }}" alt="">
-                    <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
-                </div>
-            </div>
+    {% if loop.index is lessthan 11 or character.owner == session['user'] %}
+    {% if character.owner == session['user'] %}
+    <tr class="user-character table-row">
+        {% elif loop.index == 1 %}
+    <tr id="first-place" class="table-row">
         {% elif loop.index == 2 %}
-        <!-- if it's 2 or 3 -->
-            <div class="row center-align second-third-place">
-                <div class="col m6">
-                    <h3 class="center-align light-blue-text text-darken-4">
-                        #2: {{ character.name|capitalize }}
-                    </h3> 
-                    <img src="{{ url_for('static', filename = character.icon) }}" alt="">
-                    <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
-                </div>
+    <tr id="second-place" class="table-row">
         {% elif loop.index == 3 %}
-                <div class="col m6">
-                    <h3 class="center-align light-blue-text text-darken-4">
-                        #3: {{ character.name|capitalize }}
-                    </h3> 
-                    <img src="{{ url_for('static', filename = character.icon) }}" alt="">
-                    <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
-                </div>
-            </div>
+    <tr id="third-place" class="table-row">
         {% else %}
-        <!-- And a list if it's 4+-->
-        <h3>{{ character.name }}</h3><br>
-        <span><a href="{{ url_for('character', charactername = character.name)}}">clickme</a></span>
-        {% endif %}
+    <tr class="table-row">
+    {% endif %}
+        <td> {{ loop.index }} </td>
+        <td> <img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon"> </td>
+        <td> {{ character.name|capitalize }} </td>
+        <td> {{ character.owner|capitalize }} </td>
+        <td> {{ character.spent_exp }}</td>
+    </tr>
+    {% endif %}
+    {% if loop.index is equalto 11 %}
+    </tbody>
+</table>
+<section id="table-extension">
+<br>
+<div class="leaderboard-dots">
+    <p>...</p>
+</div>
+<table class="centered responsive-table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th> </th>
+        <th>Character</th>
+        <th>User</th>
+        <th>Experience</th>
+    </tr>
+    </thead>
+    <tbody id="table-extension-body">
+    {% endif %}
     {% endfor %}
+    </tbody>
+</table>
+</section>
+<script>
+    let tableRows = document.getElementsByClassName("table-row")
+    for (row in tableRows) {
+        tableRows[row].onclick = "{{ url_for('character', charactername=character.name) }}"
+    }
+</script>
 {% endblock %}
