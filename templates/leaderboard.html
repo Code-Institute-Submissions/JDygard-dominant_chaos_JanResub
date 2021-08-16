@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+</head>
 <h2 id="top-10">Top 10 Fighters</h2>
 <table class="centered responsive-table">
     <thead>
@@ -25,41 +28,59 @@
         {% else %}
     <tr class="table-row">
     {% endif %}
-        <td> {{ loop.index }} </td>
+        <td>{{ loop.index }}</td>
         <td> <img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon"> </td>
-        <td> {{ character.name|capitalize }} </td>
-        <td> {{ character.owner|capitalize }} </td>
-        <td> {{ character.spent_exp }}</td>
+        <td>{{ character.name|capitalize }}</td>
+        <td>{{ character.owner|capitalize }}</td>
+        <td>{{ character.spent_exp }}</td>
     </tr>
     {% endif %}
     {% if loop.index is equalto 11 %}
     </tbody>
 </table>
 <section id="table-extension">
-<br>
-<div class="leaderboard-dots">
-    <p>...</p>
-</div>
-<table class="centered responsive-table">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th> </th>
-        <th>Character</th>
-        <th>User</th>
-        <th>Experience</th>
-    </tr>
-    </thead>
-    <tbody id="table-extension-body">
-    {% endif %}
-    {% endfor %}
-    </tbody>
-</table>
+    <br>
+    <div class="leaderboard-dots">
+        <p>...</p>
+    </div>
+    <table class="centered responsive-table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th> </th>
+            <th>Character</th>
+            <th>User</th>
+            <th>Experience</th>
+        </tr>
+        </thead>
+        <tbody id="table-extension-body">
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
 </section>
 <script>
+
+    namespace = '/test';
+    var socket = io(namespace);
     let tableRows = document.getElementsByClassName("table-row")
-    for (row in tableRows) {
-        tableRows[row].onclick = "{{ url_for('character', charactername=character.name) }}"
+    if (tableRows.length < 11) {
+        document.getElementById("table-extension").innerHTML = ""
     }
+    for (let i = 0; i < tableRows.length; i++) {
+        tableRows[i].onclick = function (){
+            socket.emit('leaderboard', tableRows[i].childNodes[5].innerHTML)
+        }
+    }
+
+    $(document).ready(function() {
+
+        namespace = '/test';
+        var socket = io(namespace);
+
+        socket.on('connect', function() {
+            socket.emit('leaderboard', "leaderboard connected");
+        });
+    });
 </script>
 {% endblock %}

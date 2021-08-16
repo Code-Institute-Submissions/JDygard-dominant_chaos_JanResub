@@ -571,6 +571,13 @@ def leaderboard():
     characters = list(mongo.db.characters.find().sort("spent_exp", -1))
     return render_template("leaderboard.html", characters=characters)
 
+@socket_.on('leaderboard', namespace="/test")
+def handle_leaderboard(data):
+    """ Handle redirects to character page from the leaderboard """
+    print(data.lower())
+    return redirect(
+        url_for("character", charactername=data.lower()))
+
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
