@@ -1,7 +1,7 @@
 ![alt text](assets/images/readme/whiteboard-flowchart.png)
 # Dominant Chaos
 
-This is a game idea Maxx and I have been kicking around since the end of Static Chaos. The core of the game will be the PvP element, with multiple classes (starting with 4 or 5), a turn-based combat system with 1-2 second ticks. Basic attacks are automated but players will be able to queue one or two more powerful abilities, stance changes and attacks every tick. The specific combat context is set in stone until it is playtested. What needs to be rebuilt is the way the player encounters the world, how players encounter each-other, how PvE content is explored, equipment and cosmetics.
+This is a game idea a friend and I have been kicking around since the end of Static Chaos. The core of the game will be the PvP element, with multiple classes (starting with 4 or 5), a turn-based combat system with 5 second ticks. Basic attacks are automated but players will be able to queue one or two more powerful abilities, stance changes and attacks every tick. The specific combat context is set in stone until it is playtested. What needs to be rebuilt is the way the player encounters the world, how players encounter each-other, how PvE content is explored, equipment and cosmetics.
 
 ## Scenes 
 In traditional MUDs, the world is arranged into a huge matrix of rooms connected by directions. This will not translate to a graphical context well.
@@ -23,6 +23,7 @@ Outward Fist: A martial artist who uses ki energy to drive outward power. Think 
 Sorcerer: Master of schools of magic, using combinations of chanted words of power to channel their abilities.
 Chi-xin Shaman: A warrior who tattoos symbols of elemental power on to their body to gain aspects of their strengths, and empower the weaving of these runes into martial magics.
 Demon: A shade from another realm of reality, using their sheer will to instantiate a corporeal form, able to customize their entire body for combat, forming tentacles, blades, armor, or claws.
+
 ## PvP 
 How do players meet each other? How do they interact?
 

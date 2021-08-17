@@ -16,25 +16,25 @@
     </thead>
     <tbody>
     {% for character in characters %}
-    {% if loop.index is lessthan 11 or character.owner == session['user'] %}
-    {% if character.owner == session['user'] %}
-    <tr class="user-character table-row">
-        {% elif loop.index == 1 %}
-    <tr id="first-place" class="table-row">
-        {% elif loop.index == 2 %}
-    <tr id="second-place" class="table-row">
-        {% elif loop.index == 3 %}
-    <tr id="third-place" class="table-row">
-        {% else %}
-    <tr class="table-row">
-    {% endif %}
-        <td>{{ loop.index }}</td>
-        <td> <img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon"> </td>
-        <td>{{ character.name|capitalize }}</td>
-        <td>{{ character.owner|capitalize }}</td>
-        <td>{{ character.spent_exp }}</td>
-    </tr>
-    {% endif %}
+        {% if loop.index is lessthan 11 or character.owner == session['user'] %}
+            {% if character.owner == session['user'] %}
+            <tr class="user-character table-row">
+                {% elif loop.index == 1 %}
+            <tr id="first-place" class="table-row">
+                {% elif loop.index == 2 %}
+            <tr id="second-place" class="table-row">
+                {% elif loop.index == 3 %}
+            <tr id="third-place" class="table-row">
+                {% else %}
+            <tr class="table-row">
+            {% endif %}
+            <td>{{ loop.index }}</td>
+            <td> <img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon"> </td>
+            <td>{{ character.name|capitalize }}</td>
+            <td>{{ character.owner|capitalize }}</td>
+            <td>{{ character.spent_exp }}</td>
+        </tr>
+        {% endif %}
     {% if loop.index is equalto 11 %}
     </tbody>
 </table>
@@ -68,8 +68,9 @@
         document.getElementById("table-extension").innerHTML = ""
     }
     for (let i = 0; i < tableRows.length; i++) {
+        tableRows[i].style.cursor = "pointer";
         tableRows[i].onclick = function (){
-            socket.emit('leaderboard', tableRows[i].childNodes[5].innerHTML)
+            socket.emit('leaderboard', tableRows[i].childNodes[5].innerHTML);
         }
     }
 
@@ -82,5 +83,8 @@
             socket.emit('leaderboard', "leaderboard connected");
         });
     });
+    socket.on("redirect", function(x) {
+        window.location.href = x;
+    })
 </script>
 {% endblock %}

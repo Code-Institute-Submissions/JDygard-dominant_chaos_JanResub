@@ -574,9 +574,9 @@ def leaderboard():
 @socket_.on('leaderboard', namespace="/test")
 def handle_leaderboard(data):
     """ Handle redirects to character page from the leaderboard """
-    print(data.lower())
-    return redirect(
-        url_for("character", charactername=data.lower()))
+    charactername = data.lower()
+    emit('redirect', url_for('character', charactername=charactername))
+
 
 
 @app.route("/profile/<username>", methods=["GET", "POST"])
