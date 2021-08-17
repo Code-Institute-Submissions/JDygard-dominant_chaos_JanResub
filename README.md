@@ -76,6 +76,33 @@ Secondary skills will all passively increase.
 - Diplomacy: Weights chances in adventure scenes with appropriate elements. Maybe split it into bluff, something like sense motive, etc.
 
 
+# Credits
+## Visuals
+[Man Doing Pushups](https://www.pexels.com/photo/man-doing-push-ups-4162495/) by [Ivan Samkov](https://www.pexels.com/@ivan-samkov)
+
+[Man Doing Yoga](https://www.pexels.com/photo/man-doing-yoga-2294363/) by [Li Sun](https://www.pexels.com/@823sl)
+
+[Man People Sport Hurry](https://www.pexels.com/photo/man-people-sport-hurry-5961753/) by [Run FFWPU](https://www.pexels.com/@runffwpu)
+
+[Man Throwing Punches on the Punching Bag](https://www.pexels.com/photo/man-throwing-punches-on-the-punching-bag-7187935/) by [Rodnae Prod](https://www.pexels.com/@rodnae-prod)
+
+[Woman In Red Robe Standing Near A Body of Water](https://www.pexels.com/photo/woman-in-red-robe-standing-near-body-of-water-5386375/) by [CottonBro](https://www.pexels.com/@cottonbro)
+
+[Close Up Photo of Person's Eye](https://www.pexels.com/photo/close-up-photo-of-person-s-eye-2168356/) by [Mark Aaron Smith](https://www.pexels.com/@markarronsmith)
+
+[A Man Kicking on the Water](https://www.pexels.com/photo/a-man-kicking-on-the-water-5895883/) by [Anna Terezevich](https://www.pexels.com/@anntarazevich)
+
+[Silhouette of Man Practicing Kickboxing on the Seashore During Sunset](https://www.pexels.com/photo/silhouette-of-man-practicing-kickboxing-on-the-seashore-during-sunset-5895869/) by [Anna Terezevich](https://www.pexels.com/@anntarazevich)
+
+[Yellow and White Smoke During Nighttime](https://www.pexels.com/photo/yellow-and-white-smoke-during-night-time-5109305/) by [Rotislav Uzunov](https://www.pexels.com/@rostislav-uzunov-3145660)
+
+[Left Fist](https://www.pexels.com/photo/left-fist-635356/) by [Neo8iam](https://www.pexels.com/@neo8iam)
+
+[Man in Sleeveless Wetsuit Doing Some Aerobics at the Beach](https://www.pexels.com/photo/man-in-sleeveless-wet-suit-doing-some-aerobics-at-the-beach-617000/) by [Artem Beliaikin](https://www.pexels.com/@belart84)
+
+[Light City Fashion Man](https://www.pexels.com/photo/light-city-fashion-man-7792245/) by [CottonBro](https://www.pexels.com/@cottonbro)
+
+[Healthy Man Person People](https://www.pexels.com/photo/healthy-man-person-people-6253310/) by [Artem Podrez](https://www.pexels.com/@artempodrez)
 
 # I'm working on it, lol
 

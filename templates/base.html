@@ -18,6 +18,7 @@
 <body>
     <nav class="nav-extended">
         <div class="nav-wrapper">
+            <a href="#" data-target="sidenav-main" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
             <a href="#" class="brand-logo center-align">Chaos Legacy</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons"></i></a>
             <ul id="nav-mobile" class="right">
@@ -30,10 +31,10 @@
             </ul>
         </div>
         <div class="nav-content">
-            <ul class="tabs tabs-transparent center-align">
+            <ul class="tabs tabs-transparent center-align hide-on-med-and-down">
                 <li class="tab"><a href="{{ url_for('index')}}">Home</a></li>
                 <li class="tab"><a href="{{ url_for('leaderboard')}}">Leaderboard</a></li>
-                <li class="tab"><a href="{{ url_for('library')}}">Library</a></li>
+                <li class="tab"><a href="{{ url_for('general')}}">Library</a></li>
                 {% if session.user %}
                     <li class="tab"><a href="{{ url_for('play')}}">Play</a></li>
                     <li class="tab"><a href="{{ url_for('profile', username= session['user'])}}">Profile</a></li>
@@ -43,7 +44,7 @@
         </div>
     </nav>
 
-    <ul class="sidenav" id="mobile-demo">
+    <ul class="sidenav" id="sidenav-main">
         <li class="tab"><a href="{{ url_for('index')}}">Home</a></li>
         <li class="tab"><a href="{{ url_for('leaderboard')}}">Leaderboard</a></li>
         <li class="tab"><a href="{{ url_for('library')}}">Library</a></li>
@@ -86,6 +87,12 @@
             </div>
         </div>
     </footer>
+    <script>  
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, options);
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

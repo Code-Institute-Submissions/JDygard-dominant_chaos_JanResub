@@ -5,7 +5,7 @@
 {% block content %}
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo right">Logo</a>
+            <a href="#" data-target="library-sidenav" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
             <ul id="nav-mobile" class="left hide-on-med-and-down">
                 <li><a href="{{ url_for('general') }}">General Info</a></li>
                 <li><a href="{{ url_for('chi_xin') }}">Chi-Xin Shaman</a></li>
@@ -14,7 +14,14 @@
                 <li><a href="{{ url_for('sorcerer') }}">Sorcerer</a></li>
             </ul>
         </div>
-    </nav>
+    </nav>  
+    <ul class="sidenav" id="library-sidenav">
+        <li><a href="{{ url_for('general') }}">General Info</a></li>
+        <li><a href="{{ url_for('chi_xin') }}">Chi-Xin Shaman</a></li>
+        <li><a href="{{ url_for('inward_fist') }}">Inward Fist</a></li>
+        <li><a href="{{ url_for('outward_fist') }}">Outward Fist</a></li>
+        <li><a href="{{ url_for('sorcerer') }}">Sorcerer</a></li>
+      </ul>
     <div class="scrollable">
         {% block information %}
         {% endblock %}

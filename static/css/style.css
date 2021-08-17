@@ -268,8 +268,29 @@ table {
 Thanks to https://www.w3schools.com/howto/howto_js_vertical_tabs.asp for the code adapted here */
 
 .scrollable {
-    height: 71vh;
+    height: 65vh;
     overflow-y: auto;
+    background-color: #eeebe3;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+@media screen and (max-height: 1040px) {
+    .scrollable {
+        height: 60vh;
+    }
+}
+
+@media screen and (max-height: 900px) {
+    .scrollable {
+        height: 55vh;
+    }
+}
+
+@media screen and (max-height: 740px) {
+    .scrollable {
+        height: 45vh;
+    }
 }
 
 .library-container {
