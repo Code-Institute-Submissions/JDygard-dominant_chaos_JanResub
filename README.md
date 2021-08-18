@@ -104,6 +104,10 @@ Secondary skills will all passively increase.
 
 [Healthy Man Person People](https://www.pexels.com/photo/healthy-man-person-people-6253310/) by [Artem Podrez](https://www.pexels.com/@artempodrez)
 
+[Human Fist](https://www.pexels.com/photo/human-fist-163431/) by [PixaBay](https://www.pexels.com/@pixabay)
+
+[Man Jumping on Mid-Air](https://www.pexels.com/photo/man-jumping-on-mid-air-1701211/) by [Yogendra Singh](https://www.pexels.com/@yogendras31)
+
 # I'm working on it, lol
 
 ## The front end

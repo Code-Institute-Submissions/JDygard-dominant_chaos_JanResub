@@ -49,8 +49,19 @@
     </section>
     {% if session.user == charactername.owner %}
     <div class="row">
-        <div class="col s12 m6">
-            <canvas width="617" height="500" id="body-canvas" style="border:1px solid #000000;"></canvas>
+        <div class="body-image col s12 m6">
+            <div class="torso">
+                <img src="../static/images/training-torso.png" alt="">
+            </div>
+            <div class="arms hidden">
+                <img src="../static/images/training-arms.png" alt="">
+            </div>
+            <div class="legs hidden">
+                <img src="../static/images/training-legs.png" alt="">
+            </div>
+            <div class="hands hidden">
+                <img src="../static/images/training-fist.png" alt="">
+            </div>
         </div>
         <div class="col s12 m6">
             <div class="card">
@@ -252,25 +263,6 @@
         var arms = "{{ charactername.arms }}"
         var legs = "{{ charactername.legs }}"
         var discipline = parseInt("{{ charactername.discipline }}")
-        /*
-        if (arms >= 100) {
-            document.getElementById("action-arms").innerHTML = "<h3> Your arms are trained to maximum </h3>"
-        } else {
-            document.getElementById("cost-arms").innerHTML = calculateCost(arms, 1)
-            document.getElementById("train-arms").addEventListener("click", function(){  // Listen for a click
-                if (parseInt(arms) + parseInt(document.getElementById("field-arms").innerHTML) >= 100) {
-                    document.getElementById("max-arms").innerHTML = " Maximum level reached."
-                } else{
-                    let current = parseInt(document.getElementById("field-arms").innerHTML);           // Store the current value of arms training   
-                    document.getElementById("field-arms").innerHTML = parseInt(current) + 1;
-                    let next = calculateCost(current + 1, 1); //OK
-                    document.getElementById("cost-arms").innerHTML = next;
-                    let totalExperience = calculateCost(arms, current + 1);
-                    document.getElementById("total-arms").innerHTML = totalExperience;
-                }
-            })
-        }
-        */
 
         function calculateCost(number, iterations) {
             let initialValue = parseInt(number) + 1;
@@ -293,7 +285,7 @@
         // any bad faith POST attempts.
 
         bodyTraining = [torso, hands, arms, legs];      // Tied to the variables declared above, taken directly from the DB
-        bodyString = ["torso", "hands", "arms", "legs"] // contrains strings for navigating the DOM and buildings other strings
+        bodyString = ["torso", "hands", "arms", "legs"] // contains strings for navigating the DOM and buildings other strings
         for (let i = 0; i < bodyTraining.length; i++) { // A for loop for going through the arrays
             if (bodyTraining[i] >= 100) {               // If the body training is already at maximum, we tell the user and lock out the training
                 document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>" // The message
@@ -307,7 +299,6 @@
                     document.getElementById("field-" + bodyString[i]).innerHTML = parseInt(current) + 1;  // The field from a line above
                     document.getElementById("flask-" + bodyString[i]).value = parseInt(current) + 1;
                     let next = calculateCost(parseInt(bodyTraining[i]) + current + 1, 1);                                             // Adjust the cost field on click
-                    console.log(next)
                     document.getElementById("cost-" + bodyString[i]).innerHTML = next;                    // the field for the cost
                     let totalExperience = calculateCost(bodyTraining[i], current + 1);                    // Calculate how much the entire batch of points would cost
                     document.getElementById("total-" + bodyString[i]).innerHTML = totalExperience;        // And display to the user
@@ -315,6 +306,10 @@
                 })
             }
         }
+        //                                  Move Active
+        //                                 =============
+        // This function responds to clicks on each of the tabs. It first hides the current tab, then
+        //              displays the chosen tab. It also cycles the pictures.
         
         function moveActive() {
             parent = event.target.parentNode.parentNode.firstElementChild;
@@ -324,6 +319,7 @@
                     let childText = parent.firstElementChild.innerHTML.toLowerCase()
                     let hideIt = document.getElementsByClassName(childText)
                     hideIt[0].style.display = "none"
+                    hideIt[1].style.display = "none"
                 } else {
                     parent = parent.nextElementSibling
                 }
@@ -333,9 +329,11 @@
                 event.target.parentNode.className = "active"
                 let childText = event.target.innerHTML.toLowerCase() 
                 let showIt = document.getElementsByClassName(childText)
-                console.log(showIt[0])
                 showIt[0].style.display = "block"
-                console.log(showIt[0])
+                showIt[0].style.height = "100%"
+                showIt[0].style.width = "100%"
+                showIt[0].style["object-fit"] = "cover"
+                showIt[1].style.display = "block"
             }
         }
     </script>

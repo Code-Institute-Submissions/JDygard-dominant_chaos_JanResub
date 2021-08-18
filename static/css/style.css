@@ -100,6 +100,12 @@ html {
     padding-top: 80px;
 }
 
+.body-image > div > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
 .char-icon {
     position: relative;
     width: 260px;
