@@ -50,16 +50,16 @@
     {% if session.user == charactername.owner %}
     <div class="row">
         <div class="body-image col s12 m6">
-            <div class="torso">
+            <div class="torso-image">
                 <img src="../static/images/training-torso.png" alt="">
             </div>
-            <div class="arms hidden">
+            <div class="arms-image hidden">
                 <img src="../static/images/training-arms.png" alt="">
             </div>
-            <div class="legs hidden">
+            <div class="legs-image hidden">
                 <img src="../static/images/training-legs.png" alt="">
             </div>
-            <div class="hands hidden">
+            <div class="hands-image hidden">
                 <img src="../static/images/training-fist.png" alt="">
             </div>
         </div>
@@ -165,15 +165,15 @@
         </div>
 
         <div class="col s12 m6">
-            <div class="card">
+            <div class="card disc-card">
                 <div class="row">
                     <h3>Disciplines</h3>
                     <p>
                         Through disciplining the mind and body, the inward fist gains access to specialized powers.
                         Disciplines must be gained in order through training the ten levels.
                     </p>
-                    <label for="disc-bar"></label>
-                    <progress id="disc-bar" value="{{ charactername.discipline }}" max="10" style="width:90%;"></progress>
+                    <label for="disc-bar" id="disc-label">{{ charactername.discipline }}/10</label>
+                    <progress id="disc-bar" value="{{ charactername.discipline }}" max="10" style="width:85%;"></progress>
                     
                 </div>
                 <ul class="pagination">
@@ -208,16 +208,33 @@
                     <h3>9 Discipline: Dim-Mak</h3>
                     <p>Using their knowledge of Ki in all things, the inward fist can use their own energy to throw off the alignment of energy in others, essentially poisoning their energy.</p>
                 </div>
-                <div class="card-action">
-                    <h4>Next point cost:</h4><span id="discipline-cost"></span>
+                <div id="disc-card-action">
+                    <h4>Next point cost: <span id="discipline-cost"></span></h4>
                     <form action="" method="POST">
                         <button class="btn" type="submit" name="form-name" value="discipline">Train Discipline</button>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="col s12 m6">
-            <canvas width="617" height="500" id="discipline-canvas" style="border:1px solid #000000;"></canvas>
+        <div class="body-image col s12 m6">
+            <div class="truesight-image">
+                <img src="../static/images/discipline-truesight.png" alt="">
+            </div>
+            <div class="levitation-image hidden">
+                <img src="../static/images/discipline-levitation.png" alt="">
+            </div>
+            <div class="roundhouse-image hidden">
+                <img src="../static/images/discipline-roundhouse.png" alt="">
+            </div>
+            <div class="inner-fire-image hidden">
+                <img src="../static/images/discipline-innerfire.png" alt="">
+            </div>
+            <div class="pheonix-fire-image hidden">
+                <img src="../static/images/discipline-pheonixfire.png" alt="">
+            </div>
+            <div class="dim-mak-image hidden">
+                <img src="../static/images/discipline-dimmak.png" alt="">
+            </div>
         </div>
     </div>
     <section>
@@ -274,9 +291,11 @@
             return Math.round(result);
         }
         
-        console.log(discipline)
-        document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000
-        
+        if (discipline < 10) {
+            document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000
+        } else {
+            document.getElementById("disc-card-action").innerHTML = "You have reached max discipline"
+        }
         //                                     Body Training Card Generator 
         //                                   ===============================
         // This is here to build the four training card tabs in the bodytraining frame. The two arrays contain the variables/strings.
@@ -318,8 +337,9 @@
                     parent.className = "waves-effect"
                     let childText = parent.firstElementChild.innerHTML.toLowerCase()
                     let hideIt = document.getElementsByClassName(childText)
+                    let hideItToo = document.getElementsByClassName(childText + "-image")
                     hideIt[0].style.display = "none"
-                    hideIt[1].style.display = "none"
+                    hideItToo[0].style.display = "none"
                 } else {
                     parent = parent.nextElementSibling
                 }
@@ -329,11 +349,12 @@
                 event.target.parentNode.className = "active"
                 let childText = event.target.innerHTML.toLowerCase() 
                 let showIt = document.getElementsByClassName(childText)
+                let showItToo = document.getElementsByClassName(childText + "-image")
+                showItToo[0].style.display = "block"
+                showItToo[0].style.height = "100%"
+                showItToo[0].style.width = "100%"
+                showItToo[0].style["object-fit"] = "cover"
                 showIt[0].style.display = "block"
-                showIt[0].style.height = "100%"
-                showIt[0].style.width = "100%"
-                showIt[0].style["object-fit"] = "cover"
-                showIt[1].style.display = "block"
             }
         }
     </script>
