@@ -77,6 +77,21 @@ Secondary skills will all passively increase.
 
 
 # Credits
+
+## Code Credits
+
+[W3 School's Tooltips](https://www.w3schools.com/css/css_tooltip.asp)
+
+Used in the character page to show details of items on mouseover.
+
+***
+
+[Stackoverflow answer on number in circle](https://stackoverflow.com/questions/4861224/how-to-use-css-to-surround-a-number-with-a-circle/19613616)
+
+Adapted for use in displaying stat blocks on the character page.
+
+***
+
 ## Visuals
 [Man Doing Pushups](https://www.pexels.com/photo/man-doing-push-ups-4162495/) by [Ivan Samkov](https://www.pexels.com/@ivan-samkov)
 

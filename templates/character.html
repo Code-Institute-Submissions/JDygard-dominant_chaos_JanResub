@@ -6,51 +6,58 @@
     </h3> 
     <section id="stats">
         <div class="row">
-                <div class="col s12 m3 l3">
-                    <div>
-                        <h4>Hit points:</h4><p>{{ charactername.max_hp }}</p>
-                    </div>
-                    <div>
-                        <h4>Max Ki</h4><p> 30 </p>
-                    </div>
-                    <div>
-                        <h4>Armor:</h4><p>{{ charactername.ac }}</p>
-                    </div>
-                    <div>
-                        <h4>Dodge chance:</h4><p>{{ charactername.dodge }}%</p>
-                    </div>
-                    <div>
-                        <h4>Block chance:</h4><p>{{ charactername.block + ( charactername.arms / 10 ) }}%</p>
-                    </div>
-                    <div>
-                        <h4>Parry chance:</h4><p>{{ charactername.parry }}%</p>
-                    </div>
-                    <div>
-                        <h4>Damage Resistance:</h4><p>{{ charactername.dr + ( charactername.torso / 10 ) }}%</p>
-                    </div>
-                    <div>
-                        <h4>Damage:</h4><p>{{ charactername.damage[0] }} - {{ (charactername.damage[1] + (charactername.hands / 5)) * charactername.damage[0] }}</p>
-                    </div>
+            <div class="col s12 m3 l3">
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext"> Hit points keep track of how much damage your character can endure.</span>
+                    <h6>HP</h6><p>{{ charactername.max_hp }}</p>
                 </div>
-                <div class="col s12 m3 l3">
-                    <h3>get this</h3>
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Ki is a measure of a Fist's ability to charge combos.</span>
+                    <h6>Ki</h6><p> 30 </p>
                 </div>
-                <div class="col s12 m6 l6">
-                    <div class="char-left">
-                        <h3>Character Bio:</h3>
-                        <p>{{ charactername.charbio }}</p>
-                    </div>
-                    <div class="char-right">
-                        <img src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
-                        {% if session.user == charactername.owner %} 
-                            <!-- Put the icon picker modal trigger here -->
-                        {% endif %}
-                    </div>
-                    <br id="char-clear-both">
-                    <div class="char-bottom">
-                        <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>            
-                    </div>
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Armor Class (AC) is a measure of how resilient a character is.</span>
+                    <h6>AC</h6><p>{{ charactername.ac }}</p>
                 </div>
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Damage (DMG) represents how damaging a character's attacks are, as a range.</span>
+                    <h6>DMG</h6><p>{{ charactername.damage[0] }} - {{ (charactername.damage[1] + (charactername.hands / 5)) * charactername.damage[0] }}</p>
+                </div>
+            </div>
+            <div class="col s12 m3 l3">
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Dodge represents how often a character negates an attack by Dodging.</span>
+                    <h6>Dodge</h6><p>{{ charactername.dodge }}%</p>
+                </div>
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Block represents how often a character negates an attack by Blocking.</span>
+                    <h6>Block</h6><p>{{ charactername.block + ( charactername.arms / 10 ) }}%</p>
+                </div>
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Parry represents how often a character negates an attack by Parrying.</span>
+                    <h6>Parry</h6><p>{{ charactername.parry }}%</p>
+                </div>
+                <div class="tooltip stat-circle">
+                    <span class="tooltiptext">Damage Resistance (DR) is a measure of how much damage is negated when the character is hit.</span>
+                    <h6>DR</h6><p>{{ charactername.dr + ( charactername.torso / 10 ) }}%</p>
+                </div>
+            </div>
+            <div class="col s12 m6 l6">
+                <div class="char-left">
+                    <span><h5>Character Bio:</h5></span>
+                    <p id="char-bio">{{ charactername.charbio }}</p>
+                </div>
+                <div class="char-right">
+                    <img src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
+                    {% if session.user == charactername.owner %} 
+                        <!-- Put the icon picker modal trigger here -->
+                    {% endif %}
+                </div>
+                <br id="char-clear-both">
+                <div class="char-bottom">
+                    <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>            
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col m2">
