@@ -292,14 +292,27 @@ def auto_atk(ch, vict):
 # A function that is invoked when a player reaches 0 hp, signalling the frontend to display a victory message and providing exp to the user character
 def victory(ch, vict):
     vict["is_dead"] = True
-    victor = mongo.db.characters.find_one({"name": ch["name"]})
-    if victor == None:
-        victor = cfg.fighter2["name"]
+    victor = mongo.db.characters.find_one({"name": ch["name"]}) # Look up the character who won
+    if victor == None:  # If they don't exist in the database then it's the enemy
+        victor = cfg.fighter2["name"] # Put the name of the opponent in the victory variable
+        loser = {"name": vict["name"]}
+        ratio = vict["winloss"]
+        ratio[1] += 1
+        print(ratio)
+        submit = {"winloss": ratio}
+        mongo.db.characters.update_one(loser, {"$set": submit})
     else:
         reward = 100000
         experience = int(victor["current_exp"])
-        submit = {"current_exp": experience + reward}
-        mongo.db.characters.update_one(victor, {"$set": submit})
+        ratio = victor["winloss"]
+        updatefilter = {"name": victor["name"]}
+        ratio[0] += 1
+        print(ratio)
+        submit = {
+            "current_exp": experience + reward,
+            "winloss": ratio
+            }
+        mongo.db.characters.update_one(updatefilter, {"$set": submit})
     add_to_queue(ch["name"], "victor", 0, 100000)
     
 
@@ -369,13 +382,13 @@ def prepare_character(chname, chusername):
             "ac": name["ac"],
             "hitroll": name["hitroll"],
             "dodge": name["dodge"],
-            "block": name["block"],
+            "block": name["block"] + (name["arms"] / 10),
             "parry": name["parry"],
             "speed": name["speed_max"],
             "ability_speed": name["speed_max"],
             "speed_max": name["speed_max"],
-            "damage": name["damage"],
-            "dr": name["dr"],
+            "damage": [name["damage"][0], name["damage"][1] + math.floor((name["hands"] / 5))],
+            "dr": name["torso"] / 10,
             "is_dead": False,
             "abilities": name["abilities"]
         }
