@@ -4,31 +4,49 @@
     <h3 class="center-align light-blue-text text-darken-4">
         {{ charactername.name|capitalize }}
     </h3> 
-    <div class="row center-align">
-        <img src="{{ url_for('static', filename = charactername.icon) }}" alt="">
-    </div>
     <section id="stats">
         <!-- Private information -->
 
         {% if session.user == charactername.owner %}
         <div class="row">
-            <div class="col m2">
-                <h4>Hit points:</h4><p>{{ charactername.max_hp }}</p>
+                <div class="col s12 m2 l2">
+                    <div>
+                        <h4>Hit points:</h4><p>{{ charactername.max_hp }}</p>
+                    </div>
+                    <div>
+                        <h4>Max Ki</h4><p> 30 </p>
+                    </div>
+                    <div>
+                        <h4>Armor:</h4><p>{{ charactername.ac }}</p>
+                    </div>
+                </div>
+                <div class="col s12 m2 l2">
+                    <div>
+                        <h4>Dodge chance:</h4><p>{{ charactername.dodge }}%</p>
+                    </div>
+                    <div>
+                        <h4>Block chance:</h4><p>{{ charactername.block }}%</p>
+                    </div>
+                    <div>
+                        <h4>Parry chance:</h4><p>{{ charactername.parry }}%</p>
+                    </div>
+                </div>
             </div>
-            <div class="col m2">
-                <h4>Energy</h4><p>{{ charactername.max_energy }}</p>
-            </div>
-            <div class="col m2">
-                <h4>Armor:</h4><p>{{ charactername.ac }}</p>
-            </div>
-            <div class="col m2">
-                <h4>Dodge chance:</h4><p>{{ charactername.dodge }}%</p>
-            </div>
-            <div class="col m2">
-                <h4>Block chance:</h4><p>{{ charactername.block }}%</p>
-            </div>
-            <div class="col m2">
-                <h4>Parry chance:</h4><p>{{ charactername.parry }}%</p>
+            <div class="col s12 m5 l5">
+                <div class="char-left">
+                    <h3>Character Bio:</h3>
+                    <p>{{ charactername.charbio }}</p>
+                </div>
+                <div class="char-right">
+                    <img src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
+                    {% if session.user == charactername.owner %} 
+                        <!-- Put the icon picker modal trigger here -->
+                    {% endif %}
+                </div>
+                <br id="char-clear-both">
+                <div class="char-bottom">
+                    <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>            
+                </div>
             </div>
         </div>
         <div class="row">
@@ -43,7 +61,6 @@
                 <h4>Experience spent:</h4><p>{{ charactername.spent_exp }}</p>
             </div>
             <div class="col m6">
-                <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>
             </div>
         </div>
     </section>
@@ -242,7 +259,7 @@
             <div class="m12 center-align">
                 <form action="" method="POST">
                     <label for="char-bio">Edit Character Biography</label>
-                    <input type="text" name="char-bio" value="{{ charactername.bio }}">
+                    <input type="text" name="char-bio" value="{{ charactername.charbio }}">
                     <button class="btn" type="submit" name="form-name" value="char-bio">Update bio</button>
                 </form>
             </div>
@@ -263,14 +280,6 @@
         </div>
     </section>
     {% endif %}
-    <section>
-        <div class="row">
-            <div class="m12 center-align">
-                <h3>Character Bio:</h3>
-                <p>{{ charactername.charbio }}</p>
-            </div>
-        </div>
-    </section>
 {% else %}
 <h2 class="center-align">This character was not found.</h2>
 {% endif %}

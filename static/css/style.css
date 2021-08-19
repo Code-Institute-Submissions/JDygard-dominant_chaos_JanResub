@@ -105,8 +105,35 @@ html {
     padding-top: 80px;
 }
 
-.disc-card {
+
+/* The character page panel on the top/right */
+
+div {
+    margin:0;
+    padding:0 !important;
 }
+
+.char-left {
+    float:left;
+    width:59%;
+    height: 100%;
+}
+
+.char-right {
+    float: right;
+    width:35%;
+}
+
+.char-bottom {
+    width: 90%;
+    display: flex;
+}
+
+.char-clear-both {
+    clear: both;
+}
+
+/* Character page training panels */
 
 #disc-card-action {
     padding: 10px;

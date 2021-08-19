@@ -621,7 +621,7 @@ def profile(username):
                 "owner": username,
                 "href": "character/" + request.form.get("name").lower(),
                 "winloss": [0, 0],
-                "abilities": {"kick": "A"}
+                "abilities": {"kick": "A"},
             }
             if request.form.get("class") == "inward_fist": # Tacking on all the specific stuff for a fist
                 new_char["icon"] = "images/fist-icon.png"
