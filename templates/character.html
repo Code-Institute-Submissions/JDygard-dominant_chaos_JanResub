@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 {% if charactername.owner %}
+    <head>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    </head>
     <h3 class="center-align light-blue-text text-darken-4">
         {{ charactername.name|capitalize }}
     </h3> 
@@ -48,9 +51,21 @@
                     <p id="char-bio">{{ charactername.charbio }}</p>
                 </div>
                 <div class="char-right">
-                    <img src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
+                    <img id="current-icon" src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
                     {% if session.user == charactername.owner %} 
-                        <!-- Put the icon picker modal trigger here -->
+                        <div id="hidden-menu">
+                            <span id="icon-selection">
+                                <img src="../static/images/portrait-0.png" alt="">
+                                <img src="../static/images/portrait-1.png" alt="">
+                                <img src="../static/images/portrait-2.png" alt="">
+                                <img src="../static/images/portrait-3.png" alt="">
+                                <img src="../static/images/portrait-4.png" alt="">
+                                <img src="../static/images/portrait-5.png" alt="">
+                                <img src="../static/images/portrait-6.png" alt="">
+                            </span>
+                            <span id="hide-selection"> Nevermind </span>
+                        </div>
+                        <span id="new-icon">Select New Icon</span>
                     {% endif %}
                 </div>
                 <br id="char-clear-both">
@@ -102,7 +117,7 @@
                 <div class="row torso">
                     <h3>Torso Training</h3>
                     <p>The inward fist's core can be rigorously trained and is key to withstanding attacks.</p>
-                    <div class="card-action" id="action-torso">
+                    <div id="action-torso">
                         <h5>Current level: {{ charactername.torso }}</h5>
                         <h5>Cost for next level:<span id="cost-torso"></span></h4>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">add</i></a>
@@ -124,7 +139,7 @@
                 <div class="row hands hidden">
                     <h3>Hands Training</h3>
                     <p>The Inward Fist can train their hands to harden them, increasing the damage they can inflict.</p>
-                    <div class="card-action" id="action-hands">
+                    <div id="action-hands">
                         <h5>Current level: {{ charactername.hands }}</h5>
                         <h5>Cost for next level:<span id="cost-hands"></span></h4>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-hands"><i class="material-icons">add</i></a>
@@ -146,7 +161,7 @@
                 <div class="row legs hidden">
                     <h3>Legs Training</h3>
                     <p>The inward fist's legs and feet can be trained for speed and power, increasing the power of their kicks.</p>
-                    <div class="card-action" id="action-legs">
+                    <div id="action-legs">
                         <h5>Current level: {{ charactername.legs }}</h5>
                         <h5>Cost for next level:<span id="cost-legs"></span></h4>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-legs"><i class="material-icons">add</i></a>
@@ -168,7 +183,7 @@
                 <div class="row arms hidden">
                     <h3>Arms Training</h3>
                     <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
-                    <div class="card-action" id="action-arms">
+                    <div id="action-arms">
                         <h5>Current level: {{ charactername.arms }}</h5>
                         <h5>Cost for next level:<span id="cost-arms"></span></h4>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-arms"><i class="material-icons">add</i></a>
@@ -374,5 +389,38 @@
                 showIt[0].style.display = "block"
             }
         }
+
+        //                      Icon Selection
+
+        namespace = '/test';
+        var socket = io(namespace)
+        $(document).ready(function() {
+            namespace = '/test';
+            var socket = io(namespace);
+    
+            socket.on('connect', function() {
+                socket.emit('character', "character connected");
+            });
+        });
+
+        let iconMenu = document.getElementById("hidden-menu")
+        let newIcon = document.getElementById("new-icon")
+
+        newIcon.onclick = function (){
+            iconMenu.style.visibility = "visible"
+        }
+
+        let icons = document.getElementById("icon-selection").children
+        let currentIcon = document.getElementById("current-icon")
+        for (let i = 0; i < icons.length; i++) {
+            icons[i].style.cursor = "pointer";
+            icons[i].onclick = function (){
+                iconMenu.style.visibility = "hidden"
+                submit = [icons[i].getAttribute("src"), "{{ charactername.name }}"];
+                currentIcon.src = submit[0];
+                socket.emit('character', submit);
+            }
+        }
+        
     </script>
 {% endblock %}

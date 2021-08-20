@@ -314,7 +314,7 @@ def victory(ch, vict):
             }
         mongo.db.characters.update_one(updatefilter, {"$set": submit})
     add_to_queue(ch["name"], "victor", 0, 100000)
-    
+
 
 # A timer that activates regeneration. This was intended to cover a lot more ground but the project is cancelled.
 def turn_timer(player1, player2):
@@ -428,7 +428,17 @@ def prepare_opponent():
 
 
 ### SocketIO emit event handlers ###
-
+@socket_.on('character', namespace="/test")
+def handle_icons(data):
+    """ Handle requests to change icons """
+    if data == "character connected":
+        print(data)
+    else:
+        name = {"name": data[1]}
+        submit = {
+            "icon": data[0]
+        }
+        mongo.db.characters.update_one(name, {"$set": submit})
 
 @socket_.on('query', namespace="/test")
 def handle_query(data):
