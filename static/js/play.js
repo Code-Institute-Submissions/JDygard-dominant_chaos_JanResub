@@ -307,6 +307,9 @@ class Play extends Phaser.Scene {
                     setTimeout(function(){
                         scene.announceText(`${victor} wins, ${reward} exp awarded.`);
                     }, 1000);
+                    setTimeout(function(){
+                        restart = true;
+                    }, 1500)
                 }
                 instructionQueue.push(data[i]);
             }

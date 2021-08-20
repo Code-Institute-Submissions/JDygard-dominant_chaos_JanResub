@@ -17,6 +17,7 @@ const config = {
     ]
 };
 
+var restart = false;
 var buttons = [];
 var buttonList = [];
 var kiText;
