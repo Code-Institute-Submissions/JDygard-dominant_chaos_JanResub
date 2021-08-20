@@ -23,6 +23,8 @@
                     socket.emit('message', "Play.html connected");
                 });
             });
+
+            document.getElementById("flash").style.visibility = "hidden"; // We don't need flash on the play page
         </script>
     </head>
 {% endblock %}

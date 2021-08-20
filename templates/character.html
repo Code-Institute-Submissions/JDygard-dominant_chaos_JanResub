@@ -405,6 +405,11 @@
 
         let iconMenu = document.getElementById("hidden-menu")
         let newIcon = document.getElementById("new-icon")
+        let hideSelection = document.getElementById("hide-selection")
+
+        hideSelection.onclick = function () {
+            iconMenu.style.visibility = "hidden"
+        }
 
         newIcon.onclick = function (){
             iconMenu.style.visibility = "visible"

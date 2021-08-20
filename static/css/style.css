@@ -147,7 +147,7 @@ html {
     display: inline-block;
     text-align: center;
     height: 25px;
-    width: 100%;
+    width: 260px;
     padding-top: 0;
     padding: 0 40px;
     border: 1px solid black;
@@ -156,7 +156,7 @@ html {
 }
 
 #new-icon:hover {
-    background-color: #fcbf49;
+    background-color: var(--main-color-bg);
 }
 
 #icon-selection > img {
@@ -203,7 +203,7 @@ html {
 .char-left {
     float: left;
     width: 50%;
-    height: 265px;
+    height: 291px;
     border: 1px solid black;
     padding-left: 10px;
     overflow:scroll;

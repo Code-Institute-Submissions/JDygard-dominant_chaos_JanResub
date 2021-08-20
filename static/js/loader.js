@@ -4,6 +4,7 @@ const config = {
     height: 1000,                // Set the canvas width
     pixelArt: false,            // Tell the graphics engine not to blur or anti-alias, in order to preserve the pixel art effect
     scale: {
+        mode: Phaser.Scale.FIT, // Scale the canvas to fit the viewport, while maintaining the aspect ratio
         autoCenter: Phaser.Scale.CENTER_BOTH    // Center the canvas
     },
     physics: {              // Selects a physics engine

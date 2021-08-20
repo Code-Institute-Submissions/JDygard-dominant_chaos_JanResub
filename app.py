@@ -701,8 +701,13 @@ def profile(username):
 @app.route("/character/<charactername>", methods=["GET", "POST"])
 def character(charactername):
     """ The character page for each character """
-    username = mongo.db.users.find_one( # Find the user
-        {"username": session["user"]})["username"]
+    try:
+        username = mongo.db.users.find_one( # Find the user
+            {"username": session["user"]})["username"]
+    except:
+        print("no user")
+    finally:
+        username = False
     charactername = mongo.db.characters.find_one( # Find the selected character
         {"name": charactername}
     )
@@ -713,7 +718,10 @@ def character(charactername):
         """ Following code block builds four statements to listen for bodytraining POSTs """
         for string in range(len(bodytrain_strings)):
             if form_name == bodytrain_strings[string]:  # If it's a bodytraining form
-                training = int(request.form.get('flask-' + bodytrain_strings[string]))  # Collect how much is being trained
+                if request.form.get('flask-' + bodytrain_strings[string]) != '':
+                    training = int(request.form.get('flask-' + bodytrain_strings[string]))  # Collect how much is being trained
+                else:
+                    break
                 bodytrain = int(charactername[bodytrain_strings[string]])   # Collect the current training
                 spent_experience = charactername["spent_exp"]   # Collect the current experience level
                 experience = int(charactername["current_exp"])  # Collect the unspent experience
