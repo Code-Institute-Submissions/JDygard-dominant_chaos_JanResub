@@ -97,6 +97,11 @@ html {
     text-align: center;
     font-size: 32px;
     border: 2px solid #666;
+    margin: auto;
+}
+
+.left-stat-column {
+    text-align: center;
 }
 
 /* Tooltips section. Thanks to W3 schools for this code snippet. */
@@ -247,14 +252,38 @@ html {
     object-fit: cover;
 }
 
+.ch-select {
+    max-width: 1100px;
+    margin: auto;
+    height: 100%;
+    padding-top: 7px;
+    align-items: center;
+}
+
 .char-icon {
     position: relative;
     width: 260px;
-    height: 260px;
+    height: auto;
+    max-height: 260px;
+    max-width: 260px;
 }
 
 .ch-card {
     max-height: 260px;
+    max-width: 260px;
+    width: auto;
+    margin: auto;
+    padding: 11px;
+    margin-bottom: 14px;
+}
+
+.ch-card-column {
+    margin: auto;
+    display: block;
+}
+
+form > input {
+    background-color: #eeebe3 !important;
 }
 
 .fa-plus-circle {
@@ -280,10 +309,27 @@ li > a {
     width: 100%
 }
 
-.chSelect {
+.ch-select {
     height: 275px;
-    margin-top:50px;
+    margin-top:5px;
+    margin-right: 5px;
+    margin-left: 5px;
+    padding-top: 5px;
     background-color: var(--contrast-color-3)
+}
+
+#ch-select-section {
+    background-color: var(--contrast-color-3);
+    height: auto;
+    display: inline-block;
+}
+
+@media screen and (min-width: 993px) {
+    #ch-select-section{
+        display: flex;
+        max-width: 1000px;
+        margin: auto;
+    }
 }
 
 .pagination > li {
@@ -304,7 +350,7 @@ li > a {
 }
 
 .card-title {
-    background-color: var(--contrast-color-1);
+    background-color: var(--contrast-color-2);
     padding: 10px !important;
 }
 
@@ -312,6 +358,18 @@ li > a {
     width: 261px;
     height: 250px;
     display: block
+}
+
+#delete-char-row {
+    display: none;
+    height: 0px;
+    overflow: hidden;
+    background-color: var(--contrast-color-3);
+    border-radius: 15px 15px 15px 15px ;
+}
+
+#delete-char-row > div > form > input {
+    max-width: 400px;
 }
 
 /* Leaderboard.html */
@@ -361,6 +419,17 @@ table {
 }
 
 /* profile.html */
+
+.profile-char-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 1000px;
+}
+
+.profile-char-item {
+    min-width: 200px;
+}
 
 #user-settings {
     margin-top:50px;

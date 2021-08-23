@@ -8,82 +8,92 @@
         {{ charactername.name|capitalize }}
     </h3> 
     <section id="stats">
+        <!-- FULL CHARACTER SHEET -->
         <div class="row">
-            <div class="col s12 m3 l3">
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext"> Hit points keep track of how much damage your character can endure.</span>
-                    <h6>HP</h6><p>{{ charactername.max_hp }}</p>
-                </div>
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Ki is a measure of a Fist's ability to charge combos.</span>
-                    <h6>Ki</h6><p> 30 </p>
-                </div>
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Armor Class (AC) is a measure of how resilient a character is.</span>
-                    <h6>AC</h6><p>{{ charactername.ac }}</p>
-                </div>
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Damage (DMG) represents how damaging a character's attacks are, as a range.</span>
-                    <h6>DMG</h6><p>{{ charactername.damage[0] }} - {{ (charactername.damage[1] + (charactername.hands / 5)) * charactername.damage[0] }}</p>
-                </div>
-            </div>
-            <div class="col s12 m3 l3">
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Dodge represents how often a character negates an attack by Dodging.</span>
-                    <h6>Dodge</h6><p>{{ charactername.dodge }}%</p>
-                </div>
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Block represents how often a character negates an attack by Blocking.</span>
-                    <h6>Block</h6><p>{{ charactername.block + ( charactername.arms / 10 ) }}%</p>
-                </div>
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Parry represents how often a character negates an attack by Parrying.</span>
-                    <h6>Parry</h6><p>{{ charactername.parry }}%</p>
-                </div>
-                <div class="tooltip stat-circle">
-                    <span class="tooltiptext">Damage Resistance (DR) is a measure of how much damage is negated when the character is hit.</span>
-                    <h6>DR</h6><p>{{ charactername.dr + ( charactername.torso / 10 ) }}%</p>
-                </div>
-            </div>
-            <div class="col s12 m6 l6">
-                <div class="char-left">
-                    <span><h5>Character Bio:</h5></span>
-                    <p id="char-bio">{{ charactername.charbio }}</p>
-                </div>
-                <div class="char-right">
-                    <img id="current-icon" src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
-                    {% if session.user == charactername.owner %} 
-                        <div id="hidden-menu">
-                            <span id="icon-selection">
-                                <img src="../static/images/portrait-0.png" alt="">
-                                <img src="../static/images/portrait-1.png" alt="">
-                                <img src="../static/images/portrait-2.png" alt="">
-                                <img src="../static/images/portrait-3.png" alt="">
-                                <img src="../static/images/portrait-4.png" alt="">
-                                <img src="../static/images/portrait-5.png" alt="">
-                                <img src="../static/images/portrait-6.png" alt="">
-                            </span>
-                            <span id="hide-selection"> Nevermind </span>
+            <!-- STAT BARS -->
+            <div class="col s12 m6">
+                <div class="row left-stat-column">
+                    <!-- LEFT STAT COLUMN -->
+                    <div class="col s12 m6 l6">
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext"> Hit points keep track of how much damage your character can endure.</span>
+                            <h6>HP</h6><p>{{ charactername.max_hp }}</p>
                         </div>
-                        <span id="new-icon">Select New Icon</span>
-                    {% endif %}
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Ki is a measure of a Fist's ability to charge combos.</span>
+                            <h6>Ki</h6><p> 30 </p>
+                        </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Armor Class (AC) is a measure of how resilient a character is.</span>
+                            <h6>AC</h6><p>{{ charactername.ac }}</p>
+                        </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Damage (DMG) represents how damaging a character's attacks are, as a range.</span>
+                            <h6>DMG</h6><p>{{ charactername.damage[0] }} - {{ (charactername.damage[1] + (charactername.hands / 5)) * charactername.damage[0] }}</p>
+                        </div>
+                    </div>
+                    <!-- RIGHT STAT COLUMN -->
+                    <div class="col s12 m6 l6">
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Dodge represents how often a character negates an attack by Dodging.</span>
+                            <h6>Dodge</h6><p>{{ charactername.dodge }}%</p>
+                        </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Block represents how often a character negates an attack by Blocking.</span>
+                            <h6>Block</h6><p>{{ charactername.block + ( charactername.arms / 10 ) }}%</p>
+                        </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Parry represents how often a character negates an attack by Parrying.</span>
+                            <h6>Parry</h6><p>{{ charactername.parry }}%</p>
+                        </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Damage Resistance (DR) is a measure of how much damage is negated when the character is hit.</span>
+                            <h6>DR</h6><p>{{ charactername.dr + ( charactername.torso / 10 ) }}%</p>
+                        </div>
+                    </div>
+                    <!-- EXPERIENCE BARS -->
+                    <div class="col s12">
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Current experience is a tally of experience currently available to spend on upgrades.</span>
+                            <h6>EXP</h6><p id="current-exp-string">{{ charactername.current_exp }}</p>
+                        </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Spent experience is used as a measure of the total strength of your character.</span>
+                            <h6>Spent EXP</h6><p id="spent-exp-string">{{ charactername.current_exp }}</p>
+                        </div>
+                    </div>
                 </div>
-                <br id="char-clear-both">
-                <div class="char-bottom">
-                    <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>            
+            </div>
+            <!-- RIGHT STAT COLUMN -->
+            <div class="col s12 m6">
+                <div class="row">
+                    <div class="char-left s12 m6">
+                        <span><h5>Character Bio:</h5></span>
+                        <p id="char-bio">{{ charactername.charbio }}</p>
+                    </div>
+                    <div class="char-right s12 m6">
+                        <img id="current-icon" src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
+                        {% if session.user == charactername.owner %} 
+                            <div id="hidden-menu">
+                                <span id="icon-selection">
+                                    <img src="../static/images/portrait-0.png" alt="">
+                                    <img src="../static/images/portrait-1.png" alt="">
+                                    <img src="../static/images/portrait-2.png" alt="">
+                                    <img src="../static/images/portrait-3.png" alt="">
+                                    <img src="../static/images/portrait-4.png" alt="">
+                                    <img src="../static/images/portrait-5.png" alt="">
+                                    <img src="../static/images/portrait-6.png" alt="">
+                                </span>
+                                <span id="hide-selection"> Nevermind </span>
+                            </div>
+                            <span id="new-icon">Select New Icon</span>
+                        {% endif %}
+                    </div>
+                    <br id="char-clear-both">
+                    <div class="char-bottom m12">
+                        <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>            
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col m2">
-                <h4>Available Experience: </h4><p>{{ charactername.current_exp }}</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col m6">
-                <h4>Experience spent:</h4><p>{{ charactername.spent_exp }}</p>
-            </div>
-            <div class="col m6">
             </div>
         </div>
     </section>
@@ -289,7 +299,12 @@
         </div>
     </section>
     <section>
-        <div class="row">
+        <div class="row" id="delete-char-btn">
+            <div class="m12 center-align">
+                <button class="red btn" type="submit" name="form-name" value="delete">I want to delete my character</button>
+            </div>
+        </div>
+        <div class="row" id="delete-char-row">
             <div class="m12 center-align">
                 <h3>
                     To delete your character, type its name and click delete.
@@ -426,6 +441,33 @@
                 socket.emit('character', submit);
             }
         }
+
+        let deleteBtn = document.getElementById("delete-char-btn");
+        let deleteChar = document.getElementById("delete-char-row");
+        var height = 0;
+        var interval;
+
+        function frame() {
+            if (height >= 185) {
+                clearInterval(interval)
+            } else if (height <= 20 || height >= 165) {
+                height += 0.5;
+                deleteChar.style.height = height + 'px';
+                window.scrollBy(0,1);
+            } else if (height <= 165){
+                height++;
+                deleteChar.style.height = height + 'px';
+                window.scrollBy(0,1);
+            }
+        }
+
+        deleteBtn.onclick = function (){
+            deleteBtn.style.display = "none";
+            deleteChar.style.display = "block";
+            interval = setInterval(frame, 5);
+        }
+
+        let currentExp = document.getElementById("current-exp-string")
         
     </script>
 {% endblock %}

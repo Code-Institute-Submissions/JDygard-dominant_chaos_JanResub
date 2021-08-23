@@ -6,124 +6,122 @@
             <h2> {{ username|capitalize }} </h2>
         </div>
     </div>
-    <div class="row chSelect">
+    <div id="ch-select-section">
+        <div class="row ch-select">
         <!-- Display character icons -->
-        <ul>
             {% for character in characters %}
-                <li>
-                    <div class="col m3 center-align ch-show">
-                        <div class="card ch-card">
-                            <div class="card-image">
-                                <a href="{{ url_for('character', charactername=character.name) }}"><img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon">
-                                <span class="card-title"> {{ character.name|capitalize }} </span></a>
+                <div class="col s12 m6 l3 ch-card-column">
+                    <div class="card ch-card">
+                        <div class="card-image">
+                            <a href="{{ url_for('character', charactername=character.name) }}"><img src="{{ url_for('static', filename = character.icon) }}" alt="" class="char-icon">
+                            <span class="card-title"> {{ character.name|capitalize }} </span></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if session.user == username %}
+                {% if characters.count() < 4 %}
+                    <div class="col s12 m6 l3 center-align ch-show" id="ch-new">
+                        <div class="card blue-grey darken-1 ch-card">
+                            <div>
+                                <a class="modal-trigger" href="#modal1"><i class="fas fa-plus-circle new-char"></i></a>
+                                <p>Create New</p>
+                                <div id="modal1" class="modal">
+                                    <form class="col s12" method="POST">    
+                                        <p>
+                                            <label>
+                                                <input class="with-gap" name="class" type="radio" checked value="inward_fist"/>
+                                                <span>Inward Fist</span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label>
+                                                <input class="with-gap" name="class" type="radio" disabled="disabled" value="outward_fist"  />
+                                                <span>Outward Fist (Coming soon)</span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label>
+                                                <input class="with-gap" name="class" type="radio" disabled="disabled" value="sorcerer"   />
+                                                <span>Sorcerer (Coming soon)</span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label>
+                                                <input class="with-gap" name="class" type="radio" disabled="disabled" value="shaman" />
+                                                <span>Chi-Xin Shaman (Coming soon)</span>
+                                            </label>
+                                        </p>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <input placeholder="Character name" id="name" name="name" type="text" class="validate" pattern="^[a-zA-Z0-9]{3,15}$">
+                                                <label for="name">Character Name: (3-15 letters)</label>
+                                            </div>
+                                        </div>  
+                                            <button class="btn waves-effect waves-light" type="submit" name="form-name" value="create-character">Create Character
+                                                <i class="material-icons right"></i>
+                                            </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </li>
-            {% endfor %}
-        </ul>
-        {% if session.user == username %}
-            {% if characters.count() < 4 %}
-        <div class="col m3 center-align ch-show" id="ch-new">
-            <div class="card blue-grey darken-1 ch-card">
-                <div>
-                    <a class="modal-trigger" href="#modal1"><i class="fas fa-plus-circle new-char"></i></a>
-                    <p>Create New</p>
-                    <div id="modal1" class="modal">
-                        <form class="col s12" method="POST">    
-                            <p>
-                                <label>
-                                    <input class="with-gap" name="class" type="radio" checked value="inward_fist"/>
-                                    <span>Inward Fist</span>
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    <input class="with-gap" name="class" type="radio" disabled="disabled" value="outward_fist"  />
-                                    <span>Outward Fist (Coming soon)</span>
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    <input class="with-gap" name="class" type="radio" disabled="disabled" value="sorcerer"   />
-                                    <span>Sorcerer (Coming soon)</span>
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    <input class="with-gap" name="class" type="radio" disabled="disabled" value="shaman" />
-                                    <span>Chi-Xin Shaman (Coming soon)</span>
-                                </label>
-                            </p>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input placeholder="Character name" id="name" name="name" type="text" class="validate" pattern="^[a-zA-Z0-9]{3,15}$">
-                                    <label for="name">Character Name: (3-15 letters)</label>
-                                </div>
-                            </div>  
-                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="create-character">Create Character
-                                    <i class="material-icons right"></i>
-                                </button>
-                        </form>
-                    </div>
-                </div>
+                {% endif %}
+        </div>
+    </div>
+    <section id="user-settings">
+        <hr class="hr-profile">
+        <div class="row">
+            <div class="m12 center-align">
+                <h4>Change Email:</h4>
             </div>
         </div>
-            {% endif %}
-    </div>
-        <section id="user-settings">
-            <hr class="hr-profile">
-            <div class="row">
-                <div class="m12 center-align">
-                    <h4>Change Email:</h4>
-                </div>
+        <div class="row">
+            <div class="col m12">
+                <form action="" method="POST">
+                    <label for="email">Desired email:</label>
+                    <input type="email" name="email" required>
+                    <label for="confirm-email">Confirm:</label>
+                    <input type="email" name="confirm-email" required>
+                    <button class="btn btn-profile" name="form-name" value="change-email">Change Email</button>
+                </form>
             </div>
-            <div class="row">
-                <div class="col m12">
-                    <form action="" method="POST">
-                        <label for="email">Desired email:</label>
-                        <input type="email" name="email" required>
-                        <label for="confirm-email">Confirm:</label>
-                        <input type="email" name="confirm-email" required>
-                        <button class="btn btn-profile" name="form-name" value="change-email">Change Email</button>
-                    </form>
-                </div>
+        </div>
+        <hr class="hr-profile">
+        <div class="row">
+            <div class="m12 center-align">
+                <h4>Change Password:</h4>
             </div>
-            <hr class="hr-profile">
-            <div class="row">
-                <div class="m12 center-align">
-                    <h4>Change Password:</h4>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col m12">
+                <form action="" method="POST">
+                    <label for="password">Current Password:</label>
+                    <input type="password" required name="password">
+                    <label for="new-password">New Password:</label>
+                    <input type="password" required name="new-password" minlength="6" maxlength="20">
+                    <label for="password2">Confirm new password:</label>
+                    <input type="password" required name="password2" minlength="6" maxlength="20"><br>
+                    <button class="btn btn-profile" name="form-name" value="change-password">Change Password</button>
+                </form>
             </div>
-            <div class="row">
-                <div class="col m12">
-                    <form action="" method="POST">
-                        <label for="password">Current Password:</label>
-                        <input type="password" required name="password">
-                        <label for="new-password">New Password:</label>
-                        <input type="password" required name="new-password" minlength="6" maxlength="20">
-                        <label for="password2">Confirm new password:</label>
-                        <input type="password" required name="password2" minlength="6" maxlength="20"><br>
-                        <button class="btn btn-profile" name="form-name" value="change-password">Change Password</button>
-                    </form>
-                </div>
+        </div>
+        <hr class="hr-profile">
+        <div>
+            <button class="modal-trigger btn btn-profile delete-button" href="#modal2">Delete Account</button>
+            <div id="modal2" class="modal">
+                <h2>Really delete your account?</h2>
+                <p>This cannot be reversed. Type your account name and password to delete your account.</p>
+                <form action="" method="POST">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" class="modal-field">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="modal-field">
+                    <button class="btn btn-profile delete-button" name="form-name" value="delete-account">Delete account permanently</button>
+                </form>
             </div>
-            <hr class="hr-profile">
-            <div>
-                <button class="modal-trigger btn btn-profile delete-button" href="#modal2">Delete Account</button>
-                <div id="modal2" class="modal">
-                    <h2>Really delete your account?</h2>
-                    <p>This cannot be reversed. Type your account name and password to delete your account.</p>
-                    <form action="" method="POST">
-                        <label for="username">Username:</label>
-                        <input type="text" name="username" class="modal-field">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" class="modal-field">
-                        <button class="btn btn-profile delete-button" name="form-name" value="delete-account">Delete account permanently</button>
-                    </form>
-                </div>
-            </div>
-        </section>
+        </div>
+    </section>
         {% endif %}
 
     <script>

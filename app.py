@@ -647,7 +647,7 @@ def profile(username):
                 "abilities": {"kick": "A"},
             }
             if request.form.get("class") == "inward_fist": # Tacking on all the specific stuff for a fist
-                new_char["icon"] = "images/fist-icon.png"
+                new_char["icon"] = "../static/images/portrait-6.png"
                 new_char["hands"] = 0
                 new_char["legs"] = 0
                 new_char["torso"] = 0
