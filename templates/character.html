@@ -59,19 +59,15 @@
                         </div>
                         <div class="tooltip stat-circle">
                             <span class="tooltiptext">Spent experience is used as a measure of the total strength of your character.</span>
-                            <h6>Spent EXP</h6><p id="spent-exp-string">{{ charactername.current_exp }}</p>
+                            <h6>Spent EXP</h6><p id="spent-exp-string">{{ charactername.spent_exp }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- RIGHT STAT COLUMN -->
+            <!-- RIGHT CHARACTER COLUMN -->
             <div class="col s12 m6">
                 <div class="row">
-                    <div class="char-left s12 m6">
-                        <span><h5>Character Bio:</h5></span>
-                        <p id="char-bio">{{ charactername.charbio }}</p>
-                    </div>
-                    <div class="char-right s12 m6">
+                    <div class="char-right col s12 m12 l6">
                         <img id="current-icon" src="{{ url_for('static', filename = charactername.icon) }}" alt="">  
                         {% if session.user == charactername.owner %} 
                             <div id="hidden-menu">
@@ -89,12 +85,16 @@
                             <span id="new-icon">Select New Icon</span>
                         {% endif %}
                     </div>
-                    <br id="char-clear-both">
-                    <div class="char-bottom m12">
-                        <h4>Win/Loss:</h4><p>{{ charactername.winloss }}</p>            
+                    <div class="char-left col s12 m12 l6">
+                        <span><h5>Character Bio:</h5></span>
+                        <p id="char-bio">{{ charactername.charbio }}</p>
+                    </div>
+                    <div class="char-bottom col m12">
+                        <h4>Win/Loss Rate: {{ charactername.winloss }}</h4>          
                     </div>
                 </div>
             </div>
+            
         </div>
     </section>
     {% if session.user == charactername.owner %}
@@ -467,7 +467,38 @@
             interval = setInterval(frame, 5);
         }
 
-        let currentExp = document.getElementById("current-exp-string")
+        
+        document.getElementById("current-exp-string").innerHTML = numberShortener(document.getElementById("current-exp-string").innerHTML);
+        document.getElementById("spent-exp-string").innerHTML = numberShortener(document.getElementById("spent-exp-string").innerHTML);
+        function numberShortener(data) {
+            let numArray = Array.from(data)
+            let display = "";
+            if (numArray.length > 3){
+                if (numArray.length > 3 && numArray.length < 7) {
+                    let decimal;
+                    for (i = 0; i < 3; i++) {
+                        decimal = numArray.pop();
+                    }
+                    for (i = 0; i < numArray.length; i++){
+                        display = display + numArray[i]
+                    }
+                    display = display + "." + decimal + "K";
+                }
+                else if (numArray.length > 6 && numArray.length < 10) {
+                    let decimal;
+                    for (i = 0; i < 6; i++) {
+                        decimal = numArray.pop();
+                    }
+                    for (i = 0; i < numArray.length; i++){
+                        display = display + numArray[i]
+                    }
+                    display = display + "." + decimal + "mil";
+                }
+                return display;
+            } else {
+                return data
+            }
+        }
         
     </script>
 {% endblock %}
