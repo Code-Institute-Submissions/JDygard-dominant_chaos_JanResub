@@ -32,13 +32,9 @@
     height: 660px;
 }
 
-.container {
-    text-align: center;
-}
-
 /* base.html */
 body {
-    margin-bottom: 150px;
+    margin-bottom: 200px;
 }
 .page-footer, main:after {
     background-color: var(--main-color-bright);
@@ -50,6 +46,8 @@ footer{
     left: 0;
     right:0;
     z-index: 10;
+    max-width: 100vw;
+    max-height: 10vh;
 }
 
 .footer-copyright {
@@ -83,6 +81,23 @@ html {
     margin-top:40px;
 }
 
+/* Scroll to top button
+ Thanks to https://css-tricks.com/how-to-make-an-unobtrusive-scroll-to-top-button/
+   for the code adapted here */
+#scrollToTopBtn {
+    position: relative;
+    bottom: 200px;
+    background-color: var(--contrast-color-3);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 48px;
+    width: 48px;
+    left: 90%;
+}
+
 /* index.html */
 
 .hero-container {
@@ -101,6 +116,13 @@ html {
     }
 }
 
+#info-section {
+    background-color: #eeebe3;
+}
+
+#combat-image {
+    overflow: hidden;
+}
 
 /* character.html */
 /* Stat-circle is what confines the stat blocks to a circle. Thanks to https://stackoverflow.com/questions/4861224/how-to-use-css-to-surround-a-number-with-a-circle/19613616 for this. */
@@ -287,7 +309,6 @@ html {
     width: auto;
     margin: auto;
     padding: 11px;
-    margin-bottom: 14px;
 }
 
 .ch-card-column {
@@ -323,6 +344,7 @@ li > a {
 }
 
 .ch-select {
+    width: 100%;
     height: 275px;
     margin-top:5px;
     margin-right: 5px;
@@ -477,6 +499,9 @@ table {
 
 /* about.html */
 
+#about-img-100 {
+    width: 100%;
+}
 
 /* Thanks to https://avexdesigns.com/blog/responsive-youtube-embed for this example of responsive video embedding */
 .video-container { 

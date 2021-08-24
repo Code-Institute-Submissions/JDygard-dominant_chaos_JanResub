@@ -29,6 +29,11 @@
     }
 }
 
+let charBio = document.getElementById("char-bio").innerHTML;
+if (charBio == ""){
+    document.getElementById("char-bio").innerHTML = "A generic adventurer, this character has done stuff and things, but nothing that the user felt like writing about."
+}
+
 // These are the two elements on the page that are being parsed like this. They are the experience fields, as they can easily range into the millions.
 document.getElementById("current-exp-string").innerHTML = numberShortener(document.getElementById("current-exp-string").innerHTML); 
 document.getElementById("spent-exp-string").innerHTML = numberShortener(document.getElementById("spent-exp-string").innerHTML);

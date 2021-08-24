@@ -80,12 +80,14 @@
             <div class="col s12 center-align">
                 <a href="https://www.patreon.com/ChaosLegacy"><i class="fab fa-patreon"></i> <br> Become one of our patrons on Patreon</a>
             </div>
+
         </div>
         <div class="footer-copyright">
             <div class="center-align">
                 © 2021 Joel Dygard
             </div>
         </div>
+        <button id="scrollToTopBtn">☝️</button>
     </footer>
     <script>
         var options
@@ -93,6 +95,19 @@
             var elems = document.querySelectorAll('.sidenav');
             var instances = M.Sidenav.init(elems, options);
         });
+
+        // Thanks to https://css-tricks.com/how-to-make-an-unobtrusive-scroll-to-top-button/
+        // for the code adapted here
+        var scrollToTopBtn = document.getElementById("scrollToTopBtn")
+        var rootElement = document.documentElement
+        function scrollToTop() {
+            // Scroll to top logic
+            rootElement.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            })
+        }
+        scrollToTopBtn.addEventListener("click", scrollToTop)
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>

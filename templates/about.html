@@ -4,13 +4,7 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="row about-page">
-        <div class="col m12 l8 center-align">
-            <!-- Thanks to https://avexdesigns.com/blog/responsive-youtube-embed for this example of responsive embedding -->
-            <div class="video-container">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/aKTJmpi6k6Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-        <div class="col m12 l4">
+        <div class="col m12">
             <h2>About the game</h2>
             <hr class="hr-about">
             <p class="indent">
@@ -43,6 +37,11 @@
             </p>
         </div>
     </div>
+    <!-- Thanks to https://avexdesigns.com/blog/responsive-youtube-embed for this example of responsive embedding -->
+    <div class="video-container" id="explanation">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/aKTJmpi6k6Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <hr>
     <div class="row">
         <div class="col m6 s12">
             <h2>Meet the team</h2>
@@ -61,7 +60,7 @@
             </p>
         </div>
         <div class="col m6 s12">
-            <img src="../static/images/about/dev.jpeg" alt="">
+            <img id="about-img-100" src="../static/images/about/dev.jpeg" alt="">
         </div>
     </div>
 {% endblock %}
