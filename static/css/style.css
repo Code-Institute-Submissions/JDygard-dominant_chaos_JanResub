@@ -78,7 +78,6 @@ html {
 
 .container{
     width: 100%;
-    margin-top:40px;
 }
 
 /* Scroll to top button
@@ -110,6 +109,69 @@ html {
     height: 375px;
 }
 
+#banner-bottom {
+    background-image: url(../images/home/banner-bottom.jpeg);
+    background-repeat: none;
+    background-size: cover;
+    background-position: center;
+    padding-bottom: 140px;
+    padding-top: 0;
+}
+
+.row:last-child {
+    margin-bottom: 0;
+}
+
+#edit-bio {
+    margin-bottom: 20px;
+}
+
+.join-text {
+    text-align:center;
+}
+
+#join-the-fight {
+    color: var(--main-color-bright);
+    padding-top: 70px;
+}
+
+#join-now {
+    color: var(--contrast-color-2)
+}
+
+#combat-img{
+    background-image: url(../images/home/combat.jpeg);
+}
+
+#explore-img {
+    background-image: url(../images/home/map.jpg);
+}   
+
+#grow-img {
+    background-image: url(../images/home/training.jpeg);
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+
+#grow-img, #explore-img, #combat-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding-bottom: 400px;
+}
+
+@media screen and (max-width:970px){
+    #grow-img, #explore-img, #combat-img {
+        padding-bottom: 250px;
+    }
+}
+
+@media screen and (max-width:680px){
+    #grow-img, #explore-img, #combat-img {
+        padding-bottom: 175px;
+    }
+}
+
 @media screen and (min-width:992px){
     .hero-container{
         height:750px;
@@ -118,10 +180,6 @@ html {
 
 #info-section {
     background-color: #eeebe3;
-}
-
-#combat-image {
-    overflow: hidden;
 }
 
 /* character.html */
