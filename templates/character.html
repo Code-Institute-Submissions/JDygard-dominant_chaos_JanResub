@@ -31,6 +31,10 @@
                             <span class="tooltiptext">Damage (DMG) represents how damaging a character's attacks are, as a range.</span>
                             <h6>DMG</h6><p>{{ charactername.damage[0] }} - {{ (charactername.damage[1] + (charactername.hands / 5)) * charactername.damage[0] }}</p>
                         </div>
+                        <div class="tooltip stat-circle">
+                            <span class="tooltiptext">Current experience is a tally of experience currently available to spend on upgrades.</span>
+                            <h6>EXP</h6><p id="current-exp-string">{{ charactername.current_exp }}</p>
+                        </div>
                     </div>
                     <!-- RIGHT STAT COLUMN -->
                     <div class="col s12 m6 l6">
@@ -49,13 +53,6 @@
                         <div class="tooltip stat-circle">
                             <span class="tooltiptext">Damage Resistance (DR) is a measure of how much damage is negated when the character is hit.</span>
                             <h6>DR</h6><p>{{ charactername.dr + ( charactername.torso / 10 ) }}%</p>
-                        </div>
-                    </div>
-                    <!-- EXPERIENCE BARS -->
-                    <div class="col s12">
-                        <div class="tooltip stat-circle">
-                            <span class="tooltiptext">Current experience is a tally of experience currently available to spend on upgrades.</span>
-                            <h6>EXP</h6><p id="current-exp-string">{{ charactername.current_exp }}</p>
                         </div>
                         <div class="tooltip stat-circle">
                             <span class="tooltiptext">Spent experience is used as a measure of the total strength of your character.</span>
@@ -468,8 +465,6 @@
         }
 
         
-        document.getElementById("current-exp-string").innerHTML = numberShortener(document.getElementById("current-exp-string").innerHTML);
-        document.getElementById("spent-exp-string").innerHTML = numberShortener(document.getElementById("spent-exp-string").innerHTML);
         function numberShortener(data) {
             let numArray = Array.from(data)
             let display = "";
@@ -499,6 +494,8 @@
                 return data
             }
         }
+        document.getElementById("current-exp-string").innerHTML = numberShortener(document.getElementById("current-exp-string").innerHTML);
+        document.getElementById("spent-exp-string").innerHTML = numberShortener(document.getElementById("spent-exp-string").innerHTML);
         
     </script>
 {% endblock %}
