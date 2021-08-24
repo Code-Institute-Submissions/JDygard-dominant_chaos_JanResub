@@ -319,11 +319,12 @@
 <h2 class="center-align">This character was not found.</h2>
 {% endif %}
     <script>
-        var torso = "{{ charactername.torso }}"
-        var hands = "{{ charactername.hands }}"
-        var arms = "{{ charactername.arms }}"
-        var legs = "{{ charactername.legs }}"
-        var discipline = parseInt("{{ charactername.discipline }}")
+        var torso = "{{ charactername.torso }}";
+        var hands = "{{ charactername.hands }}";
+        var arms = "{{ charactername.arms }}";
+        var legs = "{{ charactername.legs }}";
+        var discipline = parseInt("{{ charactername.discipline }}");
+        var characterName = "{{ charactername.name }}";
     </script>
     <script src="/static/js/character.js"></script>
     {% if session.user == charactername.owner %} 

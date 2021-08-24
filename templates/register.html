@@ -1,60 +1,39 @@
-<!--
-    A simple registration page.
-    Should I collect emails?
-    Maybe I'll get some simple optional info like the country they're playing from
-    and maybe where they heard about the game
--->
 {% extends "base.html" %}
 {% block content %}
-    <!--   Put a registration form in here.
-    the name of the name field needs to be username. The password field is password.
-        Also put in a confirm password field. We can double-check that it is consistent with JS.
-
-    We will later need to put in the fields for email, where they were referred from and the country they're in.
-    We could do the red star thing for obligatory fields.
-
-    Verify email.
--->
-
-    <div class="row">
-        <div class="col s12 m6">
-            <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title">Register</span>
+    <div class="card blue-grey darken-1 login-register-card register-card">
+        <div class="card-content white-text">
+            <span class="card-title">Register</span>
+            <div class="row">
+                <form class="col s12" method="POST" action="{{ url_for('register') }}">
                     <div class="row">
-                        <form class="col s12" method="POST" action="{{ url_for('register') }}">
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input placeholder="Username" id="username" name="username" type="text" class="validate" pattern="^[a-zA-Z0-9]{5,15}$">
-                                    <label for="first_name">Username</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input placeholder="Email" id="email" name="email" type="email" class="validate" required>
-                                    <label for="email">Email</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="password" type="password" name="password" class="validate" required>
-                                    <label for="password">Password</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="password_confirm" type="password" name="password_confirm" class="validate" required>
-                                    <label for="password_confirm">Confirm Password</label>
-                                </div>
-                            </div>
-                            <button class="btn waves-effect waves-light" type="submit" name="action">Login
-                                <i class="material-icons right"></i>
-                            </button>
-                        </form>
+                        <div class="input-field col s12">
+                            <input placeholder="Username" id="username" name="username" type="text" class="validate" pattern="^[a-zA-Z0-9]{5,15}$">
+                            <label for="first_name">Username</label>
+                        </div>
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input placeholder="Email" id="email" name="email" type="email" class="validate" required>
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="password" type="password" name="password" class="validate" required>
+                            <label for="password">Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="password_confirm" type="password" name="password_confirm" class="validate" required>
+                            <label for="password_confirm">Confirm Password</label>
+                        </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Login
+                        <i class="material-icons right"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-
 {% endblock %}

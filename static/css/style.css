@@ -21,6 +21,20 @@
     padding-bottom:10px;
 }
 
+/* Login/register pages */
+
+.login-register-card {
+    max-width: 450px;
+    margin: auto;
+}
+
+.register-card {
+    height: 660px;
+}
+
+.container {
+    text-align: center;
+}
 
 /* base.html */
 body {

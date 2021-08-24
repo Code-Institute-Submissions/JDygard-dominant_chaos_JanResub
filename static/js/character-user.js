@@ -1,17 +1,18 @@
-function calculateCost(number, iterations) {
-    let initialValue = parseInt(number) + 1;
-    let result = 0;
-    for (let i = 0; i < iterations; i++) {
-        result += Math.sqrt(initialValue) * 1500;
-        initialValue++;
+// A function for calculating the cost of abilities
+function calculateCost(number, iterations) { 
+    let initialValue = parseInt(number) + 1; // Get the value being trained to
+    let result = 0;                          // Set the starting value
+    for (let i = 0; i < iterations; i++) {   // Loop through the number of iterations chosen by the user
+        result += Math.sqrt(initialValue) * 1500; // Every iteration, add the cost of the next point to the result
+        initialValue++;                     // Iterate
     }
-    return Math.round(result);
+    return Math.round(result);              // And return the results
 }
 
 if (discipline < 10) {
-    document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000
+    document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000            // Show the cost for the next training
 } else {
-    document.getElementById("disc-card-action").innerHTML = "You have reached max discipline"
+    document.getElementById("disc-card-action").innerHTML = "You have reached max discipline"   // Block training if discipline is maxed
 }
 //                                     Body Training Card Generator 
 //                                   ===============================
@@ -77,6 +78,8 @@ function moveActive() {
 
 //                      Icon Selection
 
+
+// Set up the socket for icon selection
 namespace = '/test';
 var socket = io(namespace)
 $(document).ready(function() {
@@ -87,26 +90,32 @@ $(document).ready(function() {
         socket.emit('character', "character connected");
     });
 });
+// End socket setup
 
+// Gather icon menu related vars
 let iconMenu = document.getElementById("hidden-menu")
 let newIcon = document.getElementById("new-icon")
 let hideSelection = document.getElementById("hide-selection")
 
+// Event listeners for clicks on icon menu
 hideSelection.onclick = function () {
-    iconMenu.style.visibility = "hidden"
+    iconMenu.style.visibility = "hidden" // Hide the menu
 }
 
 newIcon.onclick = function (){
-    iconMenu.style.visibility = "visible"
+    iconMenu.style.visibility = "visible" // Show the menu
 }
 
-let icons = document.getElementById("icon-selection").children
-let currentIcon = document.getElementById("current-icon")
+// Gather vars for the icon selection
+let icons = document.getElementById("icon-selection").children // Gather all implemented icons
+let currentIcon = document.getElementById("current-icon") // Gather the icon currently displayed
+
+// Loop through the icons that exist and add listeners
 for (let i = 0; i < icons.length; i++) {
     icons[i].style.cursor = "pointer";
     icons[i].onclick = function (){
         iconMenu.style.visibility = "hidden"
-        submit = [icons[i].getAttribute("src"), "{{ charactername.name }}"];
+        submit = [icons[i].getAttribute("src"), characterName];
         currentIcon.src = submit[0];
         socket.emit('character', submit);
     }
