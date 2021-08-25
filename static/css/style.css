@@ -145,7 +145,18 @@ html {
     right: 25vw;
     color: #eeebe3;
     border-radius: 5px;
-    background-color: rgba(0.8, 0.8, 0.8, 0.5)
+    background-color: rgba(0.8, 0.8, 0.8, 0.5);
+    border: 1px solid var(--main-color-bright);
+}
+
+.training-card-height {
+    min-height: 500px;
+}
+
+@media screen and (min-width: 1280px) {
+    #hero-call-to-action {
+        right: 310px
+    }
 }
 
 @media screen and (max-width: 505px) {

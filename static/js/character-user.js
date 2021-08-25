@@ -145,3 +145,20 @@ deleteBtn.onclick = function (){
     deleteChar.style.display = "block";
     interval = setInterval(frame, 5);
 }
+
+
+var swappedSwitch = false;
+let textDiv = document.getElementById("discipline-img");
+let imgDiv = document.getElementById("discipline-text");
+// Thanks to https://stackoverflow.com/questions/2943140/how-to-swap-html-elements-in-javascript for the code adapted here
+$(window).on('load resize', function() { 
+    if (window.innerWidth < 601 && swappedSwitch == false) {
+        let blahblah = textDiv.parentNode.insertBefore(textDiv, textDiv.previousElementSibling);
+        console.log(textDiv.previousSibling)
+        swappedSwitch = true;
+    } else if (window.innerWidth >= 601 && swappedSwitch == true){
+        console.log(imgDiv.previousSibling)
+        imgDiv.parentNode.insertBefore(imgDiv, imgDiv.previousElementSibling);
+        swappedSwitch = false;
+    }
+});
