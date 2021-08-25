@@ -25,7 +25,11 @@ bodyTraining = [torso, hands, arms, legs];      // Tied to the variables declare
 bodyString = ["torso", "hands", "arms", "legs"] // contains strings for navigating the DOM and buildings other strings
 for (let i = 0; i < bodyTraining.length; i++) { // A for loop for going through the arrays
     if (bodyTraining[i] >= 100) {               // If the body training is already at maximum, we tell the user and lock out the training
-        document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>" // The message
+        if (bodyString[i] == "torso"){
+            document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " is trained to maximum </h3>" // The message
+        } else {
+            document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>" // The message
+        }
     } else {                                                                                                                            // Otherwise
     document.getElementById("cost-" + bodyString[i]).innerHTML = calculateCost(bodyTraining[i], 1)                                      // Set the cost field for the cost of the next point
     document.getElementById("train-" + bodyString[i]).addEventListener("click", function(){                                             // And listen for the click
@@ -151,13 +155,11 @@ var swappedSwitch = false;
 let textDiv = document.getElementById("discipline-img");
 let imgDiv = document.getElementById("discipline-text");
 // Thanks to https://stackoverflow.com/questions/2943140/how-to-swap-html-elements-in-javascript for the code adapted here
-$(window).on('load resize', function() { 
-    if (window.innerWidth < 601 && swappedSwitch == false) {
+$(window).on('load resize', function() {
+    if (window.innerWidth < 1201 && swappedSwitch == false) {
         let blahblah = textDiv.parentNode.insertBefore(textDiv, textDiv.previousElementSibling);
-        console.log(textDiv.previousSibling)
         swappedSwitch = true;
-    } else if (window.innerWidth >= 601 && swappedSwitch == true){
-        console.log(imgDiv.previousSibling)
+    } else if (window.innerWidth >= 1201 && swappedSwitch == true){
         imgDiv.parentNode.insertBefore(imgDiv, imgDiv.previousElementSibling);
         swappedSwitch = false;
     }

@@ -96,7 +96,7 @@
     </section>
     {% if session.user == charactername.owner %}
     <div class="row">
-        <div class="body-image col s12 m6">
+        <div class="body-image col l12 xl6">
             <div class="torso-image">
                 <img src="../static/images/training-torso.png" alt="">
             </div>
@@ -110,10 +110,10 @@
                 <img src="../static/images/training-fist.png" alt="">
             </div>
         </div>
-        <div class="col s12 m6">
-            <div class="card training-card-height">
+        <div class="col l12 xl6">
+            <div class="card training-card training-card-height">
                 <h3 class="center-align">Body Training</h3>
-                <ul class="pagination">
+                <ul class="pagination center-align">
                     <li class="active" id="train-card-1"><a href="#!" onclick="moveActive(event)">Torso</a></li>
                     <li class="waves-effect" id="train-card-2"><a href="#!" onclick="moveActive(event)">Arms</a></li>
                     <li class="waves-effect" id="train-card-3"><a href="#!" onclick="moveActive(event)">Hands</a></li>
@@ -121,13 +121,13 @@
                 </ul>
 
                 <!-- torso tab -->
-                <div class="row torso">
+                <div class="row torso center-align">
                     <h3>Torso Training</h3>
                     <p>The inward fist's core can be rigorously trained and is key to withstanding attacks.</p>
                     <div id="action-torso">
                         <h5>Current level: {{ charactername.torso }}</h5>
                         <h5>Cost for next level:<span id="cost-torso"></span></h4>
-                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">+</i></a>
+                        <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">add</i></a>
                         <h5>
                             <form method="POST">
                                 <span id="field-torso">0</span>
@@ -143,7 +143,7 @@
                 </div>
 
                 <!-- Hands tab -->
-                <div class="row hands hidden">
+                <div class="row hands hidden center-align">
                     <h3>Hands Training</h3>
                     <p>The Inward Fist can train their hands to harden them, increasing the damage they can inflict.</p>
                     <div id="action-hands">
@@ -165,7 +165,7 @@
                 </div>
 
                 <!-- Legs tab -->
-                <div class="row legs hidden">
+                <div class="row legs hidden center-align">
                     <h3>Legs Training</h3>
                     <p>The inward fist's legs and feet can be trained for speed and power, increasing the power of their kicks.</p>
                     <div id="action-legs">
@@ -187,7 +187,7 @@
                 </div>
 
                 <!-- arms tab -->
-                <div class="row arms hidden">
+                <div class="row arms hidden center-align">
                     <h3>Arms Training</h3>
                     <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
                     <div id="action-arms">
@@ -211,7 +211,7 @@
             </div>
         </div>
 
-        <div class="col s12 m6" id="discipline-text">
+        <div class="col l12 xl6" id="discipline-text">
             <div class="card disc-card">
                 <div class="row">
                     <h3>Disciplines</h3>
@@ -223,7 +223,7 @@
                     <progress id="disc-bar" value="{{ charactername.discipline }}" max="10" style="width:85%;"></progress>
                     
                 </div>
-                <ul class="pagination">
+                <ul class="pagination center-align">
                     <li class="active" id="train-card-1"><a href="#!" onclick="moveActive(event)">Truesight</a></li>
                     <li class="waves-effect" id="train-card-2"><a href="#!" onclick="moveActive(event)">Levitation</a></li>
                     <li class="waves-effect" id="train-card-3"><a href="#!" onclick="moveActive(event)">Roundhouse</a></li>
@@ -263,7 +263,7 @@
                 </div>
             </div>
         </div>
-        <div class="body-image col s12 m6" id="discipline-img">
+        <div class="body-image col l12 xl6" id="discipline-img">
             <div class="truesight-image">
                 <img src="../static/images/discipline-truesight.png" alt="">
             </div>

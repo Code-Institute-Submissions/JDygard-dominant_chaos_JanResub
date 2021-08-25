@@ -456,6 +456,10 @@ form > input {
     background-color: var(--contrast-color-1);
 }
 
+.training-card > .row {
+    margin: 10px;
+}
+
 .card > h3, .card > div > h3, .card > div > h4 {
     margin-top: 0px;
 }
@@ -493,12 +497,17 @@ li > a {
     padding-right: 30px;
 }
 
-.pagination > li:first-of-type {
-    margin-left: 55px
+.disc-card > .row {
+    margin-left: 35px;
+    margin-right: 5px;
 }
 
-.card > .row {
-    margin-left: 30px;
+.card > ul > li {
+    width: 150px;
+}
+
+.disc-card > ul > li {
+    width: 180px;
 }
 
 .hidden {
