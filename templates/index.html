@@ -15,9 +15,7 @@
                 <h5>Fight</h5>
                 <p>Fight against monsters in riveting adventures or against other players!</p>
             </div>
-            <div class="col m6 s12">
-                <div id="combat-img">
-                </div>
+            <div class="col m6 s12" id="combat-img">
             </div>
         </div>
         <div class="row">
@@ -49,12 +47,20 @@
         </div>
     </section>
     <script>
+        var swappedSwitch = false;
         let imgDiv = document.getElementById("explore-img");
         let textDiv = document.getElementById("explore-text");
-        if (window.innerWidth < 601) {
-            console.log(textDiv)
-            document.getElementById("explore-img") = textDiv;
-            document.getElementById("explore-text") = imgDiv;
-        }
+        // Thanks to https://stackoverflow.com/questions/2943140/how-to-swap-html-elements-in-javascript for the code adapted here
+        $(window).on('load resize', function() { 
+            if (window.innerWidth < 601 && swappedSwitch == false) {
+                let blahblah = textDiv.parentNode.insertBefore(textDiv, textDiv.previousElementSibling);
+                console.log(textDiv.previousSibling)
+                swappedSwitch = true;
+            } else if (window.innerWidth >= 601 && swappedSwitch == true){
+                console.log(imgDiv.previousSibling)
+                imgDiv.parentNode.insertBefore(imgDiv, imgDiv.previousElementSibling);
+                swappedSwitch = false;
+            }
+        });
     </script>
 {% endblock %}
