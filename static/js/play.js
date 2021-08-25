@@ -387,6 +387,10 @@ class Play extends Phaser.Scene {
             key: 'idle',
             repeat: -1,
         })
+        playerTwo.anims.play({
+            key: 'idle',
+            repeat: -1,
+        })
         var namespace = "/test"; // Namespace used to identify which user this is
         var socket = io(namespace); // Establish socket variable
 

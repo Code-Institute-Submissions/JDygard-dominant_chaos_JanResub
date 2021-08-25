@@ -35,13 +35,9 @@ form button {
     padding-bottom: 20px !important;
 }
 
-.input-field {
+.input-field-login {
     background-color: #eeebe3;
     border-radius: 5px;
-}
-
-.register-card {
-    height: 660px;
 }
 
 /* base.html */
@@ -445,7 +441,7 @@ form > input {
 
 .card {
     margin-top: 0px;   
-    height: 500px;
+    height: fit-content;
     background-color: var(--contrast-color-1);
 }
 
