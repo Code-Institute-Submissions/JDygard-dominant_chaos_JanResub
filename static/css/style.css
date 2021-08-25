@@ -133,6 +133,7 @@ html {
     background-position: center;
     display: flex;
     height: 375px;
+    margin-bottom: 0;
 }
 
 #hero-call-to-action {
@@ -535,6 +536,17 @@ li > a {
 
 #delete-char-row > div > form > input {
     max-width: 400px;
+}
+
+@media screen and (max-width: 600px) {
+    #delete-h3 {
+        font-size: 22px;
+    }
+
+    #delete-char-row > div > form > input {
+        max-width: 270px;
+        background-color: greenS
+    }   
 }
 
 /* Leaderboard.html */
