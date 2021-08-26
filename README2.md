@@ -1,6 +1,5 @@
 
 # Dominant Chaos
-
 This is a game idea a friend and I have been kicking around since the end of Static Chaos. The core of the game will be the PvP element, with multiple classes (starting with 4 or 5), a turn-based combat system with 5 second ticks. Basic attacks are automated but players will be able to queue one or two more powerful abilities, stance changes and attacks every tick. The specific combat context is set in stone until it is playtested. What needs to be rebuilt is the way the player encounters the world, how players encounter each-other, how PvE content is explored, equipment and cosmetics.
 
 ## Scenes 
@@ -160,11 +159,6 @@ Typical splash page.
 ### Library page
 - Contains learning materials pertinent to playing the game, and maybe information about coming updates and additions.
 
-## Deployment plans? Maybe?
-
-Load into amazon s3 bucket.
-Use amazon gamelift for combat server.
-
 ## dump to turn queue    
 
 TURN QUEUE
@@ -211,50 +205,3 @@ third tier is specific fight logic
 1. We will keep the code light by keeping all the combat abilities separate from each character. The chclass and a chsheet itself will only carry a list of what items to load into it on generation.
 2. So what will actually happen when the user is training in the front-end, is that they are modifying the list of elements on their loadout in the database. When loading a combat instance, the list is read and the associated elements are added. This limits the ability of malicious users to submit unauthorized commands, keeps instance code lighter, and keeps database information load lighter.
 ***
-
-# Some code notes to remember:
-## Subclassing
-class JobListing():
-    """
-    Creates an instance of JobListing
-    """
-    def __init__(self, job_title, department):
-        self.job_title = job_title
-        self.department = department
-    
-    def description(self):
-        return f"Job opening for {self.job_title} in {self.department} department"
-
-- class SalesManager(JobListing): # Define the new class
-    - def __init__(self, salary): # Define the initialization procedures for the class
-        - JobListing.__init__(self, "Sales Manager", "Sales") # Call the __init__ method from the parent and define that stuff
-        - self.salary = salary # Define the new salary argument from salesmanager class
-
-## Unpacking a tuple
-
-        c, d = a # Unpacks the tuple a into variables c and d
-
-## The dispatch library:
-
-def some_function():
-    Do a thing
-
-dispatch = {
-    do_a_thing: "some_function"
-}
-
-## Method controller view
-
-look into method controller view (MCV) theory
-
-## field control/defensive programming
-
-pattern="^[a-zA-Z0-9]{5,15}$" can be added to any sort of input field. This is an example that limits the input to alphanumeric strings between 5 and 15 characters
-
-## Total restructure
-
-SocketIO is functioning in app.py, but fightbase.py needs to be able to route through the socket also. I found several examples of how to make this work, but it involved a total restructure of my code and heroku configuration. It would be using blueprints and total separation of code.
-
-Considering that the workload of this project has ballooned way larger than I had ever expected, in the interests of time I will just be moving all of the fight logic into app.py.
-
-It's an uglier solution than I would like, but it makes the schedule fit better.

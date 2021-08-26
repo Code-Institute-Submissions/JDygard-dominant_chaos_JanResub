@@ -1,5 +1,3 @@
-import math
-import assets.py.charbase as charbase
 import static.py.cfg as cfg
 import time
 curtime = time.time()
