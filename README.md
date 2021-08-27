@@ -174,16 +174,10 @@ Typical splash page.
 ![alt text](assets/images/readme/figma-character.jpg)
 
 ### About page
-- Info about meeeeeeeee
+- Info about the game and the developer
 
 ### Library page
 - Contains learning materials pertinent to playing the game, and maybe information about coming updates and additions.
-
-## dump to turn queue    
-
-
-
-
 
 # Current Features
 The actual development of the game went roughly according to the plans outlined above. I will go through the plan above and show how each part was implemented, and document the deviations. Note that these features are delved into in much more detail in the testing documentation.
@@ -193,6 +187,93 @@ The actual development of the game went roughly according to the plans outlined 
 ## Features not originally planned
 
 ## Unimplemented features
+
+# Testing
+Testing data can be found in a separate [testing file](TESTING.md).
+
+
+# Deployment
+## Database
+This software uses a non-relational database cluster on [MongoDB](https://www.mongodb.com/)
+1. Log into or create an account on [MongoDB](https://www.mongodb.com/)
+2. Find and select `New Project`, and name your project.
+3. Navigate to the "Project" page.
+4. Find and select `Create a New Cluster`
+    - Choose a cluster (Shared is free)
+    - Select an appropriate provider, region, cluster tier and cluster name
+5. Select `Database Access` and click `Add new database user`
+    - Password authentication
+    - Setup a username and password
+    - Add user
+6. `Network access` > `Database access` > `Add IP address`
+    - `Allow access from anywhere`
+    - `Confirm`
+7. Click `Clusters` after it loads.
+8. `Collections` > `Create Database`
+    - Enter an appropriate database name, collection name and click `Create`
+9. Click `Create collection` and create a "users" and a "characters" collection.
+
+## Local Clone
+### Deployment
+This project was developed using Visual Studio Code v1.55.0, and all commit/push commands were performed in the software's terminal.
+
+#### Github Pages
+1. Log into GitHub
+2. Navigate to [the repository](https://github.com/JDygard/dominant-chaos).
+3. Click "Settings"
+4. Scroll to "GitHub Pages"
+5. Select a branch.
+6. The "GitHub Pages" section should now contain the link to the deployed page.
+
+#### Creating a fork
+1. Navigate to [the repository](https://github.com/JDygard/dominant_chaos).
+2. Click "Fork"
+
+#### Cloning with GitPod
+1. Install GitPod extension.
+2. Log into GitHub
+3. Navigate to [the repository](https://github.com/JDygard/dominant_chaos).
+4. Click "GitPod."
+ 
+#### Cloning into VSCode
+1. Navigate to [the repository](https://github.com/JDygard/dominant_chaos).
+2. Click "Clone or download"
+3. Copy the provided URL.
+4. Open your terminal
+5. Navigate to the desired target directory
+6. type 'git clone' and then paste the url.
+
+#### Environment Variables
+1. Create .gitignore in the project's root directory.
+2. Create env.py in the project's root directory.
+3. Add env.py to .gitignore.
+4. env.py should contain the following, replacing the the items in <> with your own data:
+
+    ```
+    import os
+
+    os.environ.setdefault("IP", "0.0.0.0")
+    os.environ.setdefault("PORT", "5000")
+    os.environ.setdefault("SECRET_KEY", "<your secret key>")
+    os.environ.setdefault("MONGO_URI", "mongodb+srv://<username>:<password>@mongodbpg.eqmx3.mongodb.net/<database name>?retryWrites=true&w=majority")
+    os.environ.setdefault("MONGO_DBNAME", "<your DB name>")
+    os.environ.setdefault("SECURITY_PASSWORD_SALT", "<your password salt>")
+    ```
+
+## Heroku Deployment
+1. Create `requirements.txt` in the root directory.
+2. Run ``` pip3 install -r requirements.txt ``` in your bash
+3. Create `Procfile` in your base directory.
+4. Run ```echo web: python app.py > Procfile```
+5. Add all files to your repository and push to GitHub.
+6. Log in or create an account on [Heroku](https://www.heroku.com/)
+7. Create a new app, and give it an appropriate name.
+8. `Deploy` the app and choose `Connect to Github`
+9. Select your repository from GitHub and click Connect
+10. Click the `Settings` tab and select `Reveal Config Vars`
+11. This is where the secret variables from your `env.py` will be stored. Enter them here.
+12. Click the `Deploy` tab and navigate to the bottom, to click `Automatic Deploys`
+13. `View app` is in the top-right and will take you to your deployed version of this app.
 
 # Lessons learned
 ## Otherwise known as "Flaws in our plan"
