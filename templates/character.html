@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% if charactername.owner %}
-    <head>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    </head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <h3 class="center-align light-blue-text text-darken-4">
         {{ charactername.name|capitalize }}
     </h3> 
@@ -83,7 +81,7 @@
                         {% endif %}
                     </div>
                     <div class="char-left col s12 m12 l6">
-                        <span><h5>Character Bio:</h5></span>
+                        <h5>Character Bio:</h5>
                         <p id="char-bio">{{ charactername.charbio }}</p>
                     </div>
                     <div class="char-bottom col m12">

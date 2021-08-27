@@ -359,7 +359,7 @@ html {
     display:inline-block;
     width:100%;
     margin: auto;
-    padding-top: 80px;
+    padding: 40px;
 }
 
 /* The character page panel on the top/right */
@@ -415,6 +415,7 @@ html {
     height: 100%;
     padding-top: 7px;
     align-items: center;
+    padding-bottom: 10px;
 }
 
 .char-icon {
