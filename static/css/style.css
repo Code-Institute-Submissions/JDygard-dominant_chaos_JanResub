@@ -437,7 +437,13 @@ html {
     max-width: 260px;
     width: auto;
     margin: auto;
-    padding: 11px;
+    padding: 5px;
+}
+
+@media screen and (max-width: 993px) {
+    .ch-card {
+        height:100%;
+    }
 }
 
 .ch-card-column {

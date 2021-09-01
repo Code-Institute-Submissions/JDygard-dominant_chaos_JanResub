@@ -130,10 +130,14 @@
             var instances = M.Modal.init(elems);
         });
 
-        let newCharIcon = document.getElementById("ch-new")
-        let currentCharIcon = document.getElementsByClassName("ch-card-column")[0]
         $(window).on('load resize', function() {
-            newCharIcon.style.height = currentCharIcon.style.height;
+            if (document.getElementById("ch-new")) {
+                let newCharIcon = document.getElementById("ch-new")
+                let currentCharIcon = document.getElementsByClassName("ch-card-column")[0]
+                newCharIcon.style.height = currentCharIcon.offsetHeight + "px";
+                console.log(currentCharIcon.offsetHeight + "px")
+                console.log(newCharIcon.style.height)
+            }
         })
     </script>
 {% endblock %}
