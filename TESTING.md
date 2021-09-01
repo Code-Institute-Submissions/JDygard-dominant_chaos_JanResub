@@ -61,9 +61,21 @@ The middle section is a three tiered area containing general reasons a user migh
 The final section is a smaller banner with a simple, legible call-to-action in the middle.
 ***
 
+
+
+https://user-images.githubusercontent.com/78797168/131670374-838732fe-79a7-4dc1-9f90-4f35d6b021c0.mp4
+
+
 ### Leaderboard
 The leaderboard shows the ten highest-performing fighters, organized by experience spent. If the user isn't logged in, they can still navigate to the pages of the fighters. If the user is logged in, their fighters are highlighted in a unique color. If they have a fighter that is not in the top ten, a separate but identical list shows their place. The top three fighters are gold-, silver- and bronze-colored, respectively.
 ***
+
+
+
+https://user-images.githubusercontent.com/78797168/131670439-3b93ea8a-2a49-4c3b-8ca3-844572e9735f.mp4
+
+
+
 
 ### Library
 The library is a simple paginated setup with information about currently implemented features and classes. Tabs are controlled by Jinja and kept in separate templates.
@@ -73,9 +85,19 @@ The library is a simple paginated setup with information about currently impleme
 The play page is very simple, containing a link to the video on the about page, and the Phaser canvas for playing the game. The phaser canvas will be tested later in this document.
 ***
 
+
+https://user-images.githubusercontent.com/78797168/131670449-f7eb240b-8b69-47ca-ae77-349abc8f8ed4.mp4
+
+
+
+
+
 ### Profile
 The profile page is where the user is intended to control their account. Here, they can create new characters, access current characters, change email or password, and delete their account. The account deletion is contained in a pop-up modal to prevent accidental deletion. Characters are displayed in a red bar at the head of the page under the account name. The maximum number of characters is 4; with the number controlled by the lack of a "new character" button when 4 characters exist.
 ***
+
+https://user-images.githubusercontent.com/78797168/131670482-4e3f70ad-32f0-468d-8aea-f02e81beb5e1.mp4
+
 
 ### About
 The about page contains some general information about the software, the development team, and a video detailing the complexities of the Phaser canvas and backend games.
