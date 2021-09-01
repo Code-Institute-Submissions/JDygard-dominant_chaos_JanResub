@@ -44,9 +44,9 @@ The lower footer contains a message with the dev's copyright information
 ***
 
 
-<figure class="video_container">
-<iframe src='https://thumbs.gfycat.com/HeartyUnlinedGodwit-mobile.mp4' frameborder='0' scrolling='no' allowfullscreen width='640' height='404'></iframe>
-</figure>
+
+https://user-images.githubusercontent.com/78797168/131670307-8e21a552-c9fd-4453-84b9-4f54433a99a1.mp4
+
 
 ### "Home" page
 index.html is broken up into three basic parts.
