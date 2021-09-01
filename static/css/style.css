@@ -446,6 +446,10 @@ html {
     }
 }
 
+.training-card-width {
+    width: 100%
+}
+
 .ch-card-column {
     margin: auto;
     display: block;

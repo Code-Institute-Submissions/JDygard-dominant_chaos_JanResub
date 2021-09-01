@@ -106,6 +106,8 @@ https://user-images.githubusercontent.com/78797168/131670374-838732fe-79a7-4dc1-
 ### Leaderboard
 The leaderboard shows the ten highest-performing fighters, organized by experience spent. If the user isn't logged in, they can still navigate to the pages of the fighters. If the user is logged in, their fighters are highlighted in a unique color. If they have a fighter that is not in the top ten, a separate but identical list shows their place. The top three fighters are gold-, silver- and bronze-colored, respectively.
 
+![alt](assets/images/readme/leaderboard-testing.jpg)
+
 - Characters not in the top 10 which are also owned by the user appear in the second list
 - The second list is successfully hidden when the user owns no characters outside the top ten
 - List items function as links to the character's profile
@@ -119,10 +121,14 @@ https://user-images.githubusercontent.com/78797168/131670439-3b93ea8a-2a49-4c3b-
 
 ### Library
 The library is a simple paginated setup with information about currently implemented features and classes. Tabs are controlled by Jinja and kept in separate templates.
+
+- Each tab opens the relevant information as expected
+
 ***
 
 ### Play
 The play page is very simple, containing a link to the video on the about page, and the Phaser canvas for playing the game. The phaser canvas will be tested later in this document.
+
 ***
 
 https://user-images.githubusercontent.com/78797168/131670449-f7eb240b-8b69-47ca-ae77-349abc8f8ed4.mp4
