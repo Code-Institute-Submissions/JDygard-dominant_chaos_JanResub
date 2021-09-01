@@ -57,18 +57,24 @@ On smaller screens, all of the functionality of the navbar collapses into a hamb
 The footer is fixed at the bottom of the page and contains three parts.
 ![alt](assets/images/readme/footer.jpg)
 
+- Footer remains fixed at the bottom of the page.
+- Footer takes up an appropriate portion of the page on all viewport sizes
+
 #### Back to top button
 A small floating button is generated in the footer to allow the user to easily click to return to the top of the current page.
+
 ![alt](assets/images/readme/footer-backtotop.jpg)
+
+- Back to top button returns the user view to the top of the page.
+- Button remains attached to the footer throughout scrolling
 
 #### Patreon link
 The upper footer contains a link to Patreon
+- Link opens page in new window
 
 #### Copyright
 The lower footer contains a message with the dev's copyright information
 ***
-
-
 
 https://user-images.githubusercontent.com/78797168/131670307-8e21a552-c9fd-4453-84b9-4f54433a99a1.mp4
 
@@ -79,17 +85,34 @@ index.html is broken up into three basic parts.
 #### Hero image
 The upper section is a large banner image with an offset centered call-to-action to join the site. The call-to-action has several media breakpoints to keep it in an attractive and readable state on all screens.
 
+- Floating information box resizes appropriately on all view sizes.
+- Hero image is visible on all viewports
+- Button redirects to signup page.
+
 #### Join the chaos
 The middle section is a three tiered area containing general reasons a user might enjoy the site. JavaScript is used to flip the middle section upon collapsing into a single column for a uniform look.
 
+- JS flips the order of the items so that they stack intuitively on smaller screen sizes
+- All images remain visible and relevant on smaller screen sizes
+
 #### Join the fight Today!
 The final section is a smaller banner with a simple, legible call-to-action in the middle.
+
+- Remains legible and usable on all screen sizes. Button redirects to signup page.
 ***
 
 https://user-images.githubusercontent.com/78797168/131670374-838732fe-79a7-4dc1-9f90-4f35d6b021c0.mp4
 
 ### Leaderboard
 The leaderboard shows the ten highest-performing fighters, organized by experience spent. If the user isn't logged in, they can still navigate to the pages of the fighters. If the user is logged in, their fighters are highlighted in a unique color. If they have a fighter that is not in the top ten, a separate but identical list shows their place. The top three fighters are gold-, silver- and bronze-colored, respectively.
+
+- Characters not in the top 10 which are also owned by the user appear in the second list
+- The second list is successfully hidden when the user owns no characters outside the top ten
+- List items function as links to the character's profile
+- Characters owned by the viewing user are highlighted in blue
+- List collapses into a horizontal format on smaller screens
+- List is viewable to logged-out users
+
 ***
 
 https://user-images.githubusercontent.com/78797168/131670439-3b93ea8a-2a49-4c3b-8ca3-844572e9735f.mp4
