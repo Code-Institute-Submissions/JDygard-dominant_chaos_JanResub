@@ -182,12 +182,116 @@ Typical splash page.
 # Current Features
 The actual development of the game went roughly according to the plans outlined above. I will go through the plan above and show how each part was implemented, and document the deviations. Note that these features are delved into in much more detail in the testing documentation.
 ***
-## Features
+## Features implemented
+### Front end
+***
+### Index page (Home)
+[Live version](http://dominant-chaos.herokuapp.com/index)
 
-## Features not originally planned
+The splash page is a relatively simple layout and was implemented essentially exactly as planned.
 
-## Unimplemented features
+### Leaderboard (Unplanned feature)
+[Live Version](http://dominant-chaos.herokuapp.com/leaderboard)
 
+The leaderboard was not initially planned but made too much sense to omit.
+
+It contains a list version of the 10 most progressed characters in the database, sorted by experience spent. If the user has characters that are not included in the top 10, their characters are displayed in a separate list below, with their relative position.
+
+### Library
+[Live Version](http://dominant-chaos.herokuapp.com/library/general)
+
+The library was implemented essentially exactly as planned, except the pagination is handled by Jinja instead of JavaScript. Each page is a separate html fragment nested in base.html > library.html > (subject).html
+
+### Play
+1. [Live Version](http://dominant-chaos.herokuapp.com/play)
+
+2. [Play.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/play.js): While not the only script relevant to the play page, it is the most important and most verbose.
+
+3. [Preloader.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/preloader.js): Preloads assets for the engine
+
+4. [Loader.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/loader.js): Loads and launches the Phaser engine
+
+5. [char-select.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/char-select.js): Screen that lets a user choose their character.
+
+`A note to assessors:` The play canvas is not polished. A list of missing features to make it a passably complete product is discussed in the [backend section](#back-end).
+
+The page has a link to an explanation video located on the About page. It delves into the vagueries of the relationship between [app.py](https://github.com/JDygard/dominant_chaos/blob/main/app.py) and [Play.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/play.js).
+
+It also contains a Phaser canvas object that displays the main gameplay component of the site. If you are interested in learning more about the mechanics of the canvas, see the aforementioned [explanation video.](http://dominant-chaos.herokuapp.com/about)
+
+### Profile
+[Live Version](http://dominant-chaos.herokuapp.com/profile/profile) NOTE: You must be logged in to this account:
+
+    accountname: profile
+    password: profile
+
+### Character
+
+[Live Version](http://dominant-chaos.herokuapp.com/character/character) NOTE: You must be logged in to this account to see the full version of the character page:
+
+    accountname: profile
+    password: profile
+
+
+[character.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/character.js): the javascript for the version of the character page where the user is not logged in.
+
+- lines 1-30: numberShortener(). This abbreviates numbers longer than 3 digits into a shorthand, i.e. 123,456,789 is shortened to 123.4m, 1,234 is shortened to 1.2k.
+- lines 32-35: Collects the character bio and displays it. Otherwise, it is filled automatically with placeholder text.
+- lines 38-39: Applies the numberShortener() function to appropriate fields.
+
+[character-user.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/character-user.js): Javascript for logged-in users.
+
+- lines 1-49: Calculating and displaying costs: This is built around two functions: the first does the simple job of displaying the appropriate cost of Discipline, and the other calculates and displays the cost of one more point, the cost of current selected points, and how many points are already trained for bodytraining.
+
+- lines 55-81: moveActive(): Controls pagination for training cards.
+
+- lines 86-126: defines the socket.io data to live update the character icon without reloading, and displays the list of options in the dropdown menu.
+
+- lines 128-151: Concerns the delete character dropdown and buttons.
+
+- lines 154-166: has to do with flipping the divs for consistent stacking on smaller screens
+
+### About
+[Live Version](http://dominant-chaos.herokuapp.com/about)
+
+### Back end
+[app.py](https://github.com/JDygard/dominant_chaos/blob/main/app.py)
+
+The backend could have been split between multiple files using blueprinting to increase readability and accessibility for coding. However, since the Socket system was built into the app file, and everything accessing it was also there, it would be difficult to move it all into other files without completely rewriting huge sections of the site. The current implementation is less navigable and more cumbersome to work with.
+
+
+#### 1-37: Boilerplate imports and app.config declarations
+
+#### 40-358: Fight logic
+This contains the 14 functions that comprise the "Combat Logic" square in the documentation above.
+While this piece of code is incomplete, it is robust and much of the code is reusable. Features other than gameplay:
+
+- Semi-uniform and extensible gameplay code practices: The code calculating hits and damage is uniform and built to accept new character types with little or no changes to existing code.
+
+- Code division: Following MVC design patterning, the frontend has zero control over what happens in the backend. 
+
+Unimplemented features: 
+
+- Combos: Unfinished. Lines 87-146 give a clue as to what was planned here. They were being designed to populate the queue with multiple custom attacks that would trigger special animations and messages on the frontend. This was cut short due to time.
+
+- A round timer: This was intended to be a heartbeat or moving ruler sort of animation that tied to round duration. It would help give the user a sense of what is going on behind the scenes.
+
+- A queued move list: This was intended to be a list with timers along the right side of the screen. Because commands issued to the game are not executed immediately, some sort of feedback should be given to the user that helps them understand what's happening with the delay. This was cut because of the necessity to coordinate with the backend to avoid bad interactions. 
+
+- Reset the round without reloading: This, unfortunately, was cut due to time. Because of how the front and backend work together, it would take a while to code coordination for a full reset.
+
+-  One upgrade considered was that each character would generate a class() populated with methods to insert into the fight code instead of cluttering 
+
+- More characters
+
+- Varied and scaling encounters and environments
+
+#### 364-523: Socket listeners
+These lines contain the socket.io related code. Any signal from play.js is recieved and interpreted here.
+
+#### 532-828: Routes
+These lines contain the routes for the HTML pages and some functions for dealing with those routes.
+***
 # Testing
 Testing data can be found in a separate [testing file](TESTING.md).
 
@@ -280,21 +384,12 @@ This project was developed using Visual Studio Code v1.55.0, and all commit/push
 ***
 ### Uniform JSON data
 The whole system is built around modular functions that work dynamically with other functions so that the system can be built on infinitely. In the end, some of these functions needed complex information parsing in order to work properly. It would have been a great idea to make all data passed around in the backend one uniform package. It would mean information being passed into functions that didn't need it, but it would also mean that no parsing would be needed between multiple functions in the backend.
-***
-### Blueprinting
-The backend could have been split between multiple files to increase readability accessibility for coding. However, since the Socket system was built into the app file, and everything accessing it was also there, it would be difficult to move it all into other files without completely rewriting huge sections of the site. The current implementation is very ugly and hard to work with.
-***
-### Complex, interlocking, modular, extensible code takes a very long time to write
-The developer made the right call building this modularly. Most of the framework is in place that would allow a multiplayer lobby to be built and player vs. player combat to take place. (However, the socket extension is not set up to be asynchronous, so getting different socket requests from different players in order to have two separate but parallel sets of combat calculations would be the big stopping point there)
 
-HOWEVER, the ability of the developer to guess how long some of these features would take to implement were extremely hampered by inexperience. What was intended to take two weeks of development time ballooned into 5 weeks without being finished. We had to simply stop coding it because it was set to take 2-4 more weeks by more experienced estimations.
 ***
 ### Bootstrap is awesome
 In order to test the waters of other technology, and because Code Institute used it in one of its write-along lessons, the developer chose to use MaterializeCSS for the frontend.
 
 Materialize results in stale layouts that are difficult to manipulate for complex pages. If a developer intends to go "off-book" for anything, the amount of CSS written while wrestling against Materialize is shocking.
-
-We will never use MaterializeCSS again. Bootstrap forever.
 ***
 ### 
 

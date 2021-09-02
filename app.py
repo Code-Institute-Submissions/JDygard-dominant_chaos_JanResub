@@ -7,7 +7,7 @@ from bson.objectid import ObjectId #Importing the ability to reference MongoDB o
 from flask_pymongo import PyMongo   # Importing a module to use python with MongoDB
 from werkzeug.security import generate_password_hash, check_password_hash   # Importing the ability to hash passwords and check hashed passwords
 import datetime # For... you know. The date... and the time.
-from flask_socketio import SocketIO, emit, disconnect
+from flask_socketio import SocketIO, emit
 from threading import Lock
 import random                   # Used for the dice_roll() method
 import time
