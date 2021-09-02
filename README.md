@@ -1,15 +1,7 @@
 # Preface
 
 ## About the project
-This project was intended to serve two purposes: To act as the basis for a personal passion project and for Milestone project 3 for Code Institute. As such, the developer tried to create a project that fulfilled two sets of requirements. This led to a ballooning of features and time involved.
-
-### Features
-Where the two personal goals (Milestone project: the database features, and the personal project: everything in the play page) meet is where the project shines. The profile page and the character page are packed with features and elements that let the user manipulate how their characters are represented to other users.
-
-### Time, and why play.js is unfinished
-The personal project aspect of the software is where things fall apart a bit. The Phaser.io canvas in the frontend represents some 600 lines of code, and the fight logic in app.py represents another 500 or so lines. This was all essentially unnecessary to the core requirements of the project, and consumed something like four weeks of development time. Upon further assessment, the developer determined that finishing the work with necessary polish would take another 2-4 weeks.
-
-Unfortunately, the rest of the game part of the application has been shelved in the interests of time.
+This project was intended to serve two purposes: To act as the basis for a personal passion project and for Milestone project 3 for Code Institute. As such, the developer tried to create a project that fulfilled two sets of requirements.
 
 ***
 
@@ -19,12 +11,61 @@ This is a game idea a friend and I have been kicking around since the end of Sta
 
 All code, art and game concepts are the sole original work of the developer, with the exception of the code and art credited at the end of this document. No tutorial was followed to make this game.
 
+## Table of contents
+***
+1. [Introduction](#Introduction)
+    
+    i. [Project Goal](#Project-goal)
+
+2. [Development Planes](#Development-planes)
+
+    i. [Strategy](#Strategy)
+
+    ii. [Scope](#Scope)
+
+    iii. [Structure](#Structure)
+
+    iv. [Skeleton](#Skeleton)
+
+    v. [Surface](#Surface)
+
+3. [Original development plan](#Original-development-plan)
+
+    i. [Phase 1](#Phase-1)
+
+    ii. [Phase 2](#Phase-2)
+
+4. [Current features](#Current-features)
+
+    i. [Features](#Features)
+
+    ii. [Unplanned features](#Features-not-originally-planned)
+
+    iii. [Unimplemented features](#Unimplemented-features)
+
+5. [Deployment and Testing](#Deployment-and-testing)
+
+    i. [Deployment](#deployment)
+
+    ii. [Testing](#testing)
+
+6. [Known Issues](#known-issues)    
+7. [Bugs](#Bugs)
+8. [Credits and references](#credits-and-references)
+
+    i. [Technologies used](#Technologies-used)
+
+    ii. [Code credits](#code-credits)
+
+    iii. [Visuals credits](#Visuals)
+
+    iv. [Acknowledgements](#Acknowledgements)
+
 ## Project goal
 Chaos Legacy is designed to provide a fun character-building adventure with challenging fights to test their tactical thinking and character-building choices. Although finishing the adventure is outside the time-scale of this project, it should give a basic understanding of what the developer was going for.
 
 For the developer, the project serves as a platform to learn new technologies which is why libraries like Socket.io and MaterializeCSS are being used.
 
-Additionally,
 ***
 ## User Stories
 As a user, I like:
@@ -90,6 +131,7 @@ A leaderboard page would show who has the highest score in the game.
 
 - Viability/Feasibility: 5. This is an extremely attainable goal. Some JS and backend work will be necessary but not enough to scare us away from this feature.
 
+[Back to top](#table-of-contents)
 ***
 ## Scope
 
@@ -179,6 +221,8 @@ Typical splash page.
 ### Library page
 - Contains learning materials pertinent to playing the game, and maybe information about coming updates and additions.
 
+[Back to top](#table-of-contents)
+***
 # Current Features
 The actual development of the game went roughly according to the plans outlined above. I will go through the plan above and show how each part was implemented, and document the deviations. Note that these features are delved into in much more detail in the testing documentation.
 ***
@@ -218,6 +262,8 @@ The library was implemented essentially exactly as planned, except the paginatio
 The page has a link to an explanation video located on the About page. It delves into the vagueries of the relationship between [app.py](https://github.com/JDygard/dominant_chaos/blob/main/app.py) and [Play.js](https://github.com/JDygard/dominant_chaos/blob/main/static/js/play.js).
 
 It also contains a Phaser canvas object that displays the main gameplay component of the site. If you are interested in learning more about the mechanics of the canvas, see the aforementioned [explanation video.](http://dominant-chaos.herokuapp.com/about)
+
+[Back to top](#table-of-contents)
 
 ### Profile
 [Live Version](http://dominant-chaos.herokuapp.com/profile/profile) NOTE: You must be logged in to this account:
@@ -291,11 +337,14 @@ These lines contain the socket.io related code. Any signal from play.js is recie
 
 #### 532-828: Routes
 These lines contain the routes for the HTML pages and some functions for dealing with those routes.
+
+[Back to top](#table-of-contents)
 ***
 # Testing
 Testing data can be found in a separate [testing file](TESTING.md).
 
-
+[Back to top](#table-of-contents)
+***
 # Deployment
 ## Database
 This software uses a non-relational database cluster on [MongoDB](https://www.mongodb.com/)
@@ -317,6 +366,8 @@ This software uses a non-relational database cluster on [MongoDB](https://www.mo
     - Enter an appropriate database name, collection name and click `Create`
 9. Click `Create collection` and create a "users" and a "characters" collection.
 
+[Back to top](#table-of-contents)
+***
 ## Local Clone
 ### Deployment
 This project was developed using Visual Studio Code v1.55.0, and all commit/push commands were performed in the software's terminal.
@@ -379,6 +430,24 @@ This project was developed using Visual Studio Code v1.55.0, and all commit/push
 12. Click the `Deploy` tab and navigate to the bottom, to click `Automatic Deploys`
 13. `View app` is in the top-right and will take you to your deployed version of this app.
 
+[Back to top](#table-of-contents)
+***
+# Known Issues
+## Profile page inaccessible to logged-out users
+It was decided that there isn't a lot of relevant or interesting data to be gleaned from the user page for other users. As such, no special effort was put into making them accessible.
+
+## Key errors
+There should be try/except blocks to account for key errors and avoid the crash screen. However, the developer had time management issues and this feature fell to the wayside.
+
+## Play Page not polished
+This was a time management issue more than anything else. Other parts of the README go into this in more detail.
+
+[Back to top](#table-of-contents)
+***
+# Bugs
+Unfortunately the developer did not keep very good track of the serious bugs found while making this project, or their potential solutions. Current bugs are listed above in "Known issues" or covered in the [testing file](TESTING.md).
+[Back to top](#table-of-contents)
+***
 # Lessons learned
 ## Otherwise known as "Flaws in our plan"
 ***
@@ -390,10 +459,12 @@ The whole system is built around modular functions that work dynamically with ot
 In order to test the waters of other technology, and because Code Institute used it in one of its write-along lessons, the developer chose to use MaterializeCSS for the frontend.
 
 Materialize results in stale layouts that are difficult to manipulate for complex pages. If a developer intends to go "off-book" for anything, the amount of CSS written while wrestling against Materialize is shocking.
+
+[Back to top](#table-of-contents)
 ***
 ### 
 
-# Credits
+# Credits and References
 ## Technologies used
 1. [Phaser 3](https://photonstorm.github.io/phaser3-docs/index.html): Phaser 3 and the API documentation were used in making the Play page.
 2. [Javascript](https://en.wikipedia.org/wiki/JavaScript): Javascript is active on most frontend pages.
@@ -403,6 +474,7 @@ Materialize results in stale layouts that are difficult to manipulate for comple
 6. [HTML5](https://en.wikipedia.org/wiki/HTML5)
 7. [Google Fonts](https://fonts.google.com/)
 
+[Back to top](#table-of-contents)
 ## Code Credits
 
 [W3 School's Tooltips](https://www.w3schools.com/css/css_tooltip.asp)
@@ -420,6 +492,8 @@ Adapted for use in displaying stat blocks on the character page.
 [Flask-socket.io documentation](https://flask-socketio.readthedocs.io/en/latest/getting_started.html)
 
 Adapted and used extensively in all of the socket manipulation
+
+[Back to top](#table-of-contents)
 ***
 
 ## Visuals
@@ -453,3 +527,10 @@ Adapted and used extensively in all of the socket manipulation
 
 [Man Jumping on Mid-Air](https://www.pexels.com/photo/man-jumping-on-mid-air-1701211/) by [Yogendra Singh](https://www.pexels.com/@yogendras31)
 
+[Back to top](#table-of-contents)
+***
+## Acknowledgements
+1. My family and friends for tolerating being shown multiple iterations of this software
+2. Seun Owanikoko and Code Institute for the instruction and advice necessary to complete this.
+
+[Back to top](#table-of-contents)
