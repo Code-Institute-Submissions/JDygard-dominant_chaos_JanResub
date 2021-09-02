@@ -50,7 +50,7 @@ All code, art and game concepts are the sole original work of the developer, wit
     ii. [Testing](#testing)
 
 6. [Known Issues](#known-issues)    
-7. [Bugs](#Bugs)
+7. [Bugs](#bugs)
 8. [Credits and references](#credits-and-references)
 
     i. [Technologies used](#Technologies-used)
@@ -446,6 +446,7 @@ This was a time management issue more than anything else. Other parts of the REA
 ***
 # Bugs
 Unfortunately the developer did not keep very good track of the serious bugs found while making this project, or their potential solutions. Current bugs are listed above in "Known issues" or covered in the [testing file](TESTING.md).
+
 [Back to top](#table-of-contents)
 ***
 # Lessons learned
