@@ -124,18 +124,16 @@
                     <p>The inward fist's core can be rigorously trained and is key to withstanding attacks.</p>
                     <div id="action-torso">
                         <h5>Current level: {{ charactername.torso }}</h5>
-                        <h5>Cost for next level:<span id="cost-torso"></span></h4>
+                        <h5>Cost for next level:<span id="cost-torso"></span></h5>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-torso"><i class="material-icons">add</i></a>
-                        <h5>
-                            <form method="POST">
-                                <span id="field-torso">0</span>
-                                <input type="text" class="hidden" name="flask-torso" id="flask-torso">                               
-                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="torso">Train
-                                    <i class="material-icons right"></i>
-                                </button>
-                            </form>
-                            <span id="max-torso"></span>
-                        </h5>
+                        <form method="POST">
+                            <span id="field-torso">0</span>
+                            <input type="text" class="hidden" name="flask-torso" id="flask-torso">                               
+                            <button class="btn waves-effect waves-light" type="submit" name="form-name" value="torso">Train
+                                <i class="material-icons right"></i>
+                            </button>
+                        </form>
+                        <span id="max-torso"></span>
                         <h5>Total cost: <span id="total-torso">0</span></h5>
                     </div>
                 </div>
@@ -148,16 +146,14 @@
                         <h5>Current level: {{ charactername.hands }}</h5>
                         <h5>Cost for next level:<span id="cost-hands"></span></h4>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-hands"><i class="material-icons">add</i></a>
-                        <h5>
-                            <form method="POST">
-                                <span id="field-hands">0</span>
-                                <input type="text" class="hidden" name="flask-hands" id="flask-hands">                               
-                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="hands">Train
-                                    <i class="material-icons right"></i>
-                                </button>
-                            </form>
-                            <span id="max-hands"></span>
-                        </h5>
+                        <form method="POST">
+                            <span id="field-hands">0</span>
+                            <input type="text" class="hidden" name="flask-hands" id="flask-hands">                               
+                            <button class="btn waves-effect waves-light" type="submit" name="form-name" value="hands">Train
+                                <i class="material-icons right"></i>
+                            </button>
+                        </form>
+                        <span id="max-hands"></span>
                         <h5>Total cost: <span id="total-hands">0</span></h5>
                     </div>
                 </div>
@@ -168,18 +164,16 @@
                     <p>The inward fist's legs and feet can be trained for speed and power, increasing the power of their kicks.</p>
                     <div id="action-legs">
                         <h5>Current level: {{ charactername.legs }}</h5>
-                        <h5>Cost for next level:<span id="cost-legs"></span></h4>
+                        <h5>Cost for next level:<span id="cost-legs"></span></h5>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-legs"><i class="material-icons">add</i></a>
-                        <h5>
-                            <form method="POST">
-                                <span id="field-legs">0</span>
-                                <input type="text" class="hidden" name="flask-legs" id="flask-legs">                               
-                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="legs">Train
-                                    <i class="material-icons right"></i>
-                                </button>
-                            </form>
-                            <span id="max-legs"></span>
-                        </h5>
+                        <form method="POST">
+                            <span id="field-legs">0</span>
+                            <input type="text" class="hidden" name="flask-legs" id="flask-legs">                               
+                            <button class="btn waves-effect waves-light" type="submit" name="form-name" value="legs">Train
+                                <i class="material-icons right"></i>
+                            </button>
+                        </form>
+                        <span id="max-legs"></span>
                         <h5>Total cost: <span id="total-legs">0</span></h5>
                     </div>
                 </div>
@@ -190,18 +184,16 @@
                     <p>The inward fist's arms can be trained for speed and power, allowing them to block attacks with increased alacrity.</p>
                     <div id="action-arms">
                         <h5>Current level: {{ charactername.arms }}</h5>
-                        <h5>Cost for next level:<span id="cost-arms"></span></h4>
+                        <h5>Cost for next level:<span id="cost-arms"></span></h5>
                         <a class="btn-floating btn-large waves-effect waves-light red" id="train-arms"><i class="material-icons">add</i></a>
-                        <h5>
-                            <form method="POST">
-                                <span id="field-arms">0</span>
-                                <input type="text" class="hidden" name="flask-arms" id="flask-arms">                               
-                                <button class="btn waves-effect waves-light" type="submit" name="form-name" value="arms">Train
-                                    <i class="material-icons right"></i>
-                                </button>
-                            </form>
-                            <span id="max-arms"></span>
-                        </h5>
+                        <form method="POST">
+                            <span id="field-arms">0</span>
+                            <input type="text" class="hidden" name="flask-arms" id="flask-arms">                               
+                            <button class="btn waves-effect waves-light" type="submit" name="form-name" value="arms">Train
+                                <i class="material-icons right"></i>
+                            </button>
+                        </form>
+                        <span id="max-arms"></span>
                         <h5>Total cost: <span id="total-arms">0</span></h5>
                     </div>
                 </div>
@@ -222,12 +214,12 @@
                     
                 </div>
                 <ul class="pagination center-align">
-                    <li class="active" id="train-card-1"><a href="#!" onclick="moveActive(event)">Truesight</a></li>
-                    <li class="waves-effect" id="train-card-2"><a href="#!" onclick="moveActive(event)">Levitation</a></li>
-                    <li class="waves-effect" id="train-card-3"><a href="#!" onclick="moveActive(event)">Roundhouse</a></li>
-                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Inner-Fire</a></li>
-                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Pheonix-Fire</a></li>
-                    <li class="waves-effect" id="train-card-4"><a href="#!" onclick="moveActive(event)">Dim-Mak</a></li>
+                    <li class="active"><a href="#!" onclick="moveActive(event)">Truesight</a></li>
+                    <li class="waves-effect"><a href="#!" onclick="moveActive(event)">Levitation</a></li>
+                    <li class="waves-effect"><a href="#!" onclick="moveActive(event)">Roundhouse</a></li>
+                    <li class="waves-effect"><a href="#!" onclick="moveActive(event)">Inner-Fire</a></li>
+                    <li class="waves-effect"><a href="#!" onclick="moveActive(event)">Pheonix-Fire</a></li>
+                    <li class="waves-effect"><a href="#!" onclick="moveActive(event)">Dim-Mak</a></li>
                 </ul>
                 <div class="row truesight">
                     <h3>1 Discipline: Truesight</h3>

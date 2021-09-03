@@ -1,32 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-    <head>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-        <script src="{{ url_for('static', filename='js/phaser.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/char-select.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/play.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
-        <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
-    
-                namespace = '/test';
-                var socket = io(namespace);
-    
-                socket.on('disconnect', function() {
-                    socket.emit('message', "bye now")
-                })
-            
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/phaser.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/char-select.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/play.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
 
-                socket.on('connect', function() {
-                    socket.emit('message', "Play.html connected");
-                });
+            namespace = '/test';
+            var socket = io(namespace);
+
+            socket.on('disconnect', function() {
+                socket.emit('message', "bye now")
+            })
+        
+
+            socket.on('connect', function() {
+                socket.emit('message', "Play.html connected");
             });
+        });
 
-            document.getElementById("flash").style.visibility = "hidden"; // We don't need flash on the play page
-        </script>
-    </head>
+        document.getElementById("flash").style.visibility = "hidden"; // We don't need flash on the play page
+    </script>
     <div class="row">
         <div class="col m12 play-header">
             <h4><a href="{{ url_for('about')}}#explanation">Wondering what is happening? Click here.</a></h4>

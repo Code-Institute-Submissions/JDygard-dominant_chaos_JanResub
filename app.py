@@ -298,7 +298,6 @@ def victory(ch, vict):
         loser = {"name": vict["name"]}
         ratio = vict["winloss"]
         ratio[1] += 1
-        print(ratio)
         submit = {"winloss": ratio}
         mongo.db.characters.update_one(loser, {"$set": submit})
     else:
@@ -307,7 +306,6 @@ def victory(ch, vict):
         ratio = victor["winloss"]
         updatefilter = {"name": victor["name"]}
         ratio[0] += 1
-        print(ratio)
         submit = {
             "current_exp": experience + reward,
             "winloss": ratio

@@ -39,15 +39,13 @@ All code, art and game concepts are the sole original work of the developer, wit
 
     i. [Features](#Features)
 
-    ii. [Unplanned features](#Features-not-originally-planned)
-
     iii. [Unimplemented features](#Unimplemented-features)
 
 5. [Deployment and Testing](#Deployment-and-testing)
 
-    i. [Deployment](#deployment)
+    i. [Testing](#testing)
 
-    ii. [Testing](#testing)
+    ii. [Deployment](#deployment)
 
 6. [Known Issues](#known-issues)    
 7. [Bugs](#bugs)
@@ -186,8 +184,10 @@ It will require:
 ![alt text](assets/images/readme/basic-data-struct.png)
 
 A simplified version of how the character is generated and then used to build the character that is used in play.js.
-***
 
+[Back to top](#table-of-contents)
+***
+# Surface
 ## The front end
 ![alt text](assets/images/readme/color-scheme.png)
 
@@ -340,12 +340,12 @@ These lines contain the routes for the HTML pages and some functions for dealing
 
 [Back to top](#table-of-contents)
 ***
-# Testing
+# Deployment
+## Testing
 Testing data can be found in a separate [testing file](TESTING.md).
 
 [Back to top](#table-of-contents)
 ***
-# Deployment
 ## Database
 This software uses a non-relational database cluster on [MongoDB](https://www.mongodb.com/)
 1. Log into or create an account on [MongoDB](https://www.mongodb.com/)
