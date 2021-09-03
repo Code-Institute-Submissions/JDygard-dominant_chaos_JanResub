@@ -174,7 +174,7 @@ html {
 
 #banner-bottom {
     background-image: url(../images/home/banner-bottom.jpeg);
-    background-repeat: none;
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     padding-bottom: 140px;
@@ -465,7 +465,7 @@ form > input {
 }
 
 .ch-show {
-    border: 1,solid,black;
+    border: 1px solid black;
 }
 
 .card {
@@ -552,7 +552,6 @@ li > a {
 
     #delete-char-row > div > form > input {
         max-width: 270px;
-        background-color: greenS
     }   
 }
 

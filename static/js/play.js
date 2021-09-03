@@ -1,6 +1,6 @@
 class Play extends Phaser.Scene {
     constructor() {
-        super ("Play")
+        super ("Play");
     }
 
     preload(){
@@ -85,16 +85,16 @@ class Play extends Phaser.Scene {
         let aggressorObj;
 
         // Making sure we are working with the correct character
-        if (player1["name"] == name){
-            aggressor = playerOne
-            defender = playerTwo
-            ch_class = player1["ch_class"]
-            aggressorObj = player1
+        if (player1.name == name){
+            aggressor = playerOne;
+            defender = playerTwo;
+            ch_class = player1.ch_class;
+            aggressorObj = player1;
         } else {
-            aggressor = playerTwo
-            defender = playerOne
-            ch_class = player2["ch_class"]
-            aggressorObj = player2
+            aggressor = playerTwo;
+            defender = playerOne;
+            ch_class = player2.ch_class;
+            aggressorObj = player2;
         }
 
         // A separate statement for kicks
@@ -117,7 +117,7 @@ class Play extends Phaser.Scene {
                         duration: duration
                     });
                     if (extra) { // If it is a fist combo-building move, the extras part is the amount of Ki gained
-                        aggressorObj["ki"] = extra; // So we will add that just as the animation plays for the illusion of continuity
+                        aggressorObj.ki = extra; // So we will add that just as the animation plays for the illusion of continuity
                     }
                 }
             }
@@ -147,13 +147,13 @@ class Play extends Phaser.Scene {
                 key: 'idle',
                 repeat: 1,
                 duration: duration
-            })
+            });
         } else {
             defender.anims.play({
                 key: 'hit',
                 repeat: 1,
                 duration: duration
-            })
+            });
         }
 
         // And some animations for executing auto attacks
@@ -184,59 +184,59 @@ class Play extends Phaser.Scene {
         let opponent;
 
         // Getting the name positions right.
-        if (name == player1["name"]){
-            opponent = player2["name"];
+        if (name == player1.name){
+            opponent = player2.name;
         } else {
-            opponent = player1["name"];
+            opponent = player1.name;
         }
 
         // Picking the right verb
         if (method == "auto"){
-            verb = "strike"
+            verb = "strike";
         }
 
         if (method == "kick"){
-            verb = "kick"
+            verb = "kick";
         }
 
         // Some messages for 0 damage states
         if (damage == 0){
             if (extra == "miss"){
-                message = `${name} attempts to ${verb} ${opponent}, but misses!`
+                message = `${name} attempts to ${verb} ${opponent}, but misses!`;
             }
             else if (extra == "dodge"){
-                message = `${name} attempts to ${verb} ${opponent}, but they dodge it!`
+                message = `${name} attempts to ${verb} ${opponent}, but they dodge it!`;
             }
             else if (extra == "block"){
-                message = `${name} attempts to ${verb} ${opponent}, but they block it!`
+                message = `${name} attempts to ${verb} ${opponent}, but they block it!`;
             }
             else if (extra == "parry"){
-                message = `${name} attempts to ${verb} ${opponent}, but they parry it!`
+                message = `${name} attempts to ${verb} ${opponent}, but they parry it!`;
             }
             else {
-                message = `${name} ${verb}s ${opponent}, oh so gently. (0)`
+                message = `${name} ${verb}s ${opponent}, oh so gently. (0)`;
             }
         }
         // And a message for successful attacks
         if (damage >= 1){
-            message = `${name} ${verb}s ${opponent}. (${damage})`
+            message = `${name} ${verb}s ${opponent}. (${damage})`;
         }
-        this.displayText(message) // Send it to the text display function
+        this.displayText(message); // Send it to the text display function
     }
 
     // This is the method that shows text in the combat log.
     displayText(message){
-        let newText = this.add.text(20,630,message) // Pop a new message into place at the top
+        let newText = this.add.text(20,630,message); // Pop a new message into place at the top
         for (let i = 0; i < textDisplay.length; i++){   // Iterate through current messages
             let oldPos = textDisplay[i].y;          // Move each message down a little to make space for the new one.
             textDisplay[i].setY(oldPos+30);
         }
-        textDisplay.unshift(newText)                // And add the new text to the textDisplay array.
+        textDisplay.unshift(newText);                // And add the new text to the textDisplay array.
     }    
     
     // A text field for showing high priority messages like victory
     announceText(message){
-        centerText.setText(message)
+        centerText.setText(message);
     }
 
     // This was an early solution for sending messages to the backend. There's a much more focused method of communication in place now, but this is still in use for initializing the combat
@@ -251,15 +251,15 @@ class Play extends Phaser.Scene {
 
     // This creates a list of buttons from the abilities available to the character
     buttonListMaker(data){
-        let iterator = 0
+        let iterator = 0;
         for (let i in data){
-            let keyData = {}
-            keyData[i] = data[i]
-            buttonList[iterator] = keyData
-            iterator += 1
+            let keyData = {};
+            keyData[i] = data[i];
+            buttonList[iterator] = keyData;
+            iterator += 1;
         }
         // This should make an entirely separate list of values also, in order and formatted for display, to be used by buttonmaker()
-        this.buttonMaker()
+        this.buttonMaker();
         
     }
 
@@ -275,41 +275,43 @@ class Play extends Phaser.Scene {
                 .setScale(0.8)
                 .setOrigin(0)
                 .setInteractive();
-            let string = Object.keys(buttonList[i])[0]  // Get the key string out
-            this.add.text(buttonX, buttonY, string + ": " + buttonList[i][string])
+            let string = Object.keys(buttonList[i])[0];  // Get the key string out
+            this.add.text(buttonX, buttonY, string + ": " + buttonList[i][string]);
             buttons[i].on('pointerdown', function(){
-                socket.emit('query', string)
-            }, this)
+                socket.emit('query', string);
+            }, this);
         }
     }
 
     parseSocketData(data){  // A method for parsing and distrubiting data from the frontend
         if (data[0] != undefined)
-            if (data[0]["max_hp"]){ // Using the "max hp" key to identify the 'welcome package' containing
+            if (data[0].max_hp){ // Using the "max hp" key to identify the 'welcome package' containing
                 player1 = data[0];  // data about the two combatants.
-                player1["hp"] = player1["max_hp"]   // Get an hp total for the UI
-                if (player1["ch_class"] == "inward_fist")
-                    player1["ki"] = 0
-                this.buttonListMaker(player1["abilities"])
+                player1.hp = player1.max_hp;   // Get an hp total for the UI
+                if (player1.ch_class == "inward_fist"){
+                    player1.ki = 0;
+                }
+                this.buttonListMaker(player1.abilities);
 
                 player2 = data[1];
-                player2["hp"] = player2["max_hp"]
-                if (player2["ch_class"] == "inward_fist")
-                    player2["ki"] = 0
-        
+                player2.hp = player2.max_hp;
+                if (player2.ch_class == "inward_fist"){
+                    player2.ki = 0;
+                }
+
         } else {    // All other data should be bulk data with attacks, so a for loop parses the data
             for (let i in data){  
 
-                if (data[i]["method"] == "victor"){ // I had to run the victory data through the autoattack queue in order to allow the UI a chance to catch up with the server before announcing the victory
-                    victor = data[i]["name"];
-                    reward = data[i]["extra"];
+                if (data[i].method == "victor"){ // I had to run the victory data through the autoattack queue in order to allow the UI a chance to catch up with the server before announcing the victory
+                    victor = data[i].name;
+                    reward = data[i].extra;
                     conclude = true;
                     setTimeout(function(){
                         scene.announceText(`${victor} wins, ${reward} exp awarded.`);
                     }, 1000);
                     setTimeout(function(){
                         restart = true;
-                    }, 1500)
+                    }, 1500);
                 }
                 instructionQueue.push(data[i]);
             }
@@ -318,30 +320,30 @@ class Play extends Phaser.Scene {
 
     // This method goes through the queue and unpacks it to its relevant sections
     queueHandler(){
-        scene = this // Establishing some context
+        scene = this; // Establishing some context
         let intervalTimer = 5000 / instructionQueue.length; // This sets the amount of time each command should take, split up through the whole round.
         let tempQueue = instructionQueue;   // Gather the current queue
         instructionQueue = [];              // And empty it
         for (let i = 0; i < tempQueue.length; i++){ // Iterate through the commands
             setTimeout(function(){                  // Set a timeout
-                scene.damageHandler(tempQueue[i]["name"], tempQueue[i]["damage"]); // damage handler needs the name of the aggressor and the damage amount.
+                scene.damageHandler(tempQueue[i].name, tempQueue[i].damage); // damage handler needs the name of the aggressor and the damage amount.
             }, intervalTimer * i);                  // each iteration has its timer multiplied by the number of iterations to evenly spread the commands out and give the illusion of continuous motion
             setTimeout(function(){
-                scene.animationHandler(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["extra"], intervalTimer); // animation handler needs the aggressor's name, the method of attack, and the extra info (For KI)
+                scene.animationHandler(tempQueue[i].name, tempQueue[i].method, tempQueue[i].extra, intervalTimer); // animation handler needs the aggressor's name, the method of attack, and the extra info (For KI)
             }, intervalTimer * i);     
             setTimeout(function(){
-                scene.lexicalParser(tempQueue[i]["name"], tempQueue[i]["method"], tempQueue[i]["damage"], tempQueue[i]["extra"]); // The lexical parser needs all of the information
+                scene.lexicalParser(tempQueue[i].name, tempQueue[i].method, tempQueue[i].damage, tempQueue[i].extra); // The lexical parser needs all of the information
             }, intervalTimer * i); 
         }
     }
 
     // Damage handler controls the health bar for the player.
     damageHandler(name, damage){
-        var stepWidth = (energyMask.displayWidth - 50) / player1["max_hp"];  // Figure out how much the bar should move for each point based on the max value
-        if (name == player2["name"]){
+        var stepWidth = (energyMask.displayWidth - 50) / player1.max_hp;  // Figure out how much the bar should move for each point based on the max value
+        if (name == player2.name){
             energyMask.x -= damage * stepWidth;             // Move the mask
-            player1["hp"] -= damage
-            let newText = `${player1["hp"]}/${player1["max_hp"]}`
+            player1.hp -= damage;
+            let newText = `${player1.hp}/${player1.max_hp}`;
             hpText.setText(newText); 
         }
     }
@@ -379,18 +381,18 @@ class Play extends Phaser.Scene {
             .setOrigin(0)
             .setScale(0.8); // Show and orient the background image
         playerOne = this.add.sprite(325, 400, 'idle')
-            .setScale(2)
+            .setScale(2);
         playerTwo = this.add.sprite(425, 400, 'idle')
             .setScale(2)
-            .setFlip(true, false)
+            .setFlip(true, false);
         playerOne.anims.play({
             key: 'idle',
             repeat: -1,
-        })
+        });
         playerTwo.anims.play({
             key: 'idle',
             repeat: -1,
-        })
+        });
         var namespace = "/test"; // Namespace used to identify which user this is
         var socket = io(namespace); // Establish socket variable
 
@@ -403,10 +405,10 @@ class Play extends Phaser.Scene {
 
         this.input.keyboard.on('keydown', function (event) { // Listen for any keypress
             for (let i = 0; i < buttonList.length; i++){     // Loop through the saved commands
-                let string = Object.keys(buttonList[i])[0]  // Get the key string out
+                let string = Object.keys(buttonList[i])[0];  // Get the key string out
                 if (event.keyCode == eval("Phaser.Input.Keyboard.KeyCodes." + buttonList[i][string]) ){ // Compare the keyCode to the one saved in the character profile
                     socket.emit("query", string); // Then send the command to the backend
-                    break // Break the for loop, because there's no such thing as a double-positive
+                    break; // Break the for loop, because there's no such thing as a double-positive
                 }
             }
         });
@@ -422,7 +424,7 @@ class Play extends Phaser.Scene {
             else if (message !== "empty"){ // Otherwise, we know it's data
                 scene.parseSocketData(message);  // So pass it to the data handler
             }
-        })
+        });
 
 // ===================== Main timer ============================
 // ===== This is the main function for controlling the game ====
@@ -447,8 +449,8 @@ class Play extends Phaser.Scene {
     update(){
         var scene = this; // Establish context
         if (player1 != undefined)   // Only run this when the player1 object has been established from the backend
-            if (currentKi != player1["ki"]){    // If the amount of ki the player has is higher than the amount being displayed
-                currentKi = player1["ki"];      // Gather the current ki
+            if (currentKi != player1.ki){    // If the amount of ki the player has is higher than the amount being displayed
+                currentKi = player1.ki;      // Gather the current ki
                 kiText.setText(currentKi);      // And display the correct amount
             }
     }

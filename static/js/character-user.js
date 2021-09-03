@@ -10,9 +10,9 @@ function calculateCost(number, iterations) {
 }
 
 if (discipline < 10) {
-    document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000            // Show the cost for the next training
+    document.getElementById("discipline-cost").innerHTML = (discipline + 1) * 500000;            // Show the cost for the next training
 } else {
-    document.getElementById("disc-card-action").innerHTML = "You have reached max discipline"   // Block training if discipline is maxed
+    document.getElementById("disc-card-action").innerHTML = "You have reached max discipline";   // Block training if discipline is maxed
 }
 //                                     Body Training Card Generator 
 //                                   ===============================
@@ -22,19 +22,19 @@ if (discipline < 10) {
 // any bad faith POST attempts.
 
 bodyTraining = [torso, hands, arms, legs];      // Tied to the variables declared above, taken directly from the DB
-bodyString = ["torso", "hands", "arms", "legs"] // contains strings for navigating the DOM and buildings other strings
+bodyString = ["torso", "hands", "arms", "legs"]; // contains strings for navigating the DOM and buildings other strings
 for (let i = 0; i < bodyTraining.length; i++) { // A for loop for going through the arrays
     if (bodyTraining[i] >= 100) {               // If the body training is already at maximum, we tell the user and lock out the training
         if (bodyString[i] == "torso"){
-            document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " is trained to maximum </h3>" // The message
+            document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " is trained to maximum </h3>"; // The message
         } else {
-            document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>" // The message
+            document.getElementById("action-" + bodyString[i]).innerHTML = "<h3> Your " + bodyString[i] + " are trained to maximum </h3>"; // The message
         }
     } else {                                                                                                                            // Otherwise
-    document.getElementById("cost-" + bodyString[i]).innerHTML = calculateCost(bodyTraining[i], 1)                                      // Set the cost field for the cost of the next point
+    document.getElementById("cost-" + bodyString[i]).innerHTML = calculateCost(bodyTraining[i], 1);                                     // Set the cost field for the cost of the next point
     document.getElementById("train-" + bodyString[i]).addEventListener("click", function(){                                             // And listen for the click
         if (parseInt(bodyTraining[i]) + parseInt(document.getElementById("field-" + bodyString[i]).innerHTML) >= 100) {                 // Determine if the amount they are training would push them above maximum
-            document.getElementById("max-" + bodyString[i]).innerHTML = " Maximum level reached."                                       // And prevent them from further queuing trainings
+            document.getElementById("max-" + bodyString[i]).innerHTML = " Maximum level reached.";                                      // And prevent them from further queuing trainings
         } else{
             let current = parseInt(document.getElementById("field-" + bodyString[i]).innerHTML);  // This is the field that is read by Flask. It also displays how many points the player wants to train at a time
             document.getElementById("field-" + bodyString[i]).innerHTML = parseInt(current) + 1;  // The field from a line above
@@ -44,7 +44,7 @@ for (let i = 0; i < bodyTraining.length; i++) { // A for loop for going through 
             let totalExperience = calculateCost(bodyTraining[i], current + 1);                    // Calculate how much the entire batch of points would cost
             document.getElementById("total-" + bodyString[i]).innerHTML = totalExperience;        // And display to the user
         }
-        })
+        });
     }
 }
 //                                  Move Active
@@ -56,27 +56,27 @@ function moveActive() {
     parent = event.target.parentNode.parentNode.firstElementChild;
     while (parent){
         if (parent.className == "active") {
-            parent.className = "waves-effect"
-            let childText = parent.firstElementChild.innerHTML.toLowerCase()
-            let hideIt = document.getElementsByClassName(childText)
-            let hideItToo = document.getElementsByClassName(childText + "-image")
-            hideIt[0].style.display = "none"
-            hideItToo[0].style.display = "none"
+            parent.className = "waves-effect";
+            let childText = parent.firstElementChild.innerHTML.toLowerCase();
+            let hideIt = document.getElementsByClassName(childText);
+            let hideItToo = document.getElementsByClassName(childText + "-image");
+            hideIt[0].style.display = "none";
+            hideItToo[0].style.display = "none";
         } else {
-            parent = parent.nextElementSibling
+            parent = parent.nextElementSibling;
         }
     }
     
     if (event.target.parentNode.className !== "active") {
-        event.target.parentNode.className = "active"
-        let childText = event.target.innerHTML.toLowerCase() 
-        let showIt = document.getElementsByClassName(childText)
-        let showItToo = document.getElementsByClassName(childText + "-image")
-        showItToo[0].style.display = "block"
-        showItToo[0].style.height = "100%"
-        showItToo[0].style.width = "100%"
-        showItToo[0].style["object-fit"] = "cover"
-        showIt[0].style.display = "block"
+        event.target.parentNode.className = "active";
+        let childText = event.target.innerHTML.toLowerCase() ;
+        let showIt = document.getElementsByClassName(childText);
+        let showItToo = document.getElementsByClassName(childText + "-image");
+        showItToo[0].style.display = "block";
+        showItToo[0].style.height = "100%";
+        showItToo[0].style.width = "100%";
+        showItToo[0].style["object-fit"] = "cover";
+        showIt[0].style.display = "block";
     }
 }
 
@@ -85,7 +85,7 @@ function moveActive() {
 
 // Set up the socket for icon selection
 namespace = '/test';
-var socket = io(namespace)
+var socket = io(namespace);
 $(document).ready(function() {
     namespace = '/test';
     var socket = io(namespace);
@@ -97,32 +97,32 @@ $(document).ready(function() {
 // End socket setup
 
 // Gather icon menu related vars
-let iconMenu = document.getElementById("hidden-menu")
-let newIcon = document.getElementById("new-icon")
-let hideSelection = document.getElementById("hide-selection")
+let iconMenu = document.getElementById("hidden-menu");
+let newIcon = document.getElementById("new-icon");
+let hideSelection = document.getElementById("hide-selection");
 
 // Event listeners for clicks on icon menu
 hideSelection.onclick = function () {
-    iconMenu.style.visibility = "hidden" // Hide the menu
-}
+    iconMenu.style.visibility = "hidden"; // Hide the menu
+};
 
 newIcon.onclick = function (){
-    iconMenu.style.visibility = "visible" // Show the menu
-}
+    iconMenu.style.visibility = "visible"; // Show the menu
+};
 
 // Gather vars for the icon selection
-let icons = document.getElementById("icon-selection").children // Gather all implemented icons
-let currentIcon = document.getElementById("current-icon") // Gather the icon currently displayed
+let icons = document.getElementById("icon-selection").children; // Gather all implemented icons
+let currentIcon = document.getElementById("current-icon"); // Gather the icon currently displayed
 
 // Loop through the icons that exist and add listeners
 for (let i = 0; i < icons.length; i++) {
     icons[i].style.cursor = "pointer";
     icons[i].onclick = function (){
-        iconMenu.style.visibility = "hidden"
+        iconMenu.style.visibility = "hidden";
         submit = [icons[i].getAttribute("src"), characterName];
         currentIcon.src = submit[0];
         socket.emit('character', submit);
-    }
+    };
 }
 
 let deleteBtn = document.getElementById("delete-char-btn");
@@ -132,7 +132,7 @@ var interval;
 
 function frame() {
     if (height >= 185) {
-        clearInterval(interval)
+        clearInterval(interval);
     } else if (height <= 20 || height >= 165) {
         height += 0.5;
         deleteChar.style.height = height + 'px';
