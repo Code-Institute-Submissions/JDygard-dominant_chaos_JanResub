@@ -127,7 +127,9 @@ The library is a simple paginated setup with information about currently impleme
 ***
 
 ### Play
-The play page is very simple, containing a link to the video on the about page, and the Phaser canvas for playing the game. The phaser canvas will be tested later in this document.
+The play page is very simple, containing a link to the video on the about page, and the Phaser canvas for playing the game.
+
+The canvas is difficult to test effectively, as the bulk of the software is incomplete. PEP8 compliance changes seem also to have deactivated the victory condition.
 
 ***
 

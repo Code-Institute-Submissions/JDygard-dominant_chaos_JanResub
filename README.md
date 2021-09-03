@@ -3,6 +3,12 @@
 ## About the project
 This project was intended to serve two purposes: To act as the basis for a personal passion project and for Milestone project 3 for Code Institute. As such, the developer tried to create a project that fulfilled two sets of requirements.
 
+## Assessment Login
+Some features in this assessment require a login. Please login with:
+
+    username: profile
+    password: profile
+    
 ***
 
 ![alt](assets/images/readme/amiresponsive.jpg)
