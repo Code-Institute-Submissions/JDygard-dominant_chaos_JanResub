@@ -645,6 +645,10 @@ table {
     background-color: var(--contrast-color-3);
 }
 
+.user-settings {
+    margin-bottom: 150px;
+}
+
 /* about.html */
 
 #about-img-100 {
