@@ -133,10 +133,13 @@
         $(window).on('load resize', function() {
             if (document.getElementById("ch-new")) {
                 let newCharIcon = document.getElementById("ch-new")
-                let currentCharIcon = document.getElementsByClassName("ch-card-column")[0]
-                newCharIcon.style.height = currentCharIcon.offsetHeight + "px";
-                console.log(currentCharIcon.offsetHeight + "px")
-                console.log(newCharIcon.style.height)
+                let currentCharIcon
+                if (document.getElementsByClassName("ch-card-column")[0]) {
+                    currentCharIcon = document.getElementsByClassName("ch-card-column")[0];
+                    newCharIcon.style.height = currentCharIcon.offsetHeight + "px";
+                } else {
+                    newCharIcon.style.height = "223px"
+                }
             }
         })
     </script>
