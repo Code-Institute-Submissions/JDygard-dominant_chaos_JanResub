@@ -13,6 +13,9 @@ Some features in this assessment require a login. Please login with:
 
 ![alt](assets/images/readme/amiresponsive.jpg)
 # Introduction
+
+Live link: [Chaos Legacy](http://dominant-chaos.herokuapp.com/index)
+
 This is a game idea a friend and I have been kicking around since the end of Static Chaos. The core of the game will be the PvP element, with multiple classes (starting with 4 or 5), a turn-based combat system with 5 second ticks. Basic attacks are automated but players will be able to queue one or two more powerful abilities, stance changes and attacks every tick.
 
 All code, art and game concepts are the sole original work of the developer, with the exception of the code and art credited at the end of this document. No tutorial was followed to make this game.
