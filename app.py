@@ -684,6 +684,8 @@ def profile(username):
                             mongo.db.users.remove(
                                 {"username": user["username"]})
                             session.pop("user")
+            return render_template(
+                "index.html")
 
         if form_name == "change-password":
             """ Change a password """
