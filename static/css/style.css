@@ -616,9 +616,10 @@ table {
 
 #user-settings {
     margin-top:50px;
-    display:block;
     margin-left:15%;
     margin-right:15%;
+    margin-bottom: 150px;
+    display:block;
     clear:both;
 }
 
@@ -643,10 +644,6 @@ table {
 
 .delete-button {
     background-color: var(--contrast-color-3);
-}
-
-.user-settings {
-    margin-bottom: 150px;
 }
 
 /* about.html */
