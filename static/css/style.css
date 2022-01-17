@@ -42,7 +42,7 @@ form button {
 
 /* base.html */
 body {
-    margin-bottom: 10vh;
+    margin-bottom: 15vh;
 }
 .page-footer, main:after {
     background-color: var(--main-color-bright);
