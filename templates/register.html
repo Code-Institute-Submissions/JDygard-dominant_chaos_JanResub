@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
     <div class="card login-register-card">
         <div class="card-content white-text">
             <span class="card-title">Register</span>
@@ -38,4 +37,7 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+    
 {% endblock %}
